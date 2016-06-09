@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Hello World</string>
-    <string name="mappedin_username">Your key here</string>
-    <string name="mappedin_password">Your secret here</string>
 </resources>
