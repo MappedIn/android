@@ -1,1 +1,1 @@
-include ':helloworld', ':mappedin'
+include ':helloworld', ':mappedin', ':singlevenue'
