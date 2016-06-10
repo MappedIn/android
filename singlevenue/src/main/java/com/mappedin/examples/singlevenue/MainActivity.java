@@ -11,15 +11,20 @@ import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
 import com.mappedin.sdk.MapView;
 import com.mappedin.sdk.Map;
+import com.mappedin.sdk.MapViewDelegate;
 import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.MappedIn;
+import com.mappedin.sdk.Overlay;
+import com.mappedin.sdk.Polygon;
 import com.mappedin.sdk.RawData;
 import com.mappedin.sdk.Venue;
 import com.mappedin.jpct.Logger;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     private boolean accessibleDirections = false;
+
+    private MapViewDelegate delegate = this;
 
     private MappedIn mappedIn = null;
     private MapView mapView = null;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             activeVenue = venues.get(0); // Grab the first venue, which is likely all you have
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.mapFragment);
+            mapView.setDelegate(delegate);
             mappedIn.getVenue(activeVenue, accessibleDirections, new CustomLocationGenerator(), new GetVenueCallback());
         }
 
@@ -60,11 +66,14 @@ public class MainActivity extends AppCompatActivity {
     private class GetVenueCallback implements MappedinCallback<Venue> {
         @Override
         public void onCompleted(final Venue venue) {
-            venue.getMaps().toArray(maps);
-            if (maps.length == 0) {
+            List<Map> mapsList = venue.getMaps();
+            if (mapsList.size() == 0) {
                 Logger.log("No maps! Make sure your venue is set up correctly!");
                 return;
             }
+            maps = new Map[mapsList.size()];
+            venue.getMaps().toArray(maps);
+
             Arrays.sort(maps, new Comparator<Map>() {
                 @Override
                 public int compare(Map a, Map b) {
@@ -86,5 +95,23 @@ public class MainActivity extends AppCompatActivity {
         public Location locationGenerator(RawData rawData) throws Exception {
             return new Location(rawData);
         }
+    }
+
+    public void didTapPolygon(Polygon polygon) {
+        if (polygon.getLocations().size() > 0) {
+            polygon.setColor(0x4ca1fc);
+        }
+    }
+
+    public void didTapMarker() {
+
+    }
+
+    public void didTapOverlay(Overlay var1) {
+
+    }
+
+    public void didTapNothing() {
+
     }
 }
