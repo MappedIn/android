@@ -2,10 +2,18 @@ package com.mappedin.examples.singlevenue;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
@@ -30,6 +38,13 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private MapView mapView = null;
     private Map[] maps = null;
 
+    private Spinner mapSpinner = null;
+    private TextView titleLabel = null;
+    private TextView descriptionLabel = null;
+    private ImageView logoImageView = null;
+
+    private HashMap<Polygon, Integer> originalColors = new HashMap<Polygon, Integer>();
+
     private Venue activeVenue = null;
 
     @Override
@@ -38,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         setContentView(R.layout.activity_main);
 
         mappedIn = new MappedIn(getApplicationContext());
+        mapSpinner = (Spinner) findViewById(R.id.mapSpinner);
         mappedIn.getVenues(new GetVenuesCallback());
     }
 
@@ -81,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
                 }
             });
             mapView.setMap(maps[0]);
+            mapSpinner.setAdapter(new ArrayAdapter<Map>());
         }
 
         @Override
@@ -98,9 +115,9 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     }
 
     public void didTapPolygon(Polygon polygon) {
-        if (polygon.getLocations().size() > 0) {
-            polygon.setColor(0x4ca1fc);
-        }
+        clearHighlightedColours();
+        highlightPolygon(polygon, 0x4ca1fc);
+
     }
 
     public void didTapMarker() {
@@ -112,6 +129,29 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     }
 
     public void didTapNothing() {
+        clearHighlightedColours();
+
+    }
+
+    private void highlightPolygon(Polygon polygon, int color) {
+        if (polygon.getLocations().size() > 0) {
+            if (!originalColors.containsKey(polygon)) {
+                originalColors.put(polygon, polygon.getColor());
+            }
+            polygon.setColor(color);
+        }
+    }
+
+    private void clearHighlightedColours() {
+        Set<Entry<Polygon, Integer>> colours = originalColors.entrySet();
+        for  (Entry<Polygon, Integer> pair : colours) {
+            pair.getKey().setColor(pair.getValue());
+        }
+
+        originalColors.clear();
+    }
+
+    private void showLocationDetails(Location location) {
 
     }
 }
