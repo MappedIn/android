@@ -1,8 +1,12 @@
 package com.mappedin.examples.singlevenue;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,14 +19,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.koushikdutta.ion.Ion;
+import com.mappedin.sdk.Directions;
 import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
 import com.mappedin.sdk.MapView;
 import com.mappedin.sdk.Map;
+import com.mappedin.sdk.MapViewCamera;
 import com.mappedin.sdk.MapViewDelegate;
 import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.MappedIn;
 import com.mappedin.sdk.Overlay;
+import com.mappedin.sdk.Path;
 import com.mappedin.sdk.Polygon;
 import com.mappedin.sdk.RawData;
 import com.mappedin.sdk.Venue;
@@ -42,19 +50,42 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private TextView titleLabel = null;
     private TextView descriptionLabel = null;
     private ImageView logoImageView = null;
+    private TextView selectOriginTextView = null;
+    private Button goButton = null;
 
     private HashMap<Polygon, Integer> originalColors = new HashMap<Polygon, Integer>();
 
     private Venue activeVenue = null;
 
+    private Context context;
+
+    private boolean navigationMode = false;
+    private Path path;
+
+    private Polygon destinationPolygon = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
         mappedIn = new MappedIn(getApplicationContext());
+
         mapSpinner = (Spinner) findViewById(R.id.mapSpinner);
+        logoImageView = (ImageView) findViewById(R.id.logoImageView);
+        titleLabel = (TextView) findViewById(R.id.titleLabel);
+        descriptionLabel = (TextView) findViewById(R.id.descriptionLabel);
+        selectOriginTextView = (TextView) findViewById(R.id.selectOriginTextView);
+        goButton = (Button) findViewById(R.id.goButton);
+        goButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startNavigation();
+            }
+        });
+
         mappedIn.getVenues(new GetVenuesCallback());
+
     }
 
     // Get the basic info for all Venues we have access to
@@ -97,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
                 }
             });
             mapView.setMap(maps[0]);
-            mapSpinner.setAdapter(new ArrayAdapter<Map>());
+            //mapSpinner.setAdapter(new ArrayAdapter<Map>());
         }
 
         @Override
@@ -110,14 +141,39 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private class CustomLocationGenerator implements LocationGenerator {
         @Override
         public Location locationGenerator(RawData rawData) throws Exception {
-            return new Location(rawData);
+            return new CustomLocation(rawData);
         }
     }
 
     public void didTapPolygon(Polygon polygon) {
-        clearHighlightedColours();
-        highlightPolygon(polygon, 0x4ca1fc);
+        if (navigationMode) {
+            if (path != null) {
+                didTapNothing();
+                return;
+            }
+            if (polygon.getLocations().size() == 0) {
+                return;
+            }
 
+            Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations().get(0).getName(), polygon.getLocations().get(0).getName());
+            if (directions != null) {
+                path = new Path(directions.getPath(), 5f, 5f, 0x4ca1fc);
+                mapView.addPath(path);
+                mapView.getCamera().focusOn(directions.getPath(), MapViewCamera.AutomaticZoomType.Out);
+            }
+
+            highlightPolygon(polygon, 0x007afb);
+            highlightPolygon(destinationPolygon, 0xff834c);
+            selectOriginTextView.setVisibility(View.INVISIBLE);
+            return;
+        }
+        clearHighlightedColours();
+        if (polygon.getLocations().size() == 0) {
+            return;
+        }
+        destinationPolygon = polygon;
+        highlightPolygon(polygon, 0x4ca1fc);
+        showLocationDetails((CustomLocation) polygon.getLocations().get(0));
     }
 
     public void didTapMarker() {
@@ -130,16 +186,16 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     public void didTapNothing() {
         clearHighlightedColours();
+        clearLocationDetails();
+        stopNavigation();
 
     }
 
     private void highlightPolygon(Polygon polygon, int color) {
-        if (polygon.getLocations().size() > 0) {
-            if (!originalColors.containsKey(polygon)) {
-                originalColors.put(polygon, polygon.getColor());
-            }
-            polygon.setColor(color);
+        if (!originalColors.containsKey(polygon)) {
+            originalColors.put(polygon, polygon.getColor());
         }
+        polygon.setColor(color);
     }
 
     private void clearHighlightedColours() {
@@ -151,7 +207,44 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         originalColors.clear();
     }
 
-    private void showLocationDetails(Location location) {
+    private void showLocationDetails(CustomLocation location) {
+        clearLocationDetails();
+        titleLabel.setText(location.getName());
+        descriptionLabel.setText(location.description);
+        goButton.setVisibility(View.VISIBLE);
 
+        // This sample is using the Ion framework for easy image loading/cacheing. You can use what you like
+        // https://github.com/koush/ion
+        if (location.logo != null) {
+            String url = location.logo.get(logoImageView.getWidth(), this).toString();
+            Logger.log("++++ " + url);
+            if (url != null) {
+                Ion.with(logoImageView)
+                        //.placeholder(R.drawable.placeholder_image)
+                        //.error(R.drawable.error_image)
+                        //.animateLoad(Animation)
+                        .load(location.logo.get(logoImageView.getWidth(), this).toString());
+            }
+        }
+    }
+
+    private void clearLocationDetails() {
+        titleLabel.setText("");
+        descriptionLabel.setText("");
+        logoImageView.setImageDrawable(null);
+        goButton.setVisibility(View.INVISIBLE);
+    }
+
+    private void startNavigation() {
+        stopNavigation();
+        navigationMode = true;
+        selectOriginTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void stopNavigation() {
+        selectOriginTextView.setVisibility(View.INVISIBLE);
+        mapView.removeAllPath();
+        navigationMode = false;
+        path = null;
     }
 }
