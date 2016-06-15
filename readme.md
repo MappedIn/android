@@ -1,6 +1,6 @@
 # MappedIn Android SDK Example
 
-This repo contains a simple example to get you started with the MappedIn Android SDK. Before you can do anything, make sure you have an API key from MappedIn. Talk to your representative to get one.
+This repo contains a simple example to get you started with the MappedIn Android SDK. Before you can do anything, make sure you have an API key from MappedIn. Talk to your representative to get one. The JavaDocs are available [here](http://mappedin.github.io/android/).
 
 ## Setup
 Just include the com.mappedin.sdk project from Maven Central. You can also clone this repo and use the pre-configured samples. We recommend you ensure your credentials are working with the Hello World sample before anything else.
