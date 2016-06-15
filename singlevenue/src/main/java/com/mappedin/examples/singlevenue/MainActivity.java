@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
             if (directions != null) {
                 path = new Path(directions.getPath(), 5f, 5f, 0x4ca1fc);
                 mapView.addPath(path);
-                mapView.getCamera().focusOn(directions.getPath(), MapViewCamera.AutomaticZoomType.Out);
+                mapView.getCamera().focusOn(directions.getPath());
             }
 
             highlightPolygon(polygon, 0x007afb);
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     private void stopNavigation() {
         selectOriginTextView.setVisibility(View.INVISIBLE);
-        mapView.removeAllPath();
+        mapView.removeAllPaths();
         navigationMode = false;
         path = null;
     }
