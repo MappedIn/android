@@ -29,28 +29,28 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
         mappedIn = new MappedIn(getApplicationContext());
-        mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
+        mappedIn.getVenues(new MappedinCallback<Venue[]>() {
             @Override
-            public void onCompleted(final List<Venue> venues) {
+            public void onCompleted(final Venue[] venues) {
                 Logger.log("Got venues");
-                if (venues.size() == 0) {
+                if (venues.length == 0) {
                     Logger.log("No venues! Did you set up your keys correctly?");
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
 
-                mappedIn.getVenue(venues.get(0), false, null, new MappedinCallback<Venue>() {
+                mappedIn.getVenue(venues[0], false, null, new MappedinCallback<Venue>() {
                     @Override
                     public void onCompleted(Venue venue) {
                         Logger.log(venue.getName() + " loaded!");
                         mapView = (MapView) getFragmentManager().findFragmentById(R.id.mapFragment);
-                        List<Map> maps = venue.getMaps();
-                        if (maps.size() == 0) {
+                        Map[] maps = venue.getMaps();
+                        if (maps.length == 0) {
                             Logger.log("No maps on venue! Talk to your mappedin representative to make sure your venue (" + venue.getName() + ") is set up correctly.");
                             progressBar.setVisibility(View.GONE);
                             return;
                         }
-                        mapView.setMap(venue.getMaps().get(0));
+                        mapView.setMap(maps[0]);
                         progressBar.setVisibility(View.GONE);
                         Logger.log("Map loaded!");
                     }

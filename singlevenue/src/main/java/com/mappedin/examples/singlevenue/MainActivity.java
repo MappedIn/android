@@ -1,6 +1,7 @@
 package com.mappedin.examples.singlevenue;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import com.koushikdutta.ion.Ion;
+import com.mappedin.sdk.Coordinate;
 import com.mappedin.sdk.Directions;
 import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
@@ -34,6 +36,7 @@ import com.mappedin.sdk.Path;
 import com.mappedin.sdk.Polygon;
 import com.mappedin.sdk.RawData;
 import com.mappedin.sdk.Venue;
+import com.mappedin.sdk.Overlay2DLabel;
 import com.mappedin.jpct.Logger;
 
 public class MainActivity extends AppCompatActivity implements MapViewDelegate {
@@ -52,8 +55,10 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private ImageView logoImageView = null;
     private TextView selectOriginTextView = null;
     private Button goButton = null;
+    private Button showLocationsButton = null;
 
     private HashMap<Polygon, Integer> originalColors = new HashMap<Polygon, Integer>();
+    private HashMap<Overlay, LocationLabelClicker> overlays = new HashMap<Overlay, LocationLabelClicker>();
 
     private Venue activeVenue = null;
 
@@ -84,19 +89,23 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
             }
         });
 
+        showLocationsButton = (Button) findViewById(R.id.showLocationButton);
+        showLocationsButton.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { showLocations();}});
+
         mappedIn.getVenues(new GetVenuesCallback());
 
     }
 
     // Get the basic info for all Venues we have access to
-    private class GetVenuesCallback implements MappedinCallback<List<Venue>> {
+    private class GetVenuesCallback implements MappedinCallback<Venue[]> {
         @Override
-        public void onCompleted(final List<Venue> venues) {
-            if (venues.size() == 0 ) {
+        public void onCompleted(final Venue[] venues) {
+            Logger.log("++++++ GetVenuesCallback");
+            if (venues.length == 0 ) {
                 Logger.log("No venues available! Are you using the right credentials? Talk to your mappedin representative.");
                 return;
             }
-            activeVenue = venues.get(0); // Grab the first venue, which is likely all you have
+            activeVenue = venues[0]; // Grab the first venue, which is likely all you have
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.mapFragment);
             mapView.setDelegate(delegate);
@@ -113,13 +122,11 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private class GetVenueCallback implements MappedinCallback<Venue> {
         @Override
         public void onCompleted(final Venue venue) {
-            List<Map> mapsList = venue.getMaps();
-            if (mapsList.size() == 0) {
+            Map[] maps = venue.getMaps();
+            if (maps.length == 0) {
                 Logger.log("No maps! Make sure your venue is set up correctly!");
                 return;
             }
-            maps = new Map[mapsList.size()];
-            venue.getMaps().toArray(maps);
 
             Arrays.sort(maps, new Comparator<Map>() {
                 @Override
@@ -180,14 +187,20 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     }
 
-    public void didTapOverlay(Overlay var1) {
-
+    public void didTapOverlay(Overlay overlay) {
+        LocationLabelClicker clicker = overlays.get(overlay);
+        if (clicker != null) {
+            clicker.click();
+        } else {
+            Logger.log("No click");
+        }
     }
 
     public void didTapNothing() {
         clearHighlightedColours();
         clearLocationDetails();
         stopNavigation();
+        clearMarkers();
 
     }
 
@@ -235,6 +248,10 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         goButton.setVisibility(View.INVISIBLE);
     }
 
+    private void clearMarkers() {
+        mapView.removeAllMarkers();
+    }
+
     private void startNavigation() {
         stopNavigation();
         navigationMode = true;
@@ -246,5 +263,34 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         mapView.removeAllPaths();
         navigationMode = false;
         path = null;
+    }
+
+    private void showLocations() {
+        for (Location location : activeVenue.getLocations()) {
+
+            List<Coordinate> coords = location.getNavigatableCoordinates();
+            if (coords.size() > 0) {
+                Overlay2DLabel label = new Overlay2DLabel(location.getName(), 36, Typeface.DEFAULT);
+                label.setPosition(coords.get(0));
+                LocationLabelClicker clicker = new LocationLabelClicker();
+                clicker.location = location;
+                overlays.put(label, clicker);
+                mapView.addMarker(label);
+            }
+        }
+    }
+
+    private class LocationLabelClicker {
+        public Location location = null;
+        public void click() {
+            didTapNothing();
+            Coordinate start = activeVenue.getLocations()[5].getNavigatableCoordinates().get(0);
+            Directions directions = location.directionsFrom(activeVenue, start, null, null);
+            if (directions != null) {
+                path = new Path(directions.getPath(), 5f, 5f, 0x4ca1fc);
+                mapView.addPath(path);
+                mapView.getCamera().focusOn(directions.getPath());
+            }
+        };
     }
 }

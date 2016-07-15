@@ -13,7 +13,7 @@ public class CustomLocation extends Location {
 
     public CustomLocation(RawData rawData) throws Exception {
         super(rawData);
-        description = rawData.stringValue("description");
+        description = rawData.string("description");
         logo = rawData.imageCollection("logo");
     }
 
