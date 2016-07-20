@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private class GetVenuesCallback implements MappedinCallback<Venue[]> {
         @Override
         public void onCompleted(final Venue[] venues) {
-            Logger.log("++++++ GetVenuesCallback");
             if (venues.length == 0 ) {
                 Logger.log("No venues available! Are you using the right credentials? Talk to your mappedin representative.");
                 return;
@@ -164,14 +163,18 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
             Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations().get(0).getName(), polygon.getLocations().get(0).getName());
             if (directions != null) {
-                path = new Path(directions.getPath(), 5f, 5f, 0x4ca1fc);
+                path = new Path(directions.getPath(), 0.05f, 0.05f, 0x4ca1fc);
                 mapView.addPath(path);
                 mapView.getCamera().focusOn(directions.getPath());
             }
 
             highlightPolygon(polygon, 0x007afb);
             highlightPolygon(destinationPolygon, 0xff834c);
-            selectOriginTextView.setVisibility(View.INVISIBLE);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    selectOriginTextView.setVisibility(View.INVISIBLE);
+                }
+            });
             return;
         }
         clearHighlightedColours();
@@ -180,7 +183,12 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         }
         destinationPolygon = polygon;
         highlightPolygon(polygon, 0x4ca1fc);
-        showLocationDetails((CustomLocation) polygon.getLocations().get(0));
+        runOnUiThread(new Runnable() {
+            public void run () {
+                showLocationDetails((CustomLocation) destinationPolygon.getLocations().get(0));
+            }
+        });
+
     }
 
     public void didTapMarker() {
@@ -230,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         // https://github.com/koush/ion
         if (location.logo != null) {
             String url = location.logo.get(logoImageView.getWidth(), this).toString();
-            Logger.log("++++ " + url);
             if (url != null) {
                 Ion.with(logoImageView)
                         //.placeholder(R.drawable.placeholder_image)
@@ -273,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
                 Overlay2DLabel label = new Overlay2DLabel(location.getName(), 36, Typeface.DEFAULT);
                 label.setPosition(coords.get(0));
                 LocationLabelClicker clicker = new LocationLabelClicker();
-                clicker.location = location;
+                clicker.location = (CustomLocation) location;
                 overlays.put(label, clicker);
                 mapView.addMarker(label);
             }
@@ -281,16 +288,14 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     }
 
     private class LocationLabelClicker {
-        public Location location = null;
+        public CustomLocation location = null;
         public void click() {
-            didTapNothing();
-            Coordinate start = activeVenue.getLocations()[5].getNavigatableCoordinates().get(0);
-            Directions directions = location.directionsFrom(activeVenue, start, null, null);
-            if (directions != null) {
-                path = new Path(directions.getPath(), 5f, 5f, 0x4ca1fc);
-                mapView.addPath(path);
-                mapView.getCamera().focusOn(directions.getPath());
-            }
+            runOnUiThread(new Runnable() {
+                public void run () {
+                    didTapNothing();
+                    showLocationDetails(location);
+                }
+            });
         };
     }
 }
