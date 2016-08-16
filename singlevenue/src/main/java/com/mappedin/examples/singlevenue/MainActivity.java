@@ -183,11 +183,8 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         }
         destinationPolygon = polygon;
         highlightPolygon(polygon, 0x4ca1fc);
-        runOnUiThread(new Runnable() {
-            public void run () {
-                showLocationDetails((CustomLocation) destinationPolygon.getLocations().get(0));
-            }
-        });
+
+        showLocationDetails((CustomLocation) destinationPolygon.getLocations().get(0));
 
     }
 
@@ -237,13 +234,13 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         // This sample is using the Ion framework for easy image loading/cacheing. You can use what you like
         // https://github.com/koush/ion
         if (location.logo != null) {
-            String url = location.logo.get(logoImageView.getWidth(), this).toString();
+            String url = location.logo.get(logoImageView.getWidth()).toString();
             if (url != null) {
                 Ion.with(logoImageView)
                         //.placeholder(R.drawable.placeholder_image)
                         //.error(R.drawable.error_image)
                         //.animateLoad(Animation)
-                        .load(location.logo.get(logoImageView.getWidth(), this).toString());
+                        .load(location.logo.get(logoImageView.getWidth()).toString());
             }
         }
     }
@@ -290,12 +287,9 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private class LocationLabelClicker {
         public CustomLocation location = null;
         public void click() {
-            runOnUiThread(new Runnable() {
-                public void run () {
-                    didTapNothing();
-                    showLocationDetails(location);
-                }
-            });
-        };
+            didTapNothing();
+            showLocationDetails(location);
+
+        }
     }
 }
