@@ -5,8 +5,6 @@ import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -27,7 +24,6 @@ import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
 import com.mappedin.sdk.MapView;
 import com.mappedin.sdk.Map;
-import com.mappedin.sdk.MapViewCamera;
 import com.mappedin.sdk.MapViewDelegate;
 import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.MappedIn;
@@ -56,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private TextView selectOriginTextView = null;
     private Button goButton = null;
     private Button showLocationsButton = null;
+    private ImageView compass = null;
 
     private HashMap<Polygon, Integer> originalColors = new HashMap<Polygon, Integer>();
     private HashMap<Overlay, LocationLabelClicker> overlays = new HashMap<Overlay, LocationLabelClicker>();
@@ -88,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
                 startNavigation();
             }
         });
+        compass = (ImageView) findViewById(R.id.compass_image);
+        compass.bringToFront();
+        compass.setImageDrawable(getResources().getDrawable(R.drawable.compass));
 
         showLocationsButton = (Button) findViewById(R.id.showLocationButton);
         showLocationsButton.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { showLocations();}});
@@ -207,6 +207,16 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         stopNavigation();
         clearMarkers();
 
+    }
+
+    @Override
+    public void onCameraBearingChange(final double bearing) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                compass.setRotation((float)(bearing/Math.PI*180));
+            }
+        });
     }
 
     private void highlightPolygon(Polygon polygon, int color) {
