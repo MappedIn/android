@@ -151,19 +151,19 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         }
     }
 
-    public void didTapPolygon(Polygon polygon) {
+    public boolean didTapPolygon(Polygon polygon) {
         if (navigationMode) {
             if (path != null) {
                 didTapNothing();
-                return;
+                return true;
             }
             if (polygon.getLocations().size() == 0) {
-                return;
+                return false;
             }
 
-            Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations().get(0).getName(), polygon.getLocations().get(0).getName());
+            Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations().get(0), polygon.getLocations().get(0));
             if (directions != null) {
-                path = new Path(directions.getPath(), 0.05f, 0.05f, 0x4ca1fc);
+                path = new Path(directions.getPath(), 1f, 1f, 0x4ca1fc);
                 mapView.addPath(path);
                 mapView.getCamera().focusOn(directions.getPath());
             }
@@ -175,29 +175,27 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
                     selectOriginTextView.setVisibility(View.INVISIBLE);
                 }
             });
-            return;
+            return true;
         }
         clearHighlightedColours();
         if (polygon.getLocations().size() == 0) {
-            return;
+            return false;
         }
         destinationPolygon = polygon;
         highlightPolygon(polygon, 0x4ca1fc);
 
         showLocationDetails((CustomLocation) destinationPolygon.getLocations().get(0));
-
+        return true;
     }
 
-    public void didTapMarker() {
-
-    }
-
-    public void didTapOverlay(Overlay overlay) {
+    public boolean didTapOverlay(Overlay overlay) {
         LocationLabelClicker clicker = overlays.get(overlay);
         if (clicker != null) {
             clicker.click();
+            return true;
         } else {
             Logger.log("No click");
+            return false;
         }
     }
 
@@ -299,7 +297,15 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         public void click() {
             didTapNothing();
             showLocationDetails(location);
-
+            if (location != null){
+                List<Polygon> polygons = location.getPolygons();
+                if (polygons.size()>0){
+                    clearHighlightedColours();
+                    destinationPolygon = polygons.get(0);
+                    highlightPolygon(destinationPolygon, 0x4ca1fc);
+                    showLocationDetails(location);
+                }
+            }
         }
     }
 }
