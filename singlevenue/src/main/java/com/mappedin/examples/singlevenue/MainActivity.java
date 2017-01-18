@@ -279,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     private void showLocations() {
         for (Location location : activeVenue.getLocations()) {
-
             List<Coordinate> coords = location.getNavigatableCoordinates();
             if (coords.size() > 0) {
                 Overlay2DLabel label = new Overlay2DLabel(location.getName(), 36, Typeface.DEFAULT);
