@@ -1,18 +1,18 @@
 package com.mappedin.examples.helloworld;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.util.List;
-
+import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Map;
 import com.mappedin.sdk.MapView;
-import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.MappedIn;
+import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.Venue;
-import com.mappedin.jpct.Logger;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,18 +28,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        mappedIn = new MappedIn(getApplicationContext());
-        mappedIn.getVenues(new MappedinCallback<Venue[]>() {
+        mappedIn = new MappedIn(getApplication());
+        mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
-            public void onCompleted(final Venue[] venues) {
+            public void onCompleted(final List<Venue> venues) {
                 Logger.log("Got venues");
-                if (venues.length == 0) {
+                if (venues.size() == 0) {
                     Logger.log("No venues! Did you set up your keys correctly?");
                     progressBar.setVisibility(View.GONE);
                     return;
                 }
 
-                mappedIn.getVenue(venues[0], false, null, new MappedinCallback<Venue>() {
+                mappedIn.getVenue(venues.get(0), false, null, new MappedinCallback<Venue>() {
                     @Override
                     public void onCompleted(Venue venue) {
                         Logger.log(venue.getName() + " loaded!");

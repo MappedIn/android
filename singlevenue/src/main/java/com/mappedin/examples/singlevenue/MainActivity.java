@@ -2,38 +2,38 @@ package com.mappedin.examples.singlevenue;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import com.koushikdutta.ion.Ion;
+import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Coordinate;
 import com.mappedin.sdk.Directions;
 import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
-import com.mappedin.sdk.MapView;
 import com.mappedin.sdk.Map;
+import com.mappedin.sdk.MapView;
+import com.mappedin.sdk.MapViewCamera;
 import com.mappedin.sdk.MapViewDelegate;
-import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.MappedIn;
+import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.Overlay;
+import com.mappedin.sdk.Overlay2DLabel;
 import com.mappedin.sdk.Path;
 import com.mappedin.sdk.Polygon;
-import com.mappedin.sdk.RawData;
 import com.mappedin.sdk.Venue;
-import com.mappedin.sdk.Overlay2DLabel;
-import com.mappedin.jpct.Logger;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private Button showLocationsButton = null;
     private ImageView compass = null;
 
-    private HashMap<Polygon, Integer> originalColors = new HashMap<Polygon, Integer>();
+//    private HashMap<Polygon, Integer> originalColors = new HashMap<Polygon, Integer>();
+    private ArrayList<Polygon> originalColors = new ArrayList<>();
     private HashMap<Overlay, LocationLabelClicker> overlays = new HashMap<Overlay, LocationLabelClicker>();
 
     private Venue activeVenue = null;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         setContentView(R.layout.activity_main);
         context = this;
 
-        mappedIn = new MappedIn(getApplicationContext());
+        mappedIn = new MappedIn(getApplication());
 
         mapSpinner = (Spinner) findViewById(R.id.mapSpinner);
         logoImageView = (ImageView) findViewById(R.id.logoImageView);
@@ -97,18 +98,31 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     }
 
     // Get the basic info for all Venues we have access to
-    private class GetVenuesCallback implements MappedinCallback<Venue[]> {
+    private class GetVenuesCallback implements MappedinCallback<List<Venue>> {
         @Override
-        public void onCompleted(final Venue[] venues) {
-            if (venues.length == 0 ) {
+        public void onCompleted(final List<Venue> venues) {
+            if (venues.size() == 0 ) {
                 Logger.log("No venues available! Are you using the right credentials? Talk to your mappedin representative.");
                 return;
             }
-            activeVenue = venues[0]; // Grab the first venue, which is likely all you have
+            activeVenue = venues.get(0); // Grab the first venue, which is likely all you have
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.mapFragment);
             mapView.setDelegate(delegate);
-            mappedIn.getVenue(activeVenue, accessibleDirections, new CustomLocationGenerator(), new GetVenueCallback());
+            LocationGenerator amenity = new LocationGenerator() {
+                @Override
+                public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                    return new Amenity(data, _index, venue);
+                }
+            };
+            LocationGenerator tenant = new LocationGenerator() {
+                @Override
+                public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                    return new Tenant(data, _index, venue);
+                }
+            };
+            final LocationGenerator[] locationGenerators = {tenant, amenity};
+            mappedIn.getVenue(activeVenue, accessibleDirections, locationGenerators, new GetVenueCallback());
         }
 
         @Override
@@ -121,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     private class GetVenueCallback implements MappedinCallback<Venue> {
         @Override
         public void onCompleted(final Venue venue) {
+            activeVenue = venue;
             Map[] maps = venue.getMaps();
             if (maps.length == 0) {
                 Logger.log("No maps! Make sure your venue is set up correctly!");
@@ -130,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
             Arrays.sort(maps, new Comparator<Map>() {
                 @Override
                 public int compare(Map a, Map b) {
-                    return (int) (a.getElevation() - b.getElevation());
+                    return (int) (a.getFloor() - b.getFloor());
                 }
             });
             mapView.setMap(maps[0]);
@@ -144,28 +159,24 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     }
 
-    private class CustomLocationGenerator implements LocationGenerator {
-        @Override
-        public Location locationGenerator(RawData rawData) throws Exception {
-            return new CustomLocation(rawData);
-        }
-    }
-
     public boolean didTapPolygon(Polygon polygon) {
         if (navigationMode) {
             if (path != null) {
                 didTapNothing();
                 return true;
             }
-            if (polygon.getLocations().size() == 0) {
+            if (polygon.getLocations().length == 0) {
                 return false;
             }
 
-            Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations().get(0), polygon.getLocations().get(0));
+            Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations()[0], polygon.getLocations()[0]);
             if (directions != null) {
-                path = new Path(directions.getPath(), 1f, 1f, 0x4ca1fc);
+                path = new Path(directions.getPath(), 1f, 3f, 0x4ca1fc);
                 mapView.addPath(path);
-                mapView.getCamera().focusOn(directions.getPath());
+                MapViewCamera.CameraAngle yaw = new MapViewCamera.CameraAngle(MapViewCamera.CameraMoveType.ABSOLUTE, 0);
+                MapViewCamera.CameraAngle pitch = new MapViewCamera.CameraAngle(MapViewCamera.CameraMoveType.ABSOLUTE, 0.246f);
+                mapView.setMap(directions.getPath()[0].getMap());
+                mapView.getCamera().frame(directions.getPath(), yaw, pitch, 0.5f);
             }
 
             highlightPolygon(polygon, 0x007afb);
@@ -178,13 +189,13 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
             return true;
         }
         clearHighlightedColours();
-        if (polygon.getLocations().size() == 0) {
+        if (polygon.getLocations().length == 0) {
             return false;
         }
         destinationPolygon = polygon;
         highlightPolygon(polygon, 0x4ca1fc);
 
-        showLocationDetails((CustomLocation) destinationPolygon.getLocations().get(0));
+        showLocationDetails(destinationPolygon.getLocations()[0]);
         return true;
     }
 
@@ -217,38 +228,57 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         });
     }
 
+    @Override
+    public void manipulatedCamera() {
+
+    }
+
     private void highlightPolygon(Polygon polygon, int color) {
-        if (!originalColors.containsKey(polygon)) {
-            originalColors.put(polygon, polygon.getColor());
+        if (!originalColors.contains(polygon)) {
+            originalColors.add(polygon);
         }
-        polygon.setColor(color);
+        mapView.setColor(polygon, color);
     }
 
     private void clearHighlightedColours() {
-        Set<Entry<Polygon, Integer>> colours = originalColors.entrySet();
-        for  (Entry<Polygon, Integer> pair : colours) {
-            pair.getKey().setColor(pair.getValue());
+        for  (Polygon polygon: originalColors) {
+            mapView.resetColor(polygon);
         }
-
         originalColors.clear();
     }
 
-    private void showLocationDetails(CustomLocation location) {
+    private void showLocationDetails(Location location) {
         clearLocationDetails();
         titleLabel.setText(location.getName());
-        descriptionLabel.setText(location.description);
         goButton.setVisibility(View.VISIBLE);
 
         // This sample is using the Ion framework for easy image loading/cacheing. You can use what you like
         // https://github.com/koush/ion
-        if (location.logo != null) {
-            String url = location.logo.get(logoImageView.getWidth()).toString();
-            if (url != null) {
-                Ion.with(logoImageView)
-                        //.placeholder(R.drawable.placeholder_image)
-                        //.error(R.drawable.error_image)
-                        //.animateLoad(Animation)
-                        .load(location.logo.get(logoImageView.getWidth()).toString());
+        if (location.getClass() == Tenant.class) {
+            Tenant tenant = (Tenant)location;
+            descriptionLabel.setText(tenant.description);
+            if (tenant.logo != null) {
+                String url = tenant.logo.getImage(logoImageView.getWidth()).toString();
+                if (url != null) {
+                    Ion.with(logoImageView)
+                            //.placeholder(R.drawable.placeholder_image)
+                            //.error(R.drawable.error_image)
+                            //.animateLoad(Animation)
+                            .load(tenant.logo.getImage(logoImageView.getWidth()).toString());
+                }
+            }
+        } else if (location.getClass() == Amenity.class) {
+            Amenity amenity = (Amenity)location;
+            descriptionLabel.setText(amenity.description);
+            if (amenity.logo != null) {
+                String url = amenity.logo.getImage(logoImageView.getWidth()).toString();
+                if (url != null) {
+                    Ion.with(logoImageView)
+                            //.placeholder(R.drawable.placeholder_image)
+                            //.error(R.drawable.error_image)
+                            //.animateLoad(Animation)
+                            .load(amenity.logo.getImage(logoImageView.getWidth()).toString());
+                }
             }
         }
     }
@@ -279,12 +309,12 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     private void showLocations() {
         for (Location location : activeVenue.getLocations()) {
-            List<Coordinate> coords = location.getNavigatableCoordinates();
-            if (coords.size() > 0) {
+            Coordinate[] coords = location.getNavigatableCoordinates();
+            if (coords.length > 0) {
                 Overlay2DLabel label = new Overlay2DLabel(location.getName(), 36, Typeface.DEFAULT);
-                label.setPosition(coords.get(0));
+                label.setPosition(coords[0]);
                 LocationLabelClicker clicker = new LocationLabelClicker();
-                clicker.location = (CustomLocation) location;
+                clicker.location = location;
                 overlays.put(label, clicker);
                 mapView.addMarker(label);
             }
@@ -292,15 +322,15 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     }
 
     private class LocationLabelClicker {
-        public CustomLocation location = null;
+        public Location location = null;
         public void click() {
             didTapNothing();
             showLocationDetails(location);
             if (location != null){
-                List<Polygon> polygons = location.getPolygons();
-                if (polygons.size()>0){
+                Polygon[] polygons = location.getPolygons();
+                if (polygons.length>0){
                     clearHighlightedColours();
-                    destinationPolygon = polygons.get(0);
+                    destinationPolygon = polygons[0];
                     highlightPolygon(destinationPolygon, 0x4ca1fc);
                     showLocationDetails(location);
                 }
