@@ -18,7 +18,6 @@ import com.mappedin.sdk.Location;
 import com.mappedin.sdk.LocationGenerator;
 import com.mappedin.sdk.Map;
 import com.mappedin.sdk.MapView;
-import com.mappedin.sdk.MapViewCamera;
 import com.mappedin.sdk.MapViewDelegate;
 import com.mappedin.sdk.MappedIn;
 import com.mappedin.sdk.MappedinCallback;
@@ -171,12 +170,10 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
             Directions directions = destinationPolygon.directionsFrom(activeVenue, polygon, destinationPolygon.getLocations()[0], polygon.getLocations()[0]);
             if (directions != null) {
-                path = new Path(directions.getPath(), 1f, 3f, 0x4ca1fc);
-                mapView.addPath(path);
-                MapViewCamera.CameraAngle yaw = new MapViewCamera.CameraAngle(MapViewCamera.CameraMoveType.ABSOLUTE, 0);
-                MapViewCamera.CameraAngle pitch = new MapViewCamera.CameraAngle(MapViewCamera.CameraMoveType.ABSOLUTE, 0.246f);
+                path = new Path(directions.getPath(), 1f, 3f, 0x4ca1fc, 1);
+                mapView.addElement(path);
                 mapView.setMap(directions.getPath()[0].getMap());
-                mapView.getCamera().frame(directions.getPath(), yaw, pitch, 0.5f);
+                mapView.frame(directions.getPath(), 0, 0.246f, 0.5f);
             }
 
             highlightPolygon(polygon, 0x007afb);
@@ -237,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
         if (!originalColors.contains(polygon)) {
             originalColors.add(polygon);
         }
-        mapView.setColor(polygon, color);
+        mapView.setColor(polygon, color, 1);
     }
 
     private void clearHighlightedColours() {
@@ -291,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
     }
 
     private void clearMarkers() {
-        mapView.removeAllMarkers();
+        mapView.removeAllElements();
     }
 
     private void startNavigation() {
@@ -302,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
 
     private void stopNavigation() {
         selectOriginTextView.setVisibility(View.INVISIBLE);
-        mapView.removeAllPaths();
+        mapView.removeAllElements();
         navigationMode = false;
         path = null;
     }
@@ -316,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate {
                 LocationLabelClicker clicker = new LocationLabelClicker();
                 clicker.location = location;
                 overlays.put(label, clicker);
-                mapView.addMarker(label);
+                mapView.addElement(label);
             }
         }
     }

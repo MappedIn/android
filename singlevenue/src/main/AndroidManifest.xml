@@ -11,9 +11,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:name="com.mappedin.sdk.Username" android:value="573dc77e7ee965268a000000"/>
-        <meta-data android:name="com.mappedin.sdk.Password" android:value="19c77f16c6d2af867c7b71e675070e49"/>
-        <meta-data android:name="com.mappedin.sdk.DataSchema" android:value="f1f6308d"/>
+        <meta-data android:name="com.mappedin.sdk.Username" android:value="Your key here"/>
+        <meta-data android:name="com.mappedin.sdk.Password" android:value="Your secret here"/>
+        <meta-data android:name="com.mappedin.sdk.DataSchema" android:value="Your data schema here"/>
     </application>
 
 </manifest>
