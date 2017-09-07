@@ -562,6 +562,9 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
             }
             turnPoints.clear();
         }
+        if (iAmHere != null) {
+            iAmHere.removeIAmHere(mapView);
+        }
         navigationMode = false;
         timer.cancel();
         walkingButton.setVisibility(View.INVISIBLE);
