@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Single Venue</string>
+    <string name="app_name">SampleApp</string>
+    <string name="title_directory">Directory</string>
+    <string name="title_map">Map</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="title_activity_location">LocationActivity</string>
+    <string name="title_activity_way_finding">WayFindingActivity</string>
 </resources>

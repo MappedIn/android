@@ -1,102 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mappedin.examples.singlevenue.MainActivity">
+    android:background="@color/colorPrimary"
+    android:id="@android:id/tabhost">
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="com.mappedin.sdk.MapView"
-        android:id="@+id/mapFragment"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true" />
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="53dp"
+            android:layout_alignParentBottom="true"/>
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/mapSpinner"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@android:id/tabs">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Select Origin"
-        android:id="@+id/selectOriginTextView"
-        android:layout_below="@+id/mapSpinner"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/logoImageView"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:minHeight="100dp"
-        android:minWidth="100dp"
-        android:layout_margin="5dp" />
+            <RelativeLayout
+                android:id="@+id/venue_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/titleLabel"
-        android:layout_alignTop="@+id/logoImageView"
-        android:layout_toRightOf="@+id/logoImageView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+                <include layout="@layout/mapview" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/descriptionLabel"
-        android:layout_below="@+id/titleLabel"
-        android:layout_alignBottom="@+id/logoImageView"
-        android:layout_toRightOf="@+id/logoImageView"
-        android:layout_toLeftOf="@+id/goButton"
-        android:layout_alignParentStart="false" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="vertical">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go!"
-        android:id="@+id/goButton"
-        android:layout_alignBottom="@+id/descriptionLabel"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/descriptionLabel"
-        android:visibility="invisible" />
+                    <ImageView
+                        android:id="@+id/instruction_image"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginRight="5dp" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Locations"
-        android:id="@+id/showLocationButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+                    <TextView
+                        android:id="@+id/instruction_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/instruction_image"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/instruction_image"
+                        android:gravity="center"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="20dp"
-        android:layout_below="@+id/showLocationButton"
-        android:layout_alignParentRight="true"
-        android:id="@+id/compass_image" />
+                    <TextView
+                        android:id="@+id/selectOriginTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/compass_image"
+                        android:layout_centerHorizontal="true"
+                        android:text="Select Origin"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:visibility="invisible" />
 
-</RelativeLayout>
+                    <ImageView
+                        android:id="@+id/compass_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/instruction_text"
+                        android:layout_marginTop="20dp"
+                        android:contentDescription="Compass" />
+
+                    <ImageView
+                        android:id="@+id/logoImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_margin="5dp"
+                        android:minHeight="100dp"
+                        android:minWidth="100dp" />
+
+                    <TextView
+                        android:id="@+id/titleLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/logoImageView"
+                        android:layout_toRightOf="@+id/logoImageView"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/descriptionLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/logoImageView"
+                        android:layout_below="@+id/titleLabel"
+                        android:layout_toLeftOf="@+id/goButton"
+                        android:layout_toRightOf="@+id/logoImageView"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <Button
+                        android:id="@+id/goButton"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/descriptionLabel"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/descriptionLabel"
+                        android:text="Go!"
+                        android:visibility="invisible" />
+                    <Button
+                        android:id="@+id/walk_btn"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:text="Start"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/directory_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWithe"
+                android:orientation="vertical">
+                <TabHost
+                    android:id="@+id/detail_tab_host"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TabWidget
+                            android:id="@android:id/tabs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                        <FrameLayout
+                            android:id="@android:id/tabcontent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <RelativeLayout
+                                android:id="@+id/categories"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <Button
+                                    android:id="@+id/category_back_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignBaseline="@+id/top_category_text_view"
+                                    android:layout_alignParentLeft="true"
+                                    android:text="Back"
+                                    android:visibility="invisible" />
+
+                                <TextView
+                                    android:id="@+id/top_category_text_view"
+                                    android:layout_margin="3dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@+id/category_back_btn"
+                                    android:textAlignment="center"
+                                    android:textStyle="bold"
+                                    android:textSize="24dp"
+                                    android:text="All Categories"/>
+                                <ListView
+                                    android:id="@+id/category_list_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@+id/top_category_text_view"/>
+                                <ListView
+                                    android:id="@+id/category_locations_list_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/top_category_text_view"
+                                    android:visibility="invisible"/>
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:id="@+id/locations"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <ListView
+                                    android:id="@+id/locations_list_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+                </TabHost>
+            </LinearLayout>
+
+
+        </FrameLayout>
+    </RelativeLayout>
+</TabHost>
