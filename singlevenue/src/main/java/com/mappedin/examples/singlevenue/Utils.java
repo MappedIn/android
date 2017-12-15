@@ -54,6 +54,8 @@ public class Utils {
                     return context.getResources().getDrawable(R.drawable.turn_right);
                 case SlightRight:
                     return context.getResources().getDrawable(R.drawable.slight_right);
+                case Straight:
+                    return context.getResources().getDrawable(R.drawable.go_straight);
                 default:
                     return null;
             }
