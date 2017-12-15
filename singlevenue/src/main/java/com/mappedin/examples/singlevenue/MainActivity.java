@@ -240,7 +240,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                 Logger.log("No venues available! Are you using the right credentials? Talk to your mappedin representative.");
                 return;
             }
-            activeVenue = venues.get(1); // Grab the first venue, which is likely all you have
+            activeVenue = venues.get(0); // Grab the first venue, which is likely all you have
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
             mapView.setDelegate(delegate);
