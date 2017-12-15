@@ -32,6 +32,19 @@
 
                 <include layout="@layout/mapview" />
 
+                <TextView
+                    android:text="Loading..."
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/loading_textview"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:background="@color/colorWithe"
+                    android:visibility="invisible"/>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

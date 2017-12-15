@@ -7,7 +7,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,6 +23,7 @@ import android.widget.TextView;
 
 import com.koushikdutta.ion.Ion;
 import com.mappedin.jpct.Logger;
+import com.mappedin.sdk.Analytics;
 import com.mappedin.sdk.Category;
 import com.mappedin.sdk.Coordinate;
 import com.mappedin.sdk.Cylinder;
@@ -48,7 +54,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends ActivityGroup implements MapViewDelegate {
+public class MainActivity extends ActivityGroup implements MapViewDelegate, SensorEventListener {
 
     private TabHost tabhost;
     private TabHost detailTabhost;
@@ -60,12 +66,15 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
     private TextView descriptionLabel = null;
     private TextView selectOriginTextView = null;
     private TextView categoryTitleTextView = null;
+    private TextView loading = null;
     private ListView categoryListView = null;
     private ListView categoryLocationListView = null;
     private ListView locationListView = null;
     private ImageView logoImageView = null;
     private ImageView instructionImageView;
     private ImageView compass = null;
+
+    private SensorManager mSensorManager;
 
     private Context context;
     private MappedIn mappedIn;
@@ -76,12 +85,29 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
     private IAmHere iAmHere = null;
     private ArrayList<Polygon> hightLightPolygon = new ArrayList<>();
     private Polygon destinationPolygon = null;
+    private SetMapCallback setMapCallback = new SetMapCallback();
     private int currentLevelIndex = 0;
     private boolean navigationMode = false;
     private boolean accessibleDirections = false;
     private boolean walking = false;
+    private boolean autoRotation = false;
+    private float initialDegree = 0;
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+        }
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,12 +166,70 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
         compass = (ImageView) findViewById(R.id.compass_image);
         compass.bringToFront();
         compass.setImageDrawable(getResources().getDrawable(R.drawable.compass));
+        compass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autoRotation = !autoRotation;
+            }
+        });
         instructionTextView = (TextView)findViewById(R.id.instruction_text);
         instructionImageView = (ImageView)findViewById(R.id.instruction_image);
         walkingButton = (Button)findViewById(R.id.walk_btn);
 
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        //map
         mappedIn = new MappedIn(getApplication());
         mappedIn.getVenues(new getVenuesCallback());
+
+        loading = (TextView) findViewById(R.id.loading_textview);
+    }
+
+    /**
+     * Called when sensor values have changed.
+     * <p>See {@link SensorManager SensorManager}
+     * for details on possible sensor types.
+     * <p>See also {@link SensorEvent SensorEvent}.
+     * <p>
+     * <p><b>NOTE:</b> The application doesn't own the
+     * {@link SensorEvent event}
+     * object passed as a parameter and therefore cannot hold on to it.
+     * The object may be part of an internal pool and may be reused by
+     * the framework.
+     *
+     * @param sensorEvent the {@link SensorEvent SensorEvent}.
+     */
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        if (autoRotation && iAmHere != null) {
+            float degree = sensorEvent.values[0];
+            Coordinate[] frame = iAmHere.getFrame();
+            if (frame != null) {
+                mapView.orbit(iAmHere.frame,
+                        -initialDegree + (float) Math.toRadians(degree),
+                        (float)Math.PI/5, 0);
+            }
+            Logger.log("degree: " + (degree) + " initial degree: " + initialDegree);
+            if(iAmHere != null) {
+                iAmHere.setRotation(initialDegree - (float) Math.toRadians(degree), 0);
+            }
+            Logger.log("working");
+        }
+    }
+
+    /**
+     * Called when the accuracy of the registered sensor has changed.
+     * <p>
+     * <p>See the SENSOR_STATUS_* constants in
+     * {@link SensorManager SensorManager} for details.
+     *
+     * @param sensor
+     * @param accuracy The new accuracy of this sensor, one of
+     *                 {@code SensorManager.SENSOR_STATUS_*}
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     // Get the basic info for all Venues we have access to
@@ -160,19 +244,13 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
             mapView.setDelegate(delegate);
-            LocationGenerator amenity = new LocationGenerator() {
+            LocationGenerator customerLocation = new LocationGenerator() {
                 @Override
                 public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                    return new Amenity(data, _index, venue);
+                    return new CustomerLocation(data, _index, venue);
                 }
             };
-            LocationGenerator tenant = new LocationGenerator() {
-                @Override
-                public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                    return new Tenant(data, _index, venue);
-                }
-            };
-            final LocationGenerator[] locationGenerators = {tenant, amenity};
+            final LocationGenerator[] locationGenerators = {customerLocation};
             mappedIn.getVenue(activeVenue, accessibleDirections, locationGenerators, new GetVenueCallback());
         }
 
@@ -200,7 +278,13 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
                 }
             });
             currentLevelIndex = 0;
-            mapView.setMap(maps[currentLevelIndex]);
+            showLoadingLogo();
+            mapView.setMap(maps[currentLevelIndex], setMapCallback);
+            TextPaint textPaint = new TextPaint();
+            textPaint.setColor(Color.BLACK);
+            textPaint.setTextSize(30);
+            textPaint.setTypeface(Typeface.SANS_SERIF);
+            mapView.addAllStoreLabels(venue, textPaint);
             final Category[] categories = activeVenue.getCategories();
             CategoryListAdapter categoryListAdapter =
                     new CategoryListAdapter(context, R.layout.list_item_category, categories);
@@ -252,6 +336,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         clearLocationDetails();
+        clearHighlightedColours();
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
                 mapView.removeAllElements();
@@ -261,8 +346,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
                     Polygon[] polygons = activeVenue.getPolygons();
                     destinationPolygon = polygons[polygonIndex];
                     mapView.frame(destinationPolygon.getMap(), 0, (float)Math.PI/5, 1);
-                    mapView.setHeight(destinationPolygon, 0.2f, 1f);
-                    mapView.setColor(destinationPolygon, Color.GREEN, 1f);
+                    highlightPolygon(destinationPolygon, Color.GREEN);
                     prepareNavigation();
                 }
             }
@@ -326,7 +410,29 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
 
     @Override
     public void manipulatedCamera() {
+        autoRotation = false;
+    }
 
+
+    void showLoadingLogo(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loading != null){
+                    loading.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+    void hideLoadingLogo(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loading != null){
+                    loading.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 
     private void highlightPolygon(Polygon polygon, int color) {
@@ -334,11 +440,12 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
             hightLightPolygon.add(polygon);
         }
         mapView.setColor(polygon, color, 1);
+        mapView.setHeight(polygon, 0.3f, 1);
     }
 
     private void clearHighlightedColours() {
         for  (Polygon polygon: hightLightPolygon) {
-            mapView.resetColor(polygon);
+            mapView.resetPolygon(polygon);
         }
         hightLightPolygon.clear();
     }
@@ -404,6 +511,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
         Directions directions =
                 from.directionsTo(activeVenue, to, from.getLocations()[0], to.getLocations()[0]);
         if (directions != null) {
+            final Analytics.Wayfind wayfind = Analytics.getInstance().startedWayfind(to.getLocations()[0]);
             final Coordinate[] pathCoor = directions.getPath();
             unwalkedMapPath = new Path(pathCoor, 1f, 3f, Color.BLUE, 1);
             mapView.addElement(unwalkedMapPath);
@@ -464,7 +572,10 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
                             public void run() {
                                 markIndex[0]++;
                                 if (markIndex[0] >= pathCoor.length) {
-                                    markIndex[0] = 0;
+                                    if (wayfind != null){
+                                        wayfind.successful();
+                                    }
+                                    timer.cancel();
                                 } else {
                                     Coordinate coordinate = pathCoor[markIndex[0]];
                                     updateIAmHereLocation(coordinate, pathCoor);
@@ -624,6 +735,28 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate {
                 unwalkedMapPath = newUnwalkedMapPath;
             }
             Logger.log("update path end");
+        }
+    }
+    class SetMapCallback implements MappedinCallback<Map> {
+
+        /**
+         * Function that will be called when the Mappedin API call has finished successfully
+         *
+         * @param map Data returned for the Mappedin API call
+         */
+        @Override
+        public void onCompleted(Map map) {
+            hideLoadingLogo();
+        }
+
+        /**
+         * Function that will be called if the Mappedin API call failed
+         *
+         * @param exception The error that occurred
+         */
+        @Override
+        public void onError(Exception exception) {
+
         }
     }
 }

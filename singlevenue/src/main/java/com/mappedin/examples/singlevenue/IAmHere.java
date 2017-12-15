@@ -43,7 +43,7 @@ public class IAmHere {
             float x = position.getX();
             float y = position.getY();
             float z = position.getZ();
-            float offset = 10;
+            float offset = 20;
             frame = new Coordinate[4];
             frame[0] = new Coordinate(new Vector3(x + offset, y + offset, z), map);
             frame[1] = new Coordinate(new Vector3(x + offset, y - offset, z), map);
