@@ -19,9 +19,22 @@
             android:name=".LocationActivity"
             android:label="@string/title_activity_location"
             android:theme="@style/AppTheme.NoActionBar" />
-        <meta-data android:name="com.mappedin.sdk.Username" android:value="Your key here"/>
-        <meta-data android:name="com.mappedin.sdk.Password" android:value="Your secret here"/>
-        <meta-data android:name="com.mappedin.sdk.DataSchema" android:value="Your data schema here"/>
+
+        <meta-data
+            android:name="com.mappedin.sdk.Username"
+            android:value="Your key here"/>
+        <meta-data
+            android:name="com.mappedin.sdk.Password"
+            android:value="Your secret here"/>
+        <meta-data
+            android:name="com.mappedin.sdk.DataSchema"
+            android:value="Your data schema here"/>
+        <meta-data
+            android:name="com.mappedin.sdk.SearchKey"
+            android:value="Your search key here"/>
+        <meta-data
+            android:name="com.mappedin.sdk.SearchSecret"
+            android:value="Your search secret here"/>
     </application>
 
 </manifest>

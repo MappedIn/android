@@ -36,13 +36,13 @@
                     android:text="Loading..."
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/loading_textview"
+                    android:id="@+id/venue_loading_textview"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:gravity="center"
-                    android:background="@color/colorWithe"
+                    android:background="@color/colorWhite"
                     android:visibility="invisible"/>
 
                 <RelativeLayout
@@ -157,7 +157,7 @@
                 android:id="@+id/directory_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorWithe"
+                android:background="@color/colorWhite"
                 android:orientation="vertical">
                 <TabHost
                     android:id="@+id/detail_tab_host"
@@ -228,12 +228,48 @@
                                     android:layout_height="wrap_content" />
 
                             </LinearLayout>
+
                         </FrameLayout>
                     </LinearLayout>
                 </TabHost>
             </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorWhite">
 
-
+                <EditText
+                    android:id="@+id/search_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:hint="Search" />
+                <GridView
+                    android:id="@+id/search_grid_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnWidth="90dp"
+                    android:numColumns="auto_fit"
+                    android:verticalSpacing="10dp"
+                    android:horizontalSpacing="10dp"
+                    android:layout_below="@+id/search_edit_text"
+                    android:stretchMode="columnWidth"
+                    android:gravity="center"
+                    />
+                <ListView
+                    android:id="@+id/suggest_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_edit_text"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:visibility="invisible"
+                    android:background="@color/colorWhite"/>
+            </RelativeLayout>
         </FrameLayout>
     </RelativeLayout>
 </TabHost>

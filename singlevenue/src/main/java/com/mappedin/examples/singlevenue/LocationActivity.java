@@ -14,6 +14,7 @@ import com.koushikdutta.ion.Ion;
 import com.mappedin.sdk.Location;
 import com.mappedin.sdk.Map;
 import com.mappedin.sdk.MapView;
+import com.mappedin.sdk.MappedinCallback;
 import com.mappedin.sdk.Polygon;
 
 public class LocationActivity extends AppCompatActivity {
@@ -21,9 +22,11 @@ public class LocationActivity extends AppCompatActivity {
     private ImageView locationLogo;
     private Button takeMeThere;
     private TextView descriptionLabel;
+    private TextView loading = null;
     private MapView mapView;
     private Location location;
     private Polygon polygon;
+    private SetMapCallback setMapCallback = new SetMapCallback();
 
     @Override
     protected void onResume(){
@@ -42,6 +45,7 @@ public class LocationActivity extends AppCompatActivity {
         locationLogo = (ImageView)findViewById(R.id.location_logo);
         descriptionLabel = (TextView)findViewById(R.id.description_text_view);
         mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
+        loading = (TextView) findViewById(R.id.location_loading_textview);
         location = ((ApplicationSingleton) getApplication()).getActiveLocation();
         if (location != null){
             if (location.getClass() == Tenant.class) {
@@ -72,7 +76,8 @@ public class LocationActivity extends AppCompatActivity {
                 if (polygon != null){
                     Map map = polygon.getMap();
                     if (map != null){
-                        mapView.setMap(map);
+                        showLoadingLogo();
+                        mapView.setMap(map, setMapCallback);
                         mapView.setColor(polygon, Color.BLUE, 1);
                         mapView.setHeight(polygon, 0.1f, 1);
                         mapView.frame(polygon, 0, 0, 0);
@@ -97,5 +102,48 @@ public class LocationActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    void showLoadingLogo(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loading != null){
+                    loading.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+    void hideLoadingLogo(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (loading != null){
+                    loading.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+    class SetMapCallback implements MappedinCallback<Map> {
+
+        /**
+         * Function that will be called when the Mappedin API call has finished successfully
+         *
+         * @param map Data returned for the Mappedin API call
+         */
+        @Override
+        public void onCompleted(Map map) {
+            hideLoadingLogo();
+        }
+
+        /**
+         * Function that will be called if the Mappedin API call failed
+         *
+         * @param exception The error that occurred
+         */
+        @Override
+        public void onError(Exception exception) {
+
+        }
     }
 }

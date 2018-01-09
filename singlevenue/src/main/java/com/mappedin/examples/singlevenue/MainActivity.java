@@ -2,7 +2,6 @@ package com.mappedin.examples.singlevenue;
 
 import android.app.Activity;
 import android.app.ActivityGroup;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -12,10 +11,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextPaint;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -42,6 +47,7 @@ import com.mappedin.sdk.Overlay;
 import com.mappedin.sdk.Overlay2DLabel;
 import com.mappedin.sdk.Path;
 import com.mappedin.sdk.Polygon;
+import com.mappedin.sdk.SmartSearch;
 import com.mappedin.sdk.Vector3;
 import com.mappedin.sdk.Venue;
 
@@ -67,16 +73,19 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
     private TextView selectOriginTextView = null;
     private TextView categoryTitleTextView = null;
     private TextView loading = null;
+    private EditText search;
     private ListView categoryListView = null;
     private ListView categoryLocationListView = null;
     private ListView locationListView = null;
+    private ListView suggestListView = null;
+    private GridView searchGridView = null;
     private ImageView logoImageView = null;
     private ImageView instructionImageView;
     private ImageView compass = null;
 
     private SensorManager mSensorManager;
 
-    private Context context;
+    private Activity self;
     private MappedIn mappedIn;
     private Venue activeVenue = null;
     private Map[] maps;
@@ -86,6 +95,8 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
     private ArrayList<Polygon> hightLightPolygon = new ArrayList<>();
     private Polygon destinationPolygon = null;
     private SetMapCallback setMapCallback = new SetMapCallback();
+    private SmartSearch smartSearch;
+
     private int currentLevelIndex = 0;
     private boolean navigationMode = false;
     private boolean accessibleDirections = false;
@@ -112,7 +123,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        context = this;
+        self = this;
 
         tabhost = (TabHost)findViewById(android.R.id.tabhost);
         tabhost.setup(this.getLocalActivityManager());
@@ -121,6 +132,9 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         tabhost.addTab(
                 tabhost.newTabSpec("directory").setIndicator("Directory")
                         .setContent(R.id.directory_layout));
+        tabhost.addTab(
+                tabhost.newTabSpec("search").setIndicator("Search")
+                        .setContent(R.id.search_layout));
         tabhost.setCurrentTab(0);
 
         // Directory
@@ -182,7 +196,41 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         mappedIn = new MappedIn(getApplication());
         mappedIn.getVenues(new getVenuesCallback());
 
-        loading = (TextView) findViewById(R.id.loading_textview);
+        loading = (TextView) findViewById(R.id.venue_loading_textview);
+
+        //search
+        search = (EditText) findViewById(R.id.search_edit_text);
+        suggestListView = (ListView) findViewById(R.id.suggest_list_view);
+        searchGridView = (GridView) findViewById(R.id.search_grid_view);
+
+        search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    suggestListView.setVisibility(View.INVISIBLE);
+                    smartSearch.search(search.getText().toString(), 1000);
+                    return true;
+                }
+                return false;
+            }
+        });
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                final String input = charSequence.toString();
+                smartSearch.suggest(input, 500);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     /**
@@ -240,7 +288,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                 Logger.log("No venues available! Are you using the right credentials? Talk to your mappedin representative.");
                 return;
             }
-            activeVenue = venues.get(0); // Grab the first venue, which is likely all you have
+            activeVenue = venues.get(3); // Grab the first venue, which is likely all you have
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
             mapView.setDelegate(delegate);
@@ -265,6 +313,9 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         @Override
         public void onCompleted(final Venue venue) {
             activeVenue = venue;
+            smartSearch = mappedIn.initiateSearch(activeVenue);
+            SearchCallback callback = new SearchCallback(self, smartSearch, search, suggestListView, searchGridView);
+            smartSearch.setDelegate(callback);
             maps = venue.getMaps();
             if (maps.length == 0) {
                 Logger.log("No maps! Make sure your venue is set up correctly!");
@@ -287,7 +338,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             mapView.addAllStoreLabels(venue, textPaint);
             final Category[] categories = activeVenue.getCategories();
             CategoryListAdapter categoryListAdapter =
-                    new CategoryListAdapter(context, R.layout.list_item_category, categories);
+                    new CategoryListAdapter(self, R.layout.list_item_category, categories);
             categoryListView.setAdapter(categoryListAdapter);
             categoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -295,7 +346,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                     Category selectCategory = categories[i];
                     final Location[] locations = selectCategory.getLocations();
                     LocationListAdapter locationListAdapter =
-                            new LocationListAdapter(context, R.layout.list_item_location, locations);
+                            new LocationListAdapter(self, R.layout.list_item_location, locations);
                     categoryTitleTextView.setText(selectCategory.getName());
                     categoryLocationListView.setAdapter(locationListAdapter);
                     categoryLocationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -314,7 +365,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
 
             final Location[] locations = activeVenue.getLocations();
             LocationListAdapter locationListAdapter =
-                    new LocationListAdapter(context, R.layout.list_item_location, locations);
+                    new LocationListAdapter(self, R.layout.list_item_location, locations);
             locationListView.setAdapter(locationListAdapter);
             locationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -462,8 +513,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             if (tenant.logo != null) {
                 String url = tenant.logo.getImage(logoImageView.getWidth()).toString();
                 if (url != null) {
-                    Ion.with(logoImageView)
-                            .load(tenant.logo.getImage(logoImageView.getWidth()).toString());
+                    Ion.with(logoImageView).load(url);
                 }
             }
         } else if (location.getClass() == Amenity.class) {
@@ -472,8 +522,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             if (amenity.logo != null) {
                 String url = amenity.logo.getImage(logoImageView.getWidth()).toString();
                 if (url != null) {
-                    Ion.with(logoImageView)
-                            .load(amenity.logo.getImage(logoImageView.getWidth()).toString());
+                    Ion.with(logoImageView).load(url);
                 }
             }
         }
@@ -548,7 +597,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             instructionTextView.setVisibility(View.VISIBLE);
             instructionTextView.setText(directions.getInstructions().get(0).instruction);
             instructionImageView.setVisibility(View.VISIBLE);
-            Drawable drawable = Utils.setDirectionImage(context, directions.getInstructions().get(0));
+            Drawable drawable = Utils.setDirectionImage(self, directions.getInstructions().get(0));
             if (drawable != null) {
                 instructionImageView.setImageDrawable(drawable);
             }
@@ -599,7 +648,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         Map coordinateMap = coordinate.getMap();
         mapView.setMap(coordinateMap);
         final Instruction currInstruction = Utils.getNextInstruction(directionInstructions, coordinate);
-        final Drawable drawable = Utils.setDirectionImage(context, currInstruction);
+        final Drawable drawable = Utils.setDirectionImage(self, currInstruction);
         if (drawable != null) {
             runOnUiThread(new Runnable() {
                 public void run() {
@@ -737,6 +786,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             Logger.log("update path end");
         }
     }
+
     class SetMapCallback implements MappedinCallback<Map> {
 
         /**
