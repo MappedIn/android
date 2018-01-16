@@ -217,18 +217,17 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 final String input = charSequence.toString();
+                // try get suggest result in 500ms(0.5s)
                 smartSearch.suggest(input, 500);
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -257,11 +256,9 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                         -initialDegree + (float) Math.toRadians(degree),
                         (float)Math.PI/5, 0);
             }
-            Logger.log("degree: " + (degree) + " initial degree: " + initialDegree);
             if(iAmHere != null) {
                 iAmHere.setRotation(initialDegree - (float) Math.toRadians(degree), 0);
             }
-            Logger.log("working");
         }
     }
 
@@ -288,7 +285,8 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                 Logger.log("No venues available! Are you using the right credentials? Talk to your mappedin representative.");
                 return;
             }
-            activeVenue = venues.get(0); // Grab the first venue, which is likely all you have
+            // Grab the first venue, which is likely all you have
+            activeVenue = venues.get(0);
             setTitle(activeVenue.getName());
             mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
             mapView.setDelegate(delegate);

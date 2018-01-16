@@ -54,6 +54,7 @@ class SearchCallback implements SearchDelegate {
                     String selected = suggests[position];
                     searchBar.setText(selected);
                     suggestListView.setVisibility(View.INVISIBLE);
+                    // try get search result in 1000ms(1s)
                     smartSearch.search(selected, 1000);
                 }
             });
