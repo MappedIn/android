@@ -23,6 +23,18 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
+            <TextView
+                android:text="Loading..."
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/location_loading_textview"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:background="@color/colorWhite"
+                android:visibility="invisible"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300sp"
