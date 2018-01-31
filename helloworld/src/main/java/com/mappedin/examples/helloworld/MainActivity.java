@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                mappedIn.getVenue(venues.get(0), false, null, new MappedinCallback<Venue>() {
+                mappedIn.getVenue(venues.get(0), null, new MappedinCallback<Venue>() {
                     @Override
                     public void onCompleted(Venue venue) {
                         Logger.log(venue.getName() + " loaded!");

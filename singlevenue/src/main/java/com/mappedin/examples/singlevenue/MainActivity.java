@@ -297,7 +297,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                 }
             };
             final LocationGenerator[] locationGenerators = {customerLocation};
-            mappedIn.getVenue(activeVenue, accessibleDirections, locationGenerators, new GetVenueCallback());
+            mappedIn.getVenue(activeVenue, locationGenerators, new GetVenueCallback());
         }
 
         @Override
@@ -395,7 +395,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                     Polygon[] polygons = activeVenue.getPolygons();
                     destinationPolygon = polygons[polygonIndex];
                     mapView.frame(destinationPolygon.getMap(), 0, (float)Math.PI/5, 1);
-                    highlightPolygon(destinationPolygon, Color.GREEN);
+                    highlightPolygon(destinationPolygon, Color.GREEN, Color.WHITE);
                     prepareNavigation();
                 }
             }
@@ -414,7 +414,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                 if (polygon.getLocations().length == 0) {
                     return false;
                 }
-                highlightPolygon(polygon, 0x4ca1fc);
+                highlightPolygon(polygon, 0x4ca1fc, Color.WHITE);
                 startNavigation(polygon, destinationPolygon);
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -429,7 +429,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             return false;
         }
         destinationPolygon = polygon;
-        highlightPolygon(polygon, 0x4ca1fc);
+        highlightPolygon(polygon, 0x4ca1fc, Color.WHITE);
 
         showLocationDetails(destinationPolygon.getLocations()[0]);
         return true;
@@ -484,11 +484,11 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         });
     }
 
-    private void highlightPolygon(Polygon polygon, int color) {
+    private void highlightPolygon(Polygon polygon, int color, int labelColor) {
         if (!hightLightPolygon.contains(polygon)) {
             hightLightPolygon.add(polygon);
         }
-        mapView.setColor(polygon, color, 1);
+        mapView.setColor(polygon, color, labelColor, 1);
         mapView.setHeight(polygon, 0.3f, 1);
     }
 
@@ -556,7 +556,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         instructionTextView.setVisibility(View.VISIBLE);
         walkingButton.setVisibility(View.VISIBLE);
         Directions directions =
-                from.directionsTo(activeVenue, to, from.getLocations()[0], to.getLocations()[0]);
+                from.directionsTo(activeVenue, to, from.getLocations()[0], to.getLocations()[0], accessibleDirections);
         if (directions != null) {
             final Analytics.Wayfind wayfind = Analytics.getInstance().startedWayfind(to.getLocations()[0]);
             final Coordinate[] pathCoor = directions.getPath();
