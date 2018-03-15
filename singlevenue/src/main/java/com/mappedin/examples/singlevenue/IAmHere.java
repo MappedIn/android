@@ -37,20 +37,11 @@ public class IAmHere {
         arrow.setColor(arrowColor, over);
         cylinder.setColor(cylinderColor, over);
     }
-    public Coordinate[] getFrame(){
+    public Coordinate getFrame(){
         if (map != null) {
-            Vector3 position = arrow.getPosition();
-            float x = position.getX();
-            float y = position.getY();
-            float z = position.getZ();
-            float offset = 20;
-            frame = new Coordinate[4];
-            frame[0] = new Coordinate(new Vector3(x + offset, y + offset, z), map);
-            frame[1] = new Coordinate(new Vector3(x + offset, y - offset, z), map);
-            frame[2] = new Coordinate(new Vector3(x - offset, y + offset, z), map);
-            frame[3] = new Coordinate(new Vector3(x - offset, y - offset, z), map);
+            return new Coordinate(arrow.getPosition(), map);
         }
-        return frame;
+        return null;
     }
     public void addIAmHere(MapView mapView){
         mapView.addElement(arrow);

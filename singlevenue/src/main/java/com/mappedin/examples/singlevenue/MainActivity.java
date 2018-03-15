@@ -250,11 +250,12 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (autoRotation && iAmHere != null) {
             float degree = sensorEvent.values[0];
-            Coordinate[] frame = iAmHere.getFrame();
-            if (frame != null) {
-                mapView.orbit(iAmHere.frame,
+            Coordinate iAmHerePosition = iAmHere.getFrame();
+            float padding = 20;
+            if (iAmHerePosition != null) {
+                mapView.orbit(iAmHerePosition,
                         -initialDegree + (float) Math.toRadians(degree),
-                        (float)Math.PI/5, 0);
+                        (float)Math.PI/5, 0, padding);
             }
             if(iAmHere != null) {
                 iAmHere.setRotation(initialDegree - (float) Math.toRadians(degree), 0);
