@@ -102,7 +102,6 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
     private boolean accessibleDirections = false;
     private boolean walking = false;
     private boolean autoRotation = false;
-    private float initialDegree = 0;
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
     @Override
@@ -254,11 +253,11 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             float padding = 20;
             if (iAmHerePosition != null) {
                 mapView.orbit(iAmHerePosition,
-                        -initialDegree + (float) Math.toRadians(degree),
+                        (float) Math.toRadians(degree),
                         (float)Math.PI/5, 0, padding);
             }
             if(iAmHere != null) {
-                iAmHere.setRotation(initialDegree - (float) Math.toRadians(degree), 0);
+                iAmHere.setRotation((float) Math.toRadians(degree), 0);
             }
         }
     }
@@ -672,7 +671,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                     angel = (float)Math.PI + angel;
                 }
             }
-            iAmHere.setRotation(-angel, 0);
+            iAmHere.setRotation(angel, 0);
         }
         try {
             float distance = currInstruction.coordinate.metersFrom(coordinate);
