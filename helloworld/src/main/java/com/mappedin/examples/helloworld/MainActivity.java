@@ -58,7 +58,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(Exception e) {
                         Logger.log("Error loading venue: " + e);
-                        progressBar.setVisibility(View.GONE);
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
                     }
                 });
             }
