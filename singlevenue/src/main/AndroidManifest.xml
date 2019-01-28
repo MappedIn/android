@@ -12,6 +12,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -20,21 +21,11 @@
             android:label="@string/title_activity_location"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <meta-data
-            android:name="com.mappedin.sdk.Username"
-            android:value="Your key here"/>
-        <meta-data
-            android:name="com.mappedin.sdk.Password"
-            android:value="Your secret here"/>
-        <meta-data
-            android:name="com.mappedin.sdk.DataSchema"
-            android:value="Your data schema here"/>
-        <meta-data
-            android:name="com.mappedin.sdk.SearchKey"
-            android:value="Your search key here"/>
-        <meta-data
-            android:name="com.mappedin.sdk.SearchSecret"
-            android:value="Your search secret here"/>
+        <meta-data android:name="com.mappedin.sdk.Username" android:value="Your key here"/>
+        <meta-data android:name="com.mappedin.sdk.Password" android:value="Your secret here"/>
+        <meta-data android:name="com.mappedin.sdk.DataSchema" android:value="Your data schema her"/>
+        <meta-data android:name="com.mappedin.sdk.SearchKey" android:value="Your search key here"/>
+        <meta-data android:name="com.mappedin.sdk.SearchSecret" android:value="Your search secret here"/>
     </application>
 
 </manifest>
