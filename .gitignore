@@ -57,6 +57,9 @@ gen-external-apklibs
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+.idea/caches
+.idea/libraries
+.idea/codeStyles
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
