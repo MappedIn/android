@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true"
-    android:focusable="true"
-    >
+    android:focusable="true">
     <LinearLayout
         android:id="@+id/steps_bar"
         android:layout_width="match_parent"
@@ -17,7 +16,8 @@
             android:id="@+id/previous_step_btn"
             android:contentDescription="@string/previous_instruction"
             android:tag="previous"
-            android:background="@drawable/ic_arrow_left"
+            app:srcCompat="@drawable/ic_arrow_left"
+            android:background="@android:color/transparent"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_weight = "0"
@@ -59,7 +59,8 @@
             android:id="@+id/next_step_btn"
             android:contentDescription="@string/next_instruction"
             android:tag="next"
-            android:background="@drawable/ic_arrow_right"
+            app:srcCompat="@drawable/ic_arrow_right"
+            android:background="@android:color/transparent"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_weight = "0"
@@ -67,7 +68,8 @@
             />
         <ImageButton
             android:contentDescription="@string/more_settings"
-            android:background="@drawable/ic_more"
+            app:srcCompat="@drawable/ic_more"
+            android:background="@android:color/transparent"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight = "0"

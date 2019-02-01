@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         mappedIn = new MappedIn(getApplication());
         context = this;
         self = this;
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // Creating roboto typeface
         robotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         robotoItalic = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Italic.ttf");

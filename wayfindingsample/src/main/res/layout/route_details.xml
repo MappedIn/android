@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/route_title_layout"
     android:orientation='horizontal'
     android:layout_width="match_parent"
@@ -13,8 +13,7 @@
     android:background="@color/colorSelectedBg"
     tools:ignore="Overdraw"
     android:clickable="true"
-    android:focusable="true"
-    >
+    android:focusable="true">
     <RelativeLayout
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
@@ -64,7 +63,8 @@
     <ImageButton
         android:id="@+id/route_preview_close_btn"
         android:contentDescription="@string/close_route_details"
-        android:background="@drawable/ic_close"
+        app:srcCompat="@drawable/ic_close"
+        android:background="@android:color/transparent"
         android:onClick="closeRouteDetails"
         android:layout_width="20dp"
         android:layout_height="20dp"
