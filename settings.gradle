@@ -1,1 +1,1 @@
-include ':helloworld', ':singlevenue'
+include ':helloworld', ':singlevenue', ':wayfindingsample'
