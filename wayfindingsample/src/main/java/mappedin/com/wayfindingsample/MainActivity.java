@@ -203,10 +203,10 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         mappedIn = new MappedIn(getApplication());
         context = this;
         self = this;
+        setContentView(R.layout.activity_main);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         // Creating roboto typeface
         robotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         });
 
         // Map View
-        mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
+        mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         mapView.setDelegate(this);
 
         // Level Picker

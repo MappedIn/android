@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextPaint;
 import android.text.TextWatcher;
@@ -60,7 +61,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends ActivityGroup implements MapViewDelegate, SensorEventListener {
+public class MainActivity extends FragmentActivity implements MapViewDelegate, SensorEventListener {
 
     private TabHost tabhost;
     private TabHost detailTabhost;
@@ -122,11 +123,12 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mappedIn = new MappedIn(getApplication());
         setContentView(R.layout.activity_main);
         self = this;
 
         tabhost = (TabHost)findViewById(android.R.id.tabhost);
-        tabhost.setup(this.getLocalActivityManager());
+        tabhost.setup();
         tabhost.addTab(
                 tabhost.newTabSpec("venue").setIndicator("Venue").setContent(R.id.venue_layout));
         tabhost.addTab(
@@ -139,7 +141,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
 
         // Directory
         detailTabhost = (TabHost)findViewById(R.id.detail_tab_host);
-        detailTabhost.setup(this.getLocalActivityManager());
+        detailTabhost.setup();
         detailTabhost.addTab(tabhost.newTabSpec("categories").setIndicator("Categories").setContent(R.id.categories));
         detailTabhost.addTab(tabhost.newTabSpec("stores").setIndicator("Stores A-Z").setContent(R.id.locations));
         detailTabhost.setCurrentTab(0);
@@ -162,7 +164,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         // Stores
         locationListView = (ListView)findViewById(R.id.locations_list_view);
 
-        mappedIn = new MappedIn(getApplication());
+
 
         //location detail
         logoImageView = (ImageView) findViewById(R.id.logoImageView);
@@ -193,7 +195,6 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         //map
-        mappedIn = new MappedIn(getApplication());
         mappedIn.getVenues(new getVenuesCallback());
 
         loading = (TextView) findViewById(R.id.venue_loading_textview);
@@ -288,7 +289,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
             // Grab the first venue, which is likely all you have
             activeVenue = venues.get(0);
             setTitle(activeVenue.getName());
-            mapView = (MapView) getFragmentManager().findFragmentById(R.id.map_fragment);
+            mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
             mapView.setDelegate(delegate);
             LocationGenerator customerLocation = new LocationGenerator() {
                 @Override
