@@ -671,7 +671,7 @@ public class MainActivity extends ActivityGroup implements MapViewDelegate, Sens
                     angel = (float)Math.PI + angel;
                 }
             }
-            iAmHere.setRotation(-angel, 0);
+            iAmHere.setRotation(angel, 0);
         }
         try {
             float distance = currInstruction.coordinate.metersFrom(coordinate);
