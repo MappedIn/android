@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.log("Start");
+        mappedIn = new MappedIn(getApplication());
         setContentView(R.layout.activity_main);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
-        mappedIn = new MappedIn(getApplication());
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
             public void onCompleted(final List<Venue> venues) {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(Venue venue) {
                         Logger.log(venue.getName() + " loaded!");
-                        mapView = (MapView) getFragmentManager().findFragmentById(R.id.mapFragment);
+                        mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
                         Map[] maps = venue.getMaps();
                         if (maps.length == 0) {
                             Logger.log("No maps on venue! Talk to your mappedin representative to make sure your venue (" + venue.getName() + ") is set up correctly.");
