@@ -672,7 +672,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                     angel = (float)Math.PI + angel;
                 }
             }
-            iAmHere.setRotation(-angel, 0);
+            iAmHere.setRotation(angel, 0);
         }
         try {
             float distance = currInstruction.coordinate.metersFrom(coordinate);
