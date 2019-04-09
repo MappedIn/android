@@ -23,18 +23,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
-            <TextView
-                android:text="Loading..."
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/location_loading_textview"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:gravity="center"
-                android:background="@color/colorWhite"
-                android:visibility="invisible"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300sp"
@@ -50,12 +38,29 @@
                 android:layout_below="@+id/map_view_part"
                 android:layout_margin="3dp"
                 android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/location_loading_textview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/location_logo"
+                android:layout_marginBottom="50dp"
+                android:height="300sp"
+                android:background="@color/colorGrey"
+                android:gravity="center"
+                android:text="Loading..."
+                android:textColor="@color/colorWhite"
+                android:visibility="invisible" />
+
             <Button
                 android:id="@+id/take_me_there"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/description_text_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
                 android:text="Take Me There" />
+
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

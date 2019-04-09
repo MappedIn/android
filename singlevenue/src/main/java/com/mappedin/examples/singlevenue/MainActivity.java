@@ -655,24 +655,24 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 }
             });
         }
-        float angel = -mapView.getCameraHeading();
+        float angle = -mapView.getCameraHeading();
         if (currInstruction.coordinate != coordinate){
             float x1 = currInstruction.coordinate.getX();
             float y1 = currInstruction.coordinate.getY();
             float x2 = coordinate.getX();
             float y2 = coordinate.getY();
             if (x1 == x2){
-                angel = y1 > y2 ? 0 : (float)Math.PI;
+                angle = y1 > y2 ? 0 : (float)Math.PI;
             }
             else if (y1 == y2){
-                angel = x1 > x2 ? (float)Math.PI/2 : -(float)Math.PI/2;
+                angle = x1 > x2 ? (float)Math.PI/2 : -(float)Math.PI/2;
             } else {
-                angel = (float)Math.atan((x1 - x2) / (y1 - y2));
+                angle = (float)Math.atan((x1 - x2) / (y1 - y2));
                 if (y1 < y2 ){
-                    angel = (float)Math.PI + angel;
+                    angle = (float)Math.PI + angle;
                 }
             }
-            iAmHere.setRotation(angel, 0);
+            iAmHere.setRotation(angle, 0);
         }
         try {
             float distance = currInstruction.coordinate.metersFrom(coordinate);
@@ -700,7 +700,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         }
         mapView.frame(
                 new Focusable[]{iAmHere.arrow, iAmHere.cylinder, currInstruction.coordinate},
-                angel, (float) Math.PI / 5, 0.8f);
+                angle, (float) Math.PI / 5, 0.8f);
     }
 
     private void stopNavigation() {
