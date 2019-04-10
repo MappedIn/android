@@ -24,7 +24,6 @@ public class LocationActivity extends AppCompatActivity {
     private Button takeMeThere;
     private TextView descriptionLabel;
     private TextView loading = null;
-    private LinearLayout mapScreen = null;
     private MapView mapView;
     private Location location;
     private Polygon polygon;
@@ -46,7 +45,6 @@ public class LocationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location);
         locationLogo = (ImageView)findViewById(R.id.location_logo);
         descriptionLabel = (TextView)findViewById(R.id.description_text_view);
-        mapScreen = (LinearLayout) findViewById(R.id.map_view_part);
         mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         loading = (TextView) findViewById(R.id.location_loading_textview);
         location = ((ApplicationSingleton) getApplication()).getActiveLocation();
