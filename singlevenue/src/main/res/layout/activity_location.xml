@@ -8,8 +8,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/detail_view"
-        android:visibility="visible">
+        android:id="@+id/detail_view">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -24,9 +23,9 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
             <LinearLayout
+                android:id="@+id/map_view_part"
                 android:layout_width="match_parent"
                 android:layout_height="300sp"
-                android:id="@+id/map_view_part"
                 android:layout_below="@id/location_logo">
                 <include layout="@layout/mapview"/>
             </LinearLayout>
@@ -46,10 +45,10 @@
                 android:layout_below="@id/location_logo"
                 android:layout_marginBottom="50dp"
                 android:height="300sp"
-                android:background="@color/colorGrey"
+                android:background="@android:color/darker_gray"
                 android:gravity="center"
                 android:text="Loading..."
-                android:textColor="@color/colorWhite"
+                android:textColor="@android:color/black"
                 android:visibility="invisible" />
 
             <Button

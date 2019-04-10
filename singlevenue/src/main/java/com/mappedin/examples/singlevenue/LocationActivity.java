@@ -127,16 +127,6 @@ public class LocationActivity extends AppCompatActivity {
             }
         });
     }
-    void showMap(){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mapScreen != null){
-                    mapScreen.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    }
     class SetMapCallback implements MappedinCallback<Map> {
 
         /**
@@ -147,7 +137,6 @@ public class LocationActivity extends AppCompatActivity {
         @Override
         public void onCompleted(Map map) {
             hideLoadingLogo();
-            showMap();
         }
 
         /**
