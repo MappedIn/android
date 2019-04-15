@@ -70,7 +70,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private Button categoryBackButton = null;
     private TextView instructionTextView = null;
     private TextView titleLabel = null;
-    private TextView descriptionLabel = null;
     private TextView selectOriginTextView = null;
     private TextView categoryTitleTextView = null;
     private TextView loading = null;
@@ -80,7 +79,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private ListView locationListView = null;
     private ListView suggestListView = null;
     private GridView searchGridView = null;
-    private ImageView logoImageView = null;
     private ImageView instructionImageView;
     private ImageView compass = null;
 
@@ -167,10 +165,8 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
 
         //location detail
-        logoImageView = (ImageView) findViewById(R.id.logoImageView);
         titleLabel = (TextView) findViewById(R.id.titleLabel);
         selectOriginTextView = (TextView) findViewById(R.id.selectOriginTextView);
-        descriptionLabel = (TextView) findViewById(R.id.descriptionLabel);
         goButton = (Button) findViewById(R.id.goButton);
         goButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -508,33 +504,15 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         // https://github.com/koush/ion
         if (location.getClass() == Tenant.class) {
             Tenant tenant = (Tenant)location;
-            descriptionLabel.setText(tenant.description);
-            if (tenant.logo != null) {
-                String url = tenant.logo.getImage(logoImageView.getWidth()).toString();
-                if (url != null) {
-                    Ion.with(logoImageView).load(url);
-                }
-            }
         } else if (location.getClass() == Amenity.class) {
             Amenity amenity = (Amenity)location;
-            descriptionLabel.setText(amenity.description);
-            if (amenity.logo != null) {
-                String url = amenity.logo.getImage(logoImageView.getWidth()).toString();
-                if (url != null) {
-                    Ion.with(logoImageView).load(url);
-                }
-            }
         }
         titleLabel.setVisibility(View.VISIBLE);
-        descriptionLabel.setVisibility(View.VISIBLE);
-        logoImageView.setVisibility(View.VISIBLE);
         goButton.setVisibility(View.VISIBLE);
     }
 
     private void clearLocationDetails() {
         titleLabel.setVisibility(View.INVISIBLE);
-        descriptionLabel.setVisibility(View.INVISIBLE);
-        logoImageView.setVisibility(View.INVISIBLE);
         goButton.setVisibility(View.INVISIBLE);
     }
 
