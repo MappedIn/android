@@ -25,7 +25,7 @@ public class CategoryListAdapter  extends ArrayAdapter<Category> {
                 Context.LAYOUT_INFLATER_SERVICE);
         convertView = layoutInflater.inflate(resource, null);
         categoryNameTextView = (TextView) convertView.findViewById(R.id.category_name_text_view);
-        categoryNameTextView.setText(categories[position].getName()+" "+categories[position].getChildren().length);
+        categoryNameTextView.setText(categories[position].getName()+"   ("+categories[position].getLocations().length+")");
         return convertView;
     }
 }
