@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
 import com.koushikdutta.ion.Ion;
 import com.mappedin.jpct.Logger;
@@ -226,6 +228,17 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
             @Override
             public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId)
+            {
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+
             }
         });
     }
