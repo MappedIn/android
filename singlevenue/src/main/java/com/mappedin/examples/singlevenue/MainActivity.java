@@ -60,6 +60,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Collections;
 
 public class MainActivity extends FragmentActivity implements MapViewDelegate, SensorEventListener {
 
@@ -331,7 +332,17 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             textPaint.setTextSize(30);
             textPaint.setTypeface(Typeface.SANS_SERIF);
             mapView.addAllStoreLabels(venue, textPaint);
-            final Category[] categories = activeVenue.getCategories();
+
+            Category[] unsortedCategories = activeVenue.getCategories();
+            ArrayList<Category> catArrList = new ArrayList<>(Arrays.asList(unsortedCategories));
+            Collections.sort(catArrList, new Comparator<Category>() {
+                @Override
+                public int compare(Category category1, Category category2) {
+                    return category1.getName().toLowerCase().compareTo(category2.getName().toLowerCase());
+                }
+            });
+            final Category[] categories = catArrList.toArray(new Category[0]);
+
             CategoryListAdapter categoryListAdapter =
                     new CategoryListAdapter(self, R.layout.list_item_category, categories);
             categoryListView.setAdapter(categoryListAdapter);
@@ -339,7 +350,17 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Category selectCategory = categories[i];
-                    final Location[] locations = selectCategory.getLocations();
+
+                    Location[] unsortedLocations = selectCategory.getLocations();
+                    ArrayList<Location> locArrList = new ArrayList<>(Arrays.asList(unsortedLocations));
+                    Collections.sort(locArrList, new Comparator<Location>() {
+                        @Override
+                        public int compare(Location location1, Location location2) {
+                            return location1.getName().toLowerCase().compareTo(location2.getName().toLowerCase());
+                        }
+                    });
+                    final Location[] locations = locArrList.toArray(new Location[0]);
+
                     LocationListAdapter locationListAdapter =
                             new LocationListAdapter(self, R.layout.list_item_location, locations);
                     categoryTitleTextView.setText(selectCategory.getName());
@@ -358,7 +379,15 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 }
             });
 
-            final Location[] locations = activeVenue.getLocations();
+            Location[] unsortedLocations = activeVenue.getLocations();
+            ArrayList<Location> locArrList = new ArrayList<>(Arrays.asList(unsortedLocations));
+            Collections.sort(locArrList, new Comparator<Location>() {
+                @Override
+                public int compare(Location location1, Location location2) {
+                    return location1.getName().toLowerCase().compareTo(location2.getName().toLowerCase());
+                }
+            });
+            final Location[] locations = locArrList.toArray(new Location[0]);
             LocationListAdapter locationListAdapter =
                     new LocationListAdapter(self, R.layout.list_item_location, locations);
             locationListView.setAdapter(locationListAdapter);
