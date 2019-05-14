@@ -242,43 +242,43 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             }
         });
 
-        levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
-        levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
-        levelChangeDownButton.setEnabled(false);
-
-        if (maps != null && currentLevelIndex == maps.length-1) {
-            levelChangeUpButton.setEnabled(false);
-        }
-        levelChangeUpButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick (View v) {
-                if (currentLevelIndex < maps.length) {
-                    currentLevelIndex += 1;
-                    levelChangeDownButton.setEnabled(true);
-                    mapView.setMap(maps[currentLevelIndex], setMapCallback);
-                    if (currentLevelIndex == maps.length-1) {
-                        levelChangeUpButton.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        if (maps != null && currentLevelIndex == 0) {
-            levelChangeDownButton.setEnabled(false);
-        }
-        levelChangeDownButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick (View v) {
-                if (currentLevelIndex > 0) {
-                    currentLevelIndex -= 1;
-                    levelChangeUpButton.setEnabled(true);
-                    mapView.setMap(maps[currentLevelIndex], setMapCallback);
-                    if (currentLevelIndex == 0) {
-                        levelChangeDownButton.setEnabled(false);
-                    }
-                }
-            }
-        });
-
-        levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
+//        levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
+//        levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
+//        levelChangeDownButton.setEnabled(false);
+//
+//        if (maps != null && currentLevelIndex == maps.length-1) {
+//            levelChangeUpButton.setEnabled(false);
+//        }
+//        levelChangeUpButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick (View v) {
+//                if (currentLevelIndex < maps.length) {
+//                    currentLevelIndex += 1;
+//                    levelChangeDownButton.setEnabled(true);
+//                    mapView.setMap(maps[currentLevelIndex], setMapCallback);
+//                    if (currentLevelIndex == maps.length-1) {
+//                        levelChangeUpButton.setEnabled(false);
+//                    }
+//                }
+//            }
+//        });
+//
+//        if (maps != null && currentLevelIndex == 0) {
+//            levelChangeDownButton.setEnabled(false);
+//        }
+//        levelChangeDownButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick (View v) {
+//                if (currentLevelIndex > 0) {
+//                    currentLevelIndex -= 1;
+//                    levelChangeUpButton.setEnabled(true);
+//                    mapView.setMap(maps[currentLevelIndex], setMapCallback);
+//                    if (currentLevelIndex == 0) {
+//                        levelChangeDownButton.setEnabled(false);
+//                    }
+//                }
+//            }
+//        });
+//
+//        levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
     }
 
     /**
@@ -367,6 +367,49 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             if (maps.length == 0) {
                 Logger.log("No maps! Make sure your venue is set up correctly!");
                 return;
+            }
+
+            levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
+            levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
+
+            if (currentLevelIndex == maps.length-1) {
+                levelChangeUpButton.setEnabled(false);
+            }
+            levelChangeUpButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View v) {
+                    if (currentLevelIndex < maps.length) {
+                        currentLevelIndex += 1;
+                        levelChangeDownButton.setEnabled(true);
+                        mapView.setMap(maps[currentLevelIndex], setMapCallback);
+                        if (currentLevelIndex == maps.length-1) {
+                            levelChangeUpButton.setEnabled(false);
+                        }
+                    }
+                }
+            });
+
+            if (currentLevelIndex == 0) {
+                levelChangeDownButton.setEnabled(false);
+            }
+            levelChangeDownButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View v) {
+                    if (currentLevelIndex > 0) {
+                        currentLevelIndex -= 1;
+                        levelChangeUpButton.setEnabled(true);
+                        mapView.setMap(maps[currentLevelIndex], setMapCallback);
+                        if (currentLevelIndex == 0) {
+                            levelChangeDownButton.setEnabled(false);
+                        }
+                    }
+                }
+            });
+
+            levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
+
+            if (maps.length == 1) {
+                levelChangeUpButton.setVisibility(View.INVISIBLE);
+                levelChangeDownButton.setVisibility(View.INVISIBLE);
+                levelNavTextView.setVisibility(View.INVISIBLE);
             }
 
             Arrays.sort(maps, new Comparator<Map>() {
@@ -616,6 +659,10 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         walkingButton.setVisibility(View.VISIBLE);
         Directions directions =
                 from.directionsTo(activeVenue, to, from.getLocations()[0], to.getLocations()[0], accessibleDirections);
+
+        levelChangeDownButton.setEnabled(false);
+        levelChangeUpButton.setEnabled(false);
+
         if (directions != null) {
             final Analytics.Wayfind wayfind = Analytics.getInstance().startedWayfind(to.getLocations()[0]);
             final Coordinate[] pathCoor = directions.getPath();
@@ -787,6 +834,13 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         walkingButton.setVisibility(View.INVISIBLE);
         instructionImageView.setVisibility(View.INVISIBLE);
         instructionTextView.setVisibility(View.INVISIBLE);
+
+        if (currentLevelIndex < maps.length-1) {
+            levelChangeUpButton.setEnabled(true);
+        }
+        if (currentLevelIndex > 0) {
+            levelChangeDownButton.setEnabled(true);
+        }
     }
 
     private void locationDetail() {
