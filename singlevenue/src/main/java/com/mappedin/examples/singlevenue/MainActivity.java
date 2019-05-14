@@ -1,7 +1,6 @@
 package com.mappedin.examples.singlevenue;
 
 import android.app.Activity;
-import android.app.ActivityGroup;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -29,7 +28,6 @@ import android.widget.TextView;
 import android.view.inputmethod.InputMethodManager;
 import android.content.Context;
 
-import com.koushikdutta.ion.Ion;
 import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Analytics;
 import com.mappedin.sdk.Category;
@@ -71,11 +69,14 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private Button goButton = null;
     private Button walkingButton = null;
     private Button categoryBackButton = null;
+    private Button levelChangeUpButton = null;
+    private Button levelChangeDownButton = null;
     private TextView instructionTextView = null;
     private TextView titleLabel = null;
     private TextView selectOriginTextView = null;
     private TextView categoryTitleTextView = null;
     private TextView loading = null;
+    private TextView levelNavTextView = null;
     private EditText search;
     private ListView categoryListView = null;
     private ListView categoryLocationListView = null;
@@ -165,8 +166,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         // Stores
         locationListView = (ListView)findViewById(R.id.locations_list_view);
 
-
-
         //location detail
         titleLabel = (TextView) findViewById(R.id.titleLabel);
         selectOriginTextView = (TextView) findViewById(R.id.selectOriginTextView);
@@ -231,6 +230,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             }
         });
 
+        // auto hids the keyboard when navigating away form the search tab
         tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId)
@@ -241,6 +241,44 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
             }
         });
+
+        levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
+        levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
+        levelChangeDownButton.setEnabled(false);
+
+        if (maps != null && currentLevelIndex == maps.length-1) {
+            levelChangeUpButton.setEnabled(false);
+        }
+        levelChangeUpButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick (View v) {
+                if (currentLevelIndex < maps.length) {
+                    currentLevelIndex += 1;
+                    levelChangeDownButton.setEnabled(true);
+                    mapView.setMap(maps[currentLevelIndex], setMapCallback);
+                    if (currentLevelIndex == maps.length-1) {
+                        levelChangeUpButton.setEnabled(false);
+                    }
+                }
+            }
+        });
+
+        if (maps != null && currentLevelIndex == 0) {
+            levelChangeDownButton.setEnabled(false);
+        }
+        levelChangeDownButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick (View v) {
+                if (currentLevelIndex > 0) {
+                    currentLevelIndex -= 1;
+                    levelChangeUpButton.setEnabled(true);
+                    mapView.setMap(maps[currentLevelIndex], setMapCallback);
+                    if (currentLevelIndex == 0) {
+                        levelChangeDownButton.setEnabled(false);
+                    }
+                }
+            }
+        });
+
+        levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
     }
 
     /**
@@ -805,6 +843,8 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             Logger.log("update path end");
         }
     }
+
+
 
     class SetMapCallback implements MappedinCallback<Map> {
 
