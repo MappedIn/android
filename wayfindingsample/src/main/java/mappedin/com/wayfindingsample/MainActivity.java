@@ -2,6 +2,7 @@ package mappedin.com.wayfindingsample;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -43,6 +44,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Coordinate;
 import com.mappedin.sdk.Cylinder;
 import com.mappedin.sdk.Directions;
@@ -50,6 +52,7 @@ import com.mappedin.sdk.Element;
 import com.mappedin.sdk.Focusable;
 import com.mappedin.sdk.Instruction;
 import com.mappedin.sdk.Location;
+import com.mappedin.sdk.LocationGenerator;
 import com.mappedin.sdk.Map;
 import com.mappedin.sdk.MapView;
 import com.mappedin.sdk.MapViewDelegate;
@@ -67,6 +70,7 @@ import com.mappedin.sdk.SmartSearch;
 import com.mappedin.sdk.Vector2;
 import com.mappedin.sdk.Venue;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -175,12 +179,18 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     // Map View
     private MapView mapView;
     private float framePadding = 4;
+    private int globalVenueIndex = 0;
 
     // Map View Status
     Map currentMap;
     Integer currentMapPosition;
     SearchResultAdapter searchResultAdapter;
     Location activatedLocation;
+
+    private VenueListAdapter venueListAdapter;
+    private ListView venueList;
+
+    private Venue activeVenue = null;
 
     @Override
     protected void onResume(){
@@ -203,18 +213,88 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
+
         mappedIn = new MappedIn(getApplication());
+        setContentView(R.layout.activity_main);
+
+        int tempVenueIndex = 0;
+        if (extras != null) {
+            tempVenueIndex = extras.getInt("venue_selected");
+        }
+        final int venueIndex = tempVenueIndex;
+        globalVenueIndex = venueIndex;
         context = this;
         self = this;
-        setContentView(R.layout.activity_main);
+
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        LocationGenerator amenity = new LocationGenerator() {
+            @Override
+            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                return new Amenity(data, _index, venue);
+            }
+        };
+        LocationGenerator tenant = new LocationGenerator() {
+            @Override
+            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                return new Tenant(data, _index, venue);
+            }
+        };
+        LocationGenerator elevator = new LocationGenerator() {
+            @Override
+            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                return new Elevator(data, _index, venue);
+            }
+        };
+        LocationGenerator escalatorStairs = new LocationGenerator() {
+            @Override
+            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                return new EscalatorStairs(data, _index, venue);
+            }
+        };
+        //Only use for keys that have these location types in the binary builder
+        final LocationGenerator[] locationGenerators1 = {tenant, amenity, elevator, escalatorStairs};
+
+        LocationGenerator customerLocation = new LocationGenerator() {
+            @Override
+            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
+                return new CustomerLocation(data, _index, venue);
+            }
+        };
+        final LocationGenerator[] locationGenerators2 = {customerLocation};
+
+        mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
+            @Override
+            public void onCompleted(final List<Venue> venues) {
+                activeVenue = venues.get(venueIndex);
+                mappedIn.getVenue(activeVenue, locationGenerators2, new MappedinCallback<Venue>() {
+                    @Override
+                    public void onCompleted(Venue venue) {
+                        Logger.log("getVenue() was successful");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Logger.log("getVeune() not successful");
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception error) {
+                Logger.log("get venues for mappedin failed");
+            }
+        });
+
+
         // Creating roboto typeface
         robotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         robotoItalic = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Italic.ttf");
 
         // Loading page
         welcomeLayout = findViewById(R.id.welcome_layout);
-        welcomeTextView = findViewById(R.id.welcome_text_view);
+        welcomeTextView = (TextView)findViewById(R.id.welcome_text_view);
         welcomeTextView.setTypeface(robotoRegular);
         loadingTextView = findViewById(R.id.loading_text_view);
         loadingTextView.setTypeface(robotoItalic);
@@ -280,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                         float distanceToPolygon = Float.MAX_VALUE;
                         if (iAmAtVenue) {
                             for (Polygon polygon : activatedLocation.getPolygons()) {
-                                Directions directions = iAmHereCoord.directionsTo(maps[0].getVenue(), polygon, null, polygon.getLocations()[0], accessible);
+                                Directions directions = iAmHereCoord.directionsTo(maps[venueIndex].getVenue(), polygon, null, polygon.getLocations()[0], accessible);
                                 if (directions != null) {
                                     float distance = directions.getDistance();
                                     if (distance < distanceToPolygon) {
@@ -901,6 +981,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                 return;
             default:
         }
+        finish();
     }
 
     @Override
@@ -1117,7 +1198,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
        Directions directions;
        if (to != null && from != null) {
            directions =
-                   from.directionsTo(maps[0].getVenue(), to, null, to.getLocations()[0], accessible);
+                   from.directionsTo(maps[globalVenueIndex].getVenue(), to, null, to.getLocations()[0], accessible);
            if (directions != null) {
                final Coordinate[] pathCoor = directions.getPath();
                Path routePath = new Path(pathCoor, 1f, 1f, getResources().getColor(R.color.azure), over);

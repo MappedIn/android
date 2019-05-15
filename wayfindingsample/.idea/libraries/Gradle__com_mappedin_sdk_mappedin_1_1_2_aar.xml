@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mappedin.sdk:mappedin:1.1.2@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/de645d79d6ff8078a0261e4fe5fadfc8/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/de645d79d6ff8078a0261e4fe5fadfc8/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mappedin.sdk/mappedin/1.1.2/a084d9ca5c555dd3b03e20c67575838a49db94c8/mappedin-1.1.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
