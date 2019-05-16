@@ -106,6 +106,8 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private boolean walking = false;
     private boolean autoRotation = false;
     private float initialDegree = 0;
+    private String[] globalMapNames = null;
+
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
     @Override
@@ -337,6 +339,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             for (int i=0; i<num_map; i++){
                 maps_name[i]=venue.getMaps()[i].getName();
             }
+            globalMapNames = maps_name;
             levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
             levelNavTextView.setText(maps_name[currentLevelIndex]);
 
@@ -389,7 +392,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                     return a.getFloor() - b.getFloor();
                 }
             });
-            currentLevelIndex = 0;
+//            currentLevelIndex = 0;
             showLoadingLogo();
             mapView.setMap(maps[currentLevelIndex], setMapCallback);
             TextPaint textPaint = new TextPaint();
@@ -456,7 +459,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         public void onError(Exception e) {
             Logger.log("Error loading Venue: " + e);
         }
-
     }
 
     protected Location[] sortLocations (Location[] unsortedLocations) {
@@ -718,6 +720,16 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
         Map coordinateMap = coordinate.getMap();
         mapView.setMap(coordinateMap);
+        if (coordinateMap != maps[currentLevelIndex]) {
+            for (int i = 0; i < maps.length; i++) {
+                if (coordinateMap == maps[i]) {
+                    currentLevelIndex = i;
+                    break;
+                }
+            }
+
+            levelNavTextView.setText(globalMapNames[currentLevelIndex]);
+        }
         final Instruction currInstruction = Utils.getNextInstruction(directionInstructions, coordinate);
         final Drawable drawable = Utils.setDirectionImage(self, currInstruction);
         if (drawable != null) {
