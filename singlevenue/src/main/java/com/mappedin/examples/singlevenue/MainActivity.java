@@ -230,7 +230,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             }
         });
 
-        // auto hids the keyboard when navigating away form the search tab
+        // auto hides the keyboard when navigating away form the search tab
         tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId)
@@ -331,6 +331,15 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 return;
             }
 
+            // get floor level names
+            final int num_map = venue.getMaps().length;
+            final String[] maps_name = new String[num_map];
+            for (int i=0; i<num_map; i++){
+                maps_name[i]=venue.getMaps()[i].getName();
+            }
+            levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
+            levelNavTextView.setText(maps_name[currentLevelIndex]);
+
             levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
             levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
 
@@ -347,6 +356,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                             levelChangeUpButton.setEnabled(false);
                         }
                     }
+                    levelNavTextView.setText(maps_name[currentLevelIndex]);
                 }
             });
 
@@ -363,10 +373,9 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                             levelChangeDownButton.setEnabled(false);
                         }
                     }
+                    levelNavTextView.setText(maps_name[currentLevelIndex]);
                 }
             });
-
-            levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
 
             if (maps.length == 1) {
                 levelChangeUpButton.setVisibility(View.INVISIBLE);
@@ -408,14 +417,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                     Category selectCategory = categories[i];
 
                     Location[] unsortedLocations = selectCategory.getLocations();
-                    ArrayList<Location> locArrList = new ArrayList<>(Arrays.asList(unsortedLocations));
-                    Collections.sort(locArrList, new Comparator<Location>() {
-                        @Override
-                        public int compare(Location location1, Location location2) {
-                            return location1.getName().toLowerCase().compareTo(location2.getName().toLowerCase());
-                        }
-                    });
-                    final Location[] locations = locArrList.toArray(new Location[0]);
+                    final Location[] locations = sortLocations(unsortedLocations);
 
                     LocationListAdapter locationListAdapter =
                             new LocationListAdapter(self, R.layout.list_item_location, locations);
@@ -436,14 +438,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             });
 
             Location[] unsortedLocations = activeVenue.getLocations();
-            ArrayList<Location> locArrList = new ArrayList<>(Arrays.asList(unsortedLocations));
-            Collections.sort(locArrList, new Comparator<Location>() {
-                @Override
-                public int compare(Location location1, Location location2) {
-                    return location1.getName().toLowerCase().compareTo(location2.getName().toLowerCase());
-                }
-            });
-            final Location[] locations = locArrList.toArray(new Location[0]);
+            final Location[] locations = sortLocations(unsortedLocations);
             LocationListAdapter locationListAdapter =
                     new LocationListAdapter(self, R.layout.list_item_location, locations);
             locationListView.setAdapter(locationListAdapter);
@@ -462,6 +457,17 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             Logger.log("Error loading Venue: " + e);
         }
 
+    }
+
+    protected Location[] sortLocations (Location[] unsortedLocations) {
+        ArrayList<Location> locArrList = new ArrayList<>(Arrays.asList(unsortedLocations));
+        Collections.sort(locArrList, new Comparator<Location>() {
+            @Override
+            public int compare(Location location1, Location location2) {
+                return location1.getName().toLowerCase().compareTo(location2.getName().toLowerCase());
+            }
+        });
+        return locArrList.toArray(new Location[0]);
     }
 
     @Override
@@ -543,7 +549,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     public void manipulatedCamera() {
         autoRotation = false;
     }
-
 
     void showLoadingLogo(){
         runOnUiThread(new Runnable() {
