@@ -106,7 +106,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private boolean walking = false;
     private boolean autoRotation = false;
     private float initialDegree = 0;
-    private String[] globalMapNames = null;
 
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
@@ -333,15 +332,8 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 return;
             }
 
-            // get floor level names
-            final int num_map = venue.getMaps().length;
-            final String[] maps_name = new String[num_map];
-            for (int i=0; i<num_map; i++){
-                maps_name[i]=venue.getMaps()[i].getName();
-            }
-            globalMapNames = maps_name;
             levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
-            levelNavTextView.setText(maps_name[currentLevelIndex]);
+            levelNavTextView.setText(maps[currentLevelIndex].getName());
 
             levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
             levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
@@ -359,7 +351,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                             levelChangeUpButton.setEnabled(false);
                         }
                     }
-                    levelNavTextView.setText(maps_name[currentLevelIndex]);
+                    levelNavTextView.setText(maps[currentLevelIndex].getName());
                 }
             });
 
@@ -376,7 +368,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                             levelChangeDownButton.setEnabled(false);
                         }
                     }
-                    levelNavTextView.setText(maps_name[currentLevelIndex]);
+                    levelNavTextView.setText(maps[currentLevelIndex].getName());
                 }
             });
 
@@ -727,7 +719,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 }
             }
 
-            levelNavTextView.setText(globalMapNames[currentLevelIndex]);
+            levelNavTextView.setText(maps[currentLevelIndex].getName());
         }
         final Instruction currInstruction = Utils.getNextInstruction(directionInstructions, coordinate);
         final Drawable drawable = Utils.setDirectionImage(self, currInstruction);
