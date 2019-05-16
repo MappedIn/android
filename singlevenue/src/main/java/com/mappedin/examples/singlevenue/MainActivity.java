@@ -392,7 +392,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                     return a.getFloor() - b.getFloor();
                 }
             });
-//            currentLevelIndex = 0;
             showLoadingLogo();
             mapView.setMap(maps[currentLevelIndex], setMapCallback);
             TextPaint textPaint = new TextPaint();
