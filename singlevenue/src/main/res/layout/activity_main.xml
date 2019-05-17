@@ -110,12 +110,10 @@
 
                     <TextView
                         android:id="@+id/level_nav_textLabel"
-                        android:layout_width="61dp"
-                        android:layout_height="36dp"
-                        android:layout_alignBottom="@+id/level_down_btn"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="333dp"
-                        android:layout_marginBottom="48dp"
+                        android:layout_width="48dp"
+                        android:layout_height="38dp"
+                        android:layout_above="@+id/level_down_btn"
+                        android:layout_marginBottom="0dp"
                         android:gravity="center"
                         android:text="@string/map_level_nav"
                         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -144,10 +142,10 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentBottom="true"
-                        android:text="Start"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_marginBottom="14dp"
+                        android:text="Start"
                         android:visibility="invisible" />
 
                     <Button
@@ -155,10 +153,12 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/level_down_btn"
+                        android:layout_above="@+id/level_nav_textLabel"
+                        android:layout_alignParentStart="true"
                         android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginBottom="85dp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginBottom="0dp"
                         android:text="+"
                         android:visibility="visible" />
 
@@ -167,9 +167,7 @@
                         style="?android:attr/buttonStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="1dp"
                         android:layout_marginBottom="14dp"
                         android:text="-"
                         android:visibility="visible" />
