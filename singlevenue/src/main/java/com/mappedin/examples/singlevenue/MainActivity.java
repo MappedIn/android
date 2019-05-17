@@ -1,7 +1,6 @@
 package com.mappedin.examples.singlevenue;
 
 import android.app.Activity;
-import android.app.ActivityGroup;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -26,8 +25,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 
-import com.koushikdutta.ion.Ion;
 import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Analytics;
 import com.mappedin.sdk.Category;
@@ -60,6 +60,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Collections;
 
 public class MainActivity extends FragmentActivity implements MapViewDelegate, SensorEventListener {
 
@@ -68,11 +69,14 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private Button goButton = null;
     private Button walkingButton = null;
     private Button categoryBackButton = null;
+    private Button levelChangeUpButton = null;
+    private Button levelChangeDownButton = null;
     private TextView instructionTextView = null;
     private TextView titleLabel = null;
     private TextView selectOriginTextView = null;
     private TextView categoryTitleTextView = null;
     private TextView loading = null;
+    private TextView levelNavTextView = null;
     private EditText search;
     private ListView categoryListView = null;
     private ListView categoryLocationListView = null;
@@ -102,6 +106,7 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
     private boolean walking = false;
     private boolean autoRotation = false;
     private float initialDegree = 0;
+
     static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
     @Override
@@ -161,8 +166,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
         // Stores
         locationListView = (ListView)findViewById(R.id.locations_list_view);
-
-
 
         //location detail
         titleLabel = (TextView) findViewById(R.id.titleLabel);
@@ -225,6 +228,18 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
             @Override
             public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        // auto hides the keyboard when navigating away form the search tab
+        tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId)
+            {
+                InputMethodManager imm = (InputMethodManager) getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+
             }
         });
     }
@@ -317,13 +332,58 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 return;
             }
 
+            levelNavTextView = (TextView)findViewById(R.id.level_nav_textLabel);
+            levelNavTextView.setText(maps[currentLevelIndex].getName());
+
+            levelChangeUpButton = (Button) findViewById(R.id.level_up_btn);
+            levelChangeDownButton = (Button) findViewById(R.id.level_down_btn);
+
+            if (currentLevelIndex == maps.length-1) {
+                levelChangeUpButton.setEnabled(false);
+            }
+            levelChangeUpButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View v) {
+                    if (currentLevelIndex < maps.length) {
+                        currentLevelIndex += 1;
+                        levelChangeDownButton.setEnabled(true);
+                        mapView.setMap(maps[currentLevelIndex], setMapCallback);
+                        if (currentLevelIndex == maps.length-1) {
+                            levelChangeUpButton.setEnabled(false);
+                        }
+                    }
+                    levelNavTextView.setText(maps[currentLevelIndex].getName());
+                }
+            });
+
+            if (currentLevelIndex == 0) {
+                levelChangeDownButton.setEnabled(false);
+            }
+            levelChangeDownButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick (View v) {
+                    if (currentLevelIndex > 0) {
+                        currentLevelIndex -= 1;
+                        levelChangeUpButton.setEnabled(true);
+                        mapView.setMap(maps[currentLevelIndex], setMapCallback);
+                        if (currentLevelIndex == 0) {
+                            levelChangeDownButton.setEnabled(false);
+                        }
+                    }
+                    levelNavTextView.setText(maps[currentLevelIndex].getName());
+                }
+            });
+
+            if (maps.length == 1) {
+                levelChangeUpButton.setVisibility(View.INVISIBLE);
+                levelChangeDownButton.setVisibility(View.INVISIBLE);
+                levelNavTextView.setVisibility(View.INVISIBLE);
+            }
+
             Arrays.sort(maps, new Comparator<Map>() {
                 @Override
                 public int compare(Map a, Map b) {
                     return a.getFloor() - b.getFloor();
                 }
             });
-            currentLevelIndex = 0;
             showLoadingLogo();
             mapView.setMap(maps[currentLevelIndex], setMapCallback);
             TextPaint textPaint = new TextPaint();
@@ -331,7 +391,17 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             textPaint.setTextSize(30);
             textPaint.setTypeface(Typeface.SANS_SERIF);
             mapView.addAllStoreLabels(venue, textPaint);
-            final Category[] categories = activeVenue.getCategories();
+
+            Category[] unsortedCategories = activeVenue.getCategories();
+            ArrayList<Category> catArrList = new ArrayList<>(Arrays.asList(unsortedCategories));
+            Collections.sort(catArrList, new Comparator<Category>() {
+                @Override
+                public int compare(Category category1, Category category2) {
+                    return category1.getName().toLowerCase().compareTo(category2.getName().toLowerCase());
+                }
+            });
+            final Category[] categories = catArrList.toArray(new Category[0]);
+
             CategoryListAdapter categoryListAdapter =
                     new CategoryListAdapter(self, R.layout.list_item_category, categories);
             categoryListView.setAdapter(categoryListAdapter);
@@ -339,7 +409,10 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Category selectCategory = categories[i];
-                    final Location[] locations = selectCategory.getLocations();
+
+                    Location[] unsortedLocations = selectCategory.getLocations();
+                    final Location[] locations = sortLocations(unsortedLocations);
+
                     LocationListAdapter locationListAdapter =
                             new LocationListAdapter(self, R.layout.list_item_location, locations);
                     categoryTitleTextView.setText(selectCategory.getName());
@@ -358,7 +431,8 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
                 }
             });
 
-            final Location[] locations = activeVenue.getLocations();
+            Location[] unsortedLocations = activeVenue.getLocations();
+            final Location[] locations = sortLocations(unsortedLocations);
             LocationListAdapter locationListAdapter =
                     new LocationListAdapter(self, R.layout.list_item_location, locations);
             locationListView.setAdapter(locationListAdapter);
@@ -376,7 +450,17 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         public void onError(Exception e) {
             Logger.log("Error loading Venue: " + e);
         }
+    }
 
+    protected Location[] sortLocations (Location[] unsortedLocations) {
+        ArrayList<Location> locArrList = new ArrayList<>(Arrays.asList(unsortedLocations));
+        Collections.sort(locArrList, new Comparator<Location>() {
+            @Override
+            public int compare(Location location1, Location location2) {
+                return location1.getName().toLowerCase().compareTo(location2.getName().toLowerCase());
+            }
+        });
+        return locArrList.toArray(new Location[0]);
     }
 
     @Override
@@ -459,7 +543,6 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         autoRotation = false;
     }
 
-
     void showLoadingLogo(){
         runOnUiThread(new Runnable() {
             @Override
@@ -536,6 +619,10 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         walkingButton.setVisibility(View.VISIBLE);
         Directions directions =
                 from.directionsTo(activeVenue, to, from.getLocations()[0], to.getLocations()[0], accessibleDirections);
+
+        levelChangeDownButton.setEnabled(false);
+        levelChangeUpButton.setEnabled(false);
+
         if (directions != null) {
             final Analytics.Wayfind wayfind = Analytics.getInstance().startedWayfind(to.getLocations()[0]);
             final Coordinate[] pathCoor = directions.getPath();
@@ -624,6 +711,16 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
 
         Map coordinateMap = coordinate.getMap();
         mapView.setMap(coordinateMap);
+        if (coordinateMap != maps[currentLevelIndex]) {
+            for (int i = 0; i < maps.length; i++) {
+                if (coordinateMap == maps[i]) {
+                    currentLevelIndex = i;
+                    break;
+                }
+            }
+
+            levelNavTextView.setText(maps[currentLevelIndex].getName());
+        }
         final Instruction currInstruction = Utils.getNextInstruction(directionInstructions, coordinate);
         final Drawable drawable = Utils.setDirectionImage(self, currInstruction);
         if (drawable != null) {
@@ -707,6 +804,13 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
         walkingButton.setVisibility(View.INVISIBLE);
         instructionImageView.setVisibility(View.INVISIBLE);
         instructionTextView.setVisibility(View.INVISIBLE);
+
+        if (currentLevelIndex < maps.length-1) {
+            levelChangeUpButton.setEnabled(true);
+        }
+        if (currentLevelIndex > 0) {
+            levelChangeDownButton.setEnabled(true);
+        }
     }
 
     private void locationDetail() {
@@ -763,6 +867,8 @@ public class MainActivity extends FragmentActivity implements MapViewDelegate, S
             Logger.log("update path end");
         }
     }
+
+
 
     class SetMapCallback implements MappedinCallback<Map> {
 

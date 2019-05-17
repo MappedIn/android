@@ -5,4 +5,5 @@
     <string name="title_activity_category">CategoryActivity</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="title_activity_way_finding">WayFindingActivity</string>
+    <string name="map_level_nav">Level Navigation</string>
 </resources>

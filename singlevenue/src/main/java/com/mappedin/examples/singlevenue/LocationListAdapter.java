@@ -20,6 +20,7 @@ public class LocationListAdapter extends ArrayAdapter<Location> {
         this.locations = locations;
         this.resource = resource;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater layoutInflater = (LayoutInflater)getContext().getSystemService(
