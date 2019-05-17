@@ -8,6 +8,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,8 +26,10 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -187,9 +191,9 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     SearchResultAdapter searchResultAdapter;
     Location activatedLocation;
 
+    // Venue selector widget
     private VenueListAdapter venueListAdapter;
     private ListView venueList;
-
     private Venue activeVenue = null;
 
     @Override
@@ -213,15 +217,18 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
-
         mappedIn = new MappedIn(getApplication());
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
         int tempVenueIndex = 0;
-        if (extras != null) {
-            tempVenueIndex = extras.getInt("venue_selected");
-        }
         final int venueIndex = tempVenueIndex;
         globalVenueIndex = venueIndex;
         context = this;
@@ -267,16 +274,24 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
             public void onCompleted(final List<Venue> venues) {
-                activeVenue = venues.get(venueIndex);
-                mappedIn.getVenue(activeVenue, locationGenerators2, new MappedinCallback<Venue>() {
+                venueList = findViewById(R.id.venue_list_view);
+                venueListAdapter = new VenueListAdapter(context, venues);
+                venueList.setAdapter(venueListAdapter);
+                venueList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onCompleted(Venue venue) {
-                        Logger.log("getVenue() was successful");
-                    }
+                    public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+                        activeVenue = venues.get(position);
+                        mappedIn.getVenue(activeVenue, locationGenerators2, new MappedinCallback<Venue>() {
+                            @Override
+                            public void onCompleted(Venue venue) {
 
-                    @Override
-                    public void onError(Exception e) {
-                        Logger.log("getVeune() not successful");
+                            }
+
+                            @Override
+                            public void onError(Exception error) {
+                            }
+                        });
+                        drawer.closeDrawer(GravityCompat.START);
                     }
                 });
             }
@@ -286,7 +301,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                 Logger.log("get venues for mappedin failed");
             }
         });
-
 
         // Creating roboto typeface
         robotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
