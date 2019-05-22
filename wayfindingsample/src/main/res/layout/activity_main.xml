@@ -53,7 +53,7 @@
 
         <include
             android:id="@+id/welcome_layout"
-            layout="@layout/welcome_page"/>
+            layout="@layout/welcome_page" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/recenter_btn"

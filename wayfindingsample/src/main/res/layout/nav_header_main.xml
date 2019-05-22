@@ -15,18 +15,18 @@
         android:id="@+id/imageView"
         android:layout_width="250dp"
         android:layout_height="89sp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:src="@drawable/mappedin_white"
-        android:layout_gravity="center_horizontal" />
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:src="@drawable/mappedin_white" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="mappedin"
-        android:textSize="22dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
+        android:text="MappedIn"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_gravity="center_horizontal" />
+        android:textSize="22dp" />
 
 </LinearLayout>

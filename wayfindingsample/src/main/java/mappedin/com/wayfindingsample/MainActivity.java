@@ -183,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     // Map View
     private MapView mapView;
     private float framePadding = 4;
-    private int globalVenueIndex = 0;
 
     // Map View Status
     Map currentMap;
@@ -228,9 +227,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        int tempVenueIndex = 0;
-        final int venueIndex = tempVenueIndex;
-        globalVenueIndex = venueIndex;
         context = this;
         self = this;
 
@@ -271,6 +267,10 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         };
         final LocationGenerator[] locationGenerators2 = {customerLocation};
 
+        // Map View
+        mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+        mapView.setDelegate(this);
+
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
             public void onCompleted(final List<Venue> venues) {
@@ -284,6 +284,40 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                         mappedIn.getVenue(activeVenue, locationGenerators2, new MappedinCallback<Venue>() {
                             @Override
                             public void onCompleted(Venue venue) {
+                                // changes the current map to that of the selected venue
+                                iAmHereFloorIndex = 0;
+                                mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+                                maps = activeVenue.getMaps();
+
+                                Arrays.sort(maps, new Comparator<Map>() {
+                                    @Override
+                                    public int compare(Map a, Map b) {
+                                        return (a.getFloor() - b.getFloor());
+                                    }
+                                });
+
+                                SetMapCallback setMapCallback = new SetMapCallback();
+                                mapView.setMap(maps[iAmHereFloorIndex], setMapCallback);
+
+                                if (maps.length == 1) {
+                                    levelPickerListView.setVisibility(View.INVISIBLE);
+                                    levelPickerLayout.setVisibility(View.INVISIBLE);
+                                }
+                                else {
+                                    levelPickerListView.setVisibility(View.VISIBLE);
+                                    levelPickerLayout.setVisibility(View.VISIBLE);
+                                }
+
+                                if (maps.length > 1) {
+                                    for (int i = 0; i < maps.length; i ++) {
+                                        levelFloorMap.put(maps[i].getFloor(), i);
+                                    }
+                                    mapListAdapter =
+                                            new MapListAdapter(MainActivity.this, context, maps);
+                                    levelPickerListView.setAdapter(mapListAdapter);
+                                    setMap(maps.length-1);
+                                    iAmHereFloorIndex = maps.length-1;
+                                }
 
                             }
 
@@ -374,7 +408,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                         float distanceToPolygon = Float.MAX_VALUE;
                         if (iAmAtVenue) {
                             for (Polygon polygon : activatedLocation.getPolygons()) {
-                                Directions directions = iAmHereCoord.directionsTo(maps[venueIndex].getVenue(), polygon, null, polygon.getLocations()[0], accessible);
+                                Directions directions = iAmHereCoord.directionsTo(maps[0].getVenue(), polygon, null, polygon.getLocations()[0], accessible);
                                 if (directions != null) {
                                     float distance = directions.getDistance();
                                     if (distance < distanceToPolygon) {
@@ -393,10 +427,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
             }
         });
 
-        // Map View
-        mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-        mapView.setDelegate(this);
-
         // Level Picker
         levelPickerLayout = findViewById(R.id.level_picker_layout);
         levelPickerListView = findViewById(R.id.level_picker_list_view);
@@ -406,6 +436,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                 mapListAdapter.setSelectedIndex(position);
                 if (position != currentMapPosition) {
                     setMap(position);
+                    iAmHereFloorIndex = position;
                     mapView.frame(currentMap, currentMap.getHeading(), (float) Math.PI / 4, 0.5f);
                 }
             }
@@ -1212,7 +1243,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
        Directions directions;
        if (to != null && from != null) {
            directions =
-                   from.directionsTo(maps[globalVenueIndex].getVenue(), to, null, to.getLocations()[0], accessible);
+                   from.directionsTo(maps[0].getVenue(), to, null, to.getLocations()[0], accessible);
            if (directions != null) {
                final Coordinate[] pathCoor = directions.getPath();
                Path routePath = new Path(pathCoor, 1f, 1f, getResources().getColor(R.color.azure), over);
@@ -1474,6 +1505,29 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
             }
         } else {
             return getResources().getDrawable(R.drawable.ic_direction_u_turn);
+        }
+    }
+
+    class SetMapCallback implements MappedinCallback<Map> {
+
+        /**
+         * Function that will be called when the Mappedin API call has finished successfully
+         *
+         * @param map Data returned for the Mappedin API call
+         */
+        @Override
+        public void onCompleted(Map map) {
+
+        }
+
+        /**
+         * Function that will be called if the Mappedin API call failed
+         *
+         * @param exception The error that occurred
+         */
+        @Override
+        public void onError(Exception exception) {
+
         }
     }
 
