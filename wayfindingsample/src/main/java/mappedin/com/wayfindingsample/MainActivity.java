@@ -2,7 +2,6 @@ package mappedin.com.wayfindingsample;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -342,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
         // Loading page
         welcomeLayout = findViewById(R.id.welcome_layout);
-        welcomeTextView = (TextView)findViewById(R.id.welcome_text_view);
+        welcomeTextView = findViewById(R.id.welcome_text_view);
         welcomeTextView.setTypeface(robotoRegular);
         loadingTextView = findViewById(R.id.loading_text_view);
         loadingTextView.setTypeface(robotoItalic);
@@ -470,7 +469,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                                 }
                             }
                         }
-
                     }
                 }
         );
