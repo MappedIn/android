@@ -2,6 +2,7 @@ package mappedin.com.wayfindingsample;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentCallbacks2;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -10,9 +11,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.os.AsyncTask;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.ComponentCallbacks2;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -81,7 +84,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MapViewDelegate, SensorEventListener {
+public class MainActivity extends AppCompatActivity implements MapViewDelegate, SensorEventListener, ComponentCallbacks2 {
     Context context;
     Activity self;
 
@@ -194,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     private ListView venueList;
     private Venue activeVenue = null;
 
+    // Katto -- list of temp objects; gotta move later
+    private Comparator<Map> mapComparator;
+
     @Override
     protected void onResume(){
         super.onResume();
@@ -269,61 +275,73 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         // Map View
         mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         mapView.setDelegate(this);
+        mapComparator = new Comparator<Map>() {
+            @Override
+            public int compare(Map a, Map b) {
+                return (a.getFloor() - b.getFloor());
+            }
+        };
 
+        venueList = findViewById(R.id.venue_list_view);
+
+        final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
+            @Override
+            public void onCompleted(Venue venue) {
+                if (venue != null) {
+                    iAmHereFloorIndex = 0;
+                    addStoreLabel(venue);
+                    enableSearch(venue);
+
+                    mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+                    maps = venue.getMaps();
+
+                    Arrays.sort(maps, mapComparator);
+                    SetMapCallback setMapCallback = new SetMapCallback();
+                    mapView.setMap(maps[iAmHereFloorIndex], setMapCallback);
+
+                    if (maps.length == 1) {
+                        levelPickerListView.setVisibility(View.INVISIBLE);
+                        levelPickerLayout.setVisibility(View.INVISIBLE);
+                    } else {
+                        levelPickerListView.setVisibility(View.VISIBLE);
+                        levelPickerLayout.setVisibility(View.VISIBLE);
+
+                        for (int i = 0; i < maps.length; i++) {
+                            levelFloorMap.put(maps[i].getFloor(), i);
+                        }
+                    }
+
+                    mapListAdapter =
+                            new MapListAdapter(MainActivity.this, context, maps);
+                    mapListAdapter.setMaps(maps);
+                    levelPickerListView.setAdapter(mapListAdapter);
+                    setMap(maps.length - 1);
+                    iAmHereFloorIndex = maps.length - 1;
+
+                    if (activeVenue != null) {
+                        mapView.frame(currentMap, currentMap.getHeading(), (float) Math.PI / 4, 1f);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
+
+        venueListAdapter = new VenueListAdapter(context, null);
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
             public void onCompleted(final List<Venue> venues) {
-                venueList = findViewById(R.id.venue_list_view);
-                venueListAdapter = new VenueListAdapter(context, venues);
+
+                venueListAdapter.setVenues(venues);
                 venueList.setAdapter(venueListAdapter);
                 venueList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
                         activeVenue = venues.get(position);
-                        mappedIn.getVenue(activeVenue, locationGenerators2, new MappedinCallback<Venue>() {
-                            @Override
-                            public void onCompleted(Venue venue) {
-                                // changes the current map to that of the selected venue
-                                iAmHereFloorIndex = 0;
-                                mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-                                maps = activeVenue.getMaps();
-
-                                Arrays.sort(maps, new Comparator<Map>() {
-                                    @Override
-                                    public int compare(Map a, Map b) {
-                                        return (a.getFloor() - b.getFloor());
-                                    }
-                                });
-
-                                SetMapCallback setMapCallback = new SetMapCallback();
-                                mapView.setMap(maps[iAmHereFloorIndex], setMapCallback);
-
-                                if (maps.length == 1) {
-                                    levelPickerListView.setVisibility(View.INVISIBLE);
-                                    levelPickerLayout.setVisibility(View.INVISIBLE);
-                                }
-                                else {
-                                    levelPickerListView.setVisibility(View.VISIBLE);
-                                    levelPickerLayout.setVisibility(View.VISIBLE);
-                                }
-
-                                if (maps.length > 1) {
-                                    for (int i = 0; i < maps.length; i ++) {
-                                        levelFloorMap.put(maps[i].getFloor(), i);
-                                    }
-                                    mapListAdapter =
-                                            new MapListAdapter(MainActivity.this, context, maps);
-                                    levelPickerListView.setAdapter(mapListAdapter);
-                                    setMap(maps.length-1);
-                                    iAmHereFloorIndex = maps.length-1;
-                                }
-
-                            }
-
-                            @Override
-                            public void onError(Exception error) {
-                            }
-                        });
+                        mappedIn.getVenue(activeVenue, locationGenerators2, getVenueCallback);
                         drawer.closeDrawer(GravityCompat.START);
                     }
                 });
@@ -613,36 +631,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         showWelcomePage();
-
-        final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
-            @Override
-            public void onCompleted(Venue venue) {
-                if (venue != null){
-                    addStoreLabel(venue);
-                    enableSearch(venue);
-                    maps = venue.getMaps();
-                    Arrays.sort(maps, new Comparator<Map>() {
-                        @Override
-                        public int compare(Map left, Map right) {
-                            return right.getFloor() - left.getFloor();
-                        }
-                    });
-                    for (int i = 0; i < maps.length; i ++) {
-                        levelFloorMap.put(maps[i].getFloor(), i);
-                    }
-                    mapListAdapter =
-                            new MapListAdapter(MainActivity.this, context, maps);
-                    levelPickerListView.setAdapter(mapListAdapter);
-                    setMap(maps.length-1);
-                    iAmHereFloorIndex = maps.length-1;
-                }
-            }
-
-            @Override
-            public void onError(Exception exception) {
-
-            }
-        };
 
         MappedinCallback<List<Venue>> getVenuesCallback = new VenuesCallback(mappedIn, getVenueCallback);
 
@@ -1529,4 +1517,28 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         }
     }
 
+//    private class LoadingAsyncTask extends AsyncTask<Void, Void, Void> {
+//        @Override
+//        protected void onPreExecute(Void... voids) {
+//            //Setup precondition to execute some task
+//        }
+//
+//        @Override
+//        protected void doInBackground(Void... voids) {
+//            //Do some task
+//            publishProgress();
+//
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Void... voids) {
+//            //Update the progress of current task
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void... voids) {
+//            //Show the result obtained from doInBackground
+//        }
+//    }
 }

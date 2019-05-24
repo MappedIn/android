@@ -54,6 +54,15 @@ public class VenueListAdapter extends BaseAdapter {
         viewHolder.venueName.setText(venues.get(position).getName());
         return convertView;
     }
+
+    public void setLayoutInflater(Context context) {
+        layoutInflater = LayoutInflater.from(context);
+    }
+
+    public void setVenues(List<Venue> venues) {
+        this.venues = venues;
+    }
+
     public static class ViewHolder {
         TextView venueName;
     }
