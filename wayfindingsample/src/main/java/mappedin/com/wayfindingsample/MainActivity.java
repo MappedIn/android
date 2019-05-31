@@ -46,6 +46,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Coordinate;
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     private LinearLayout levelPickerLayout;
     private ListView levelPickerListView;
     private SparseIntArray levelFloorMap = new SparseIntArray(0);
-    private MapListAdapter mapListAdapter;
+    private MapListAdapter mapListAdapter = null;
 
     private FloatingActionButton recenterBtn;
 
@@ -189,10 +190,12 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     SearchResultAdapter searchResultAdapter;
     Location activatedLocation;
 
-    // Venue selector widget
+    // Venue selector drawer
     private VenueListAdapter venueListAdapter;
     private ListView venueList;
     private Venue activeVenue = null;
+    private ProgressBar venueProgressBar;
+    private Comparator<Map> mapComparator;
 
     @Override
     protected void onResume(){
@@ -269,61 +272,76 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         // Map View
         mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         mapView.setDelegate(this);
+        mapComparator = new Comparator<Map>() {
+            @Override
+            public int compare(Map a, Map b) {
+                return (a.getFloor() - b.getFloor());
+            }
+        };
 
+        venueList = findViewById(R.id.venue_list_view);
+
+        // venue loading progress bar
+        venueProgressBar = findViewById(R.id.venue_progressBar);
+        venueProgressBar.bringToFront();
+        venueProgressBar.setVisibility(View.INVISIBLE);
+
+        final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
+            @Override
+            public void onCompleted(Venue venue) {
+                if (venue != null) {
+                    addStoreLabel(venue);
+                    enableSearch(venue);
+
+                    maps = venue.getMaps();
+                    Arrays.sort(maps, mapComparator);
+
+                    iAmHereFloorIndex = 0;
+                    mapView.setMap(maps[iAmHereFloorIndex]);
+                    setMap(maps.length - 1);
+
+                    if (maps.length == 1) {
+                        levelPickerListView.setVisibility(View.INVISIBLE);
+                        levelPickerLayout.setVisibility(View.INVISIBLE);
+                    } else {
+                        levelPickerListView.setVisibility(View.VISIBLE);
+                        levelPickerLayout.setVisibility(View.VISIBLE);
+
+                        for (int i = 0; i < maps.length; i++) {
+                            levelFloorMap.put(maps[i].getFloor(), i);
+                        }
+                    }
+
+                    mapListAdapter =
+                            new MapListAdapter(MainActivity.this, context, maps);
+                    levelPickerListView.setAdapter(mapListAdapter);
+
+                    if (activeVenue != null) {
+                        mapView.frame(currentMap, currentMap.getHeading(), (float) Math.PI / 4, 1f);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
+
+        venueListAdapter = new VenueListAdapter(context, null);
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
             public void onCompleted(final List<Venue> venues) {
-                venueList = findViewById(R.id.venue_list_view);
-                venueListAdapter = new VenueListAdapter(context, venues);
+                venueListAdapter.setVenues(venues);
                 venueList.setAdapter(venueListAdapter);
                 venueList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+                        venueProgressBar.setVisibility(View.VISIBLE);
+                        mapView.getView().setVisibility(View.INVISIBLE);
+                        levelPickerLayout.setVisibility(View.INVISIBLE);
                         activeVenue = venues.get(position);
-                        mappedIn.getVenue(activeVenue, locationGenerators2, new MappedinCallback<Venue>() {
-                            @Override
-                            public void onCompleted(Venue venue) {
-                                // changes the current map to that of the selected venue
-                                iAmHereFloorIndex = 0;
-                                mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-                                maps = activeVenue.getMaps();
-
-                                Arrays.sort(maps, new Comparator<Map>() {
-                                    @Override
-                                    public int compare(Map a, Map b) {
-                                        return (a.getFloor() - b.getFloor());
-                                    }
-                                });
-
-                                SetMapCallback setMapCallback = new SetMapCallback();
-                                mapView.setMap(maps[iAmHereFloorIndex], setMapCallback);
-
-                                if (maps.length == 1) {
-                                    levelPickerListView.setVisibility(View.INVISIBLE);
-                                    levelPickerLayout.setVisibility(View.INVISIBLE);
-                                }
-                                else {
-                                    levelPickerListView.setVisibility(View.VISIBLE);
-                                    levelPickerLayout.setVisibility(View.VISIBLE);
-                                }
-
-                                if (maps.length > 1) {
-                                    for (int i = 0; i < maps.length; i ++) {
-                                        levelFloorMap.put(maps[i].getFloor(), i);
-                                    }
-                                    mapListAdapter =
-                                            new MapListAdapter(MainActivity.this, context, maps);
-                                    levelPickerListView.setAdapter(mapListAdapter);
-                                    setMap(maps.length-1);
-                                    iAmHereFloorIndex = maps.length-1;
-                                }
-
-                            }
-
-                            @Override
-                            public void onError(Exception error) {
-                            }
-                        });
+                        mappedIn.getVenue(activeVenue, locationGenerators2, getVenueCallback);
                         drawer.closeDrawer(GravityCompat.START);
                     }
                 });
@@ -614,36 +632,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
         showWelcomePage();
 
-        final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
-            @Override
-            public void onCompleted(Venue venue) {
-                if (venue != null){
-                    addStoreLabel(venue);
-                    enableSearch(venue);
-                    maps = venue.getMaps();
-                    Arrays.sort(maps, new Comparator<Map>() {
-                        @Override
-                        public int compare(Map left, Map right) {
-                            return right.getFloor() - left.getFloor();
-                        }
-                    });
-                    for (int i = 0; i < maps.length; i ++) {
-                        levelFloorMap.put(maps[i].getFloor(), i);
-                    }
-                    mapListAdapter =
-                            new MapListAdapter(MainActivity.this, context, maps);
-                    levelPickerListView.setAdapter(mapListAdapter);
-                    setMap(maps.length-1);
-                    iAmHereFloorIndex = maps.length-1;
-                }
-            }
-
-            @Override
-            public void onError(Exception exception) {
-
-            }
-        };
-
         MappedinCallback<List<Venue>> getVenuesCallback = new VenuesCallback(mappedIn, getVenueCallback);
 
         mappedIn.getVenues(getVenuesCallback);
@@ -712,7 +700,8 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         locationNameTextView.setText("");
     }
     private void setMap(final int newMapPosition){
-        if (currentMapPosition == null || newMapPosition != currentMapPosition) {
+        if (currentMapPosition == null || newMapPosition != currentMapPosition ||
+                maps[currentMapPosition] != currentMap) {
             MappedinCallback<Map> setMapCallback = new MappedinCallback<Map>() {
                 @Override
                 public void onCompleted(Map map) {
@@ -728,6 +717,11 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                                     }
                                     mapListAdapter.setSelectedIndex(currentMapPosition);
+                                    venueProgressBar.setVisibility(View.INVISIBLE);
+                                    mapView.getView().setVisibility(View.VISIBLE);
+                                    if (maps.length > 1) {
+                                        levelPickerLayout.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             });
                 }
@@ -1505,28 +1499,4 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
             return getResources().getDrawable(R.drawable.ic_direction_u_turn);
         }
     }
-
-    class SetMapCallback implements MappedinCallback<Map> {
-
-        /**
-         * Function that will be called when the Mappedin API call has finished successfully
-         *
-         * @param map Data returned for the Mappedin API call
-         */
-        @Override
-        public void onCompleted(Map map) {
-
-        }
-
-        /**
-         * Function that will be called if the Mappedin API call failed
-         *
-         * @param exception The error that occurred
-         */
-        @Override
-        public void onError(Exception exception) {
-
-        }
-    }
-
 }

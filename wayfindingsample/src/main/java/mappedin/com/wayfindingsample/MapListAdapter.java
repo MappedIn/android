@@ -56,7 +56,6 @@ class MapListAdapter extends ArrayAdapter<Map> {
             mViewHolder.levelTextView.setTextColor(getContext().getResources().getColor(R.color.colorUnselectedText));
             mViewHolder.levelTextView.setBackground(getContext().getResources().getDrawable(R.drawable.level_picker_item));
         }
-
         Map map = maps[position];
         String name = map.getShortName();
         mViewHolder.levelTextView.setText(name);

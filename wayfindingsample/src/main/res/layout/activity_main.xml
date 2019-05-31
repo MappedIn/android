@@ -21,6 +21,14 @@
             android:layout_height="match_parent"
             class="com.mappedin.sdk.MapView"/>
 
+        <ProgressBar
+            android:id="@+id/venue_progressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/progress"/>
+
         <include
             android:id="@+id/search_bar_layout"
             layout="@layout/search_bar"
