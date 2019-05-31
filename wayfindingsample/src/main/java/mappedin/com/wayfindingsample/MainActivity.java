@@ -2,7 +2,6 @@ package mappedin.com.wayfindingsample;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ComponentCallbacks2;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -11,11 +10,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.os.AsyncTask;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.content.ComponentCallbacks2;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -49,6 +46,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Coordinate;
@@ -84,7 +82,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MapViewDelegate, SensorEventListener, ComponentCallbacks2 {
+public class MainActivity extends AppCompatActivity implements MapViewDelegate, SensorEventListener {
     Context context;
     Activity self;
 
@@ -131,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     private LinearLayout levelPickerLayout;
     private ListView levelPickerListView;
     private SparseIntArray levelFloorMap = new SparseIntArray(0);
-    private MapListAdapter mapListAdapter;
+    private MapListAdapter mapListAdapter = null;
 
     private FloatingActionButton recenterBtn;
 
@@ -192,12 +190,11 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     SearchResultAdapter searchResultAdapter;
     Location activatedLocation;
 
-    // Venue selector widget
+    // Venue selector drawer
     private VenueListAdapter venueListAdapter;
     private ListView venueList;
     private Venue activeVenue = null;
-
-    // Katto -- list of temp objects; gotta move later
+    private ProgressBar venueProgressBar;
     private Comparator<Map> mapComparator;
 
     @Override
@@ -284,20 +281,24 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
         venueList = findViewById(R.id.venue_list_view);
 
+        // venue loading progress bar
+        venueProgressBar = findViewById(R.id.venue_progressBar);
+        venueProgressBar.bringToFront();
+        venueProgressBar.setVisibility(View.INVISIBLE);
+
         final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
             @Override
             public void onCompleted(Venue venue) {
                 if (venue != null) {
-                    iAmHereFloorIndex = 0;
                     addStoreLabel(venue);
                     enableSearch(venue);
 
-                    mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
                     maps = venue.getMaps();
-
                     Arrays.sort(maps, mapComparator);
-                    SetMapCallback setMapCallback = new SetMapCallback();
-                    mapView.setMap(maps[iAmHereFloorIndex], setMapCallback);
+
+                    iAmHereFloorIndex = 0;
+                    mapView.setMap(maps[iAmHereFloorIndex]);
+                    setMap(maps.length - 1);
 
                     if (maps.length == 1) {
                         levelPickerListView.setVisibility(View.INVISIBLE);
@@ -313,10 +314,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
                     mapListAdapter =
                             new MapListAdapter(MainActivity.this, context, maps);
-                    mapListAdapter.setMaps(maps);
                     levelPickerListView.setAdapter(mapListAdapter);
-                    setMap(maps.length - 1);
-                    iAmHereFloorIndex = maps.length - 1;
 
                     if (activeVenue != null) {
                         mapView.frame(currentMap, currentMap.getHeading(), (float) Math.PI / 4, 1f);
@@ -334,12 +332,14 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
             @Override
             public void onCompleted(final List<Venue> venues) {
-
                 venueListAdapter.setVenues(venues);
                 venueList.setAdapter(venueListAdapter);
                 venueList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+                        venueProgressBar.setVisibility(View.VISIBLE);
+                        mapView.getView().setVisibility(View.INVISIBLE);
+                        levelPickerLayout.setVisibility(View.INVISIBLE);
                         activeVenue = venues.get(position);
                         mappedIn.getVenue(activeVenue, locationGenerators2, getVenueCallback);
                         drawer.closeDrawer(GravityCompat.START);
@@ -700,7 +700,8 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         locationNameTextView.setText("");
     }
     private void setMap(final int newMapPosition){
-        if (currentMapPosition == null || newMapPosition != currentMapPosition) {
+        if (currentMapPosition == null || newMapPosition != currentMapPosition ||
+                maps[currentMapPosition] != currentMap) {
             MappedinCallback<Map> setMapCallback = new MappedinCallback<Map>() {
                 @Override
                 public void onCompleted(Map map) {
@@ -716,6 +717,11 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                                     }
                                     mapListAdapter.setSelectedIndex(currentMapPosition);
+                                    venueProgressBar.setVisibility(View.INVISIBLE);
+                                    mapView.getView().setVisibility(View.VISIBLE);
+                                    if (maps.length > 1) {
+                                        levelPickerLayout.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             });
                 }
@@ -1493,52 +1499,4 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
             return getResources().getDrawable(R.drawable.ic_direction_u_turn);
         }
     }
-
-    class SetMapCallback implements MappedinCallback<Map> {
-
-        /**
-         * Function that will be called when the Mappedin API call has finished successfully
-         *
-         * @param map Data returned for the Mappedin API call
-         */
-        @Override
-        public void onCompleted(Map map) {
-
-        }
-
-        /**
-         * Function that will be called if the Mappedin API call failed
-         *
-         * @param exception The error that occurred
-         */
-        @Override
-        public void onError(Exception exception) {
-
-        }
-    }
-
-//    private class LoadingAsyncTask extends AsyncTask<Void, Void, Void> {
-//        @Override
-//        protected void onPreExecute(Void... voids) {
-//            //Setup precondition to execute some task
-//        }
-//
-//        @Override
-//        protected void doInBackground(Void... voids) {
-//            //Do some task
-//            publishProgress();
-//
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Void... voids) {
-//            //Update the progress of current task
-//
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void... voids) {
-//            //Show the result obtained from doInBackground
-//        }
-//    }
 }

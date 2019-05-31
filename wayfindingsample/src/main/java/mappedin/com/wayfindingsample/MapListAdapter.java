@@ -33,11 +33,6 @@ class MapListAdapter extends ArrayAdapter<Map> {
         notifyDataSetChanged();
     }
 
-    public void setMaps (Map[] maps) {
-        this.maps = maps;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
