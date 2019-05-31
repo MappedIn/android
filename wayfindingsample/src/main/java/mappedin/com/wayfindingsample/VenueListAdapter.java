@@ -46,17 +46,13 @@ public class VenueListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.list_item_venue, null);
             viewHolder = new ViewHolder();
-            viewHolder.venueName = (TextView) convertView.findViewById(R.id.venue_name_textview);
+            viewHolder.venueName = convertView.findViewById(R.id.venue_name_textview);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.venueName.setText(venues.get(position).getName());
         return convertView;
-    }
-
-    public void setLayoutInflater(Context context) {
-        layoutInflater = LayoutInflater.from(context);
     }
 
     public void setVenues(List<Venue> venues) {
