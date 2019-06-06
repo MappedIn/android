@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mappedin Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+</head>
+<body>
+<div class="container">
+    <div class="map-container">
+        <!-- Start of Mappedin Web Snippet -->
+        <div id="mappedin-map"></div>
+        <main data-key="externalId" data-lang="en" data-venue="<Your Venue Slug Here>" id="mappedin-app"></main>
+        <script type="text/javascript">
+                    window.mappedin = {
+                        miKey: {
+                            id: '<Your API Key Here>',
+                            key: '<Your API Secret Here>'
+                        }
+                    };
+                </script>
+        <script src="https://d1p5cqqchvbqmy.cloudfront.net/web/release/mappedin-web.js" type="text/javascript"></script>
+        <!-- End of Mappedin Web Snippet -->
+    </div>
+</div>
+</body>
+</html>
