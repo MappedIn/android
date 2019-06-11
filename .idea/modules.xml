@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/helloworld/helloworld.iml" filepath="$PROJECT_DIR$/helloworld/helloworld.iml" />
       <module fileurl="file://$PROJECT_DIR$/singlevenue/singlevenue.iml" filepath="$PROJECT_DIR$/singlevenue/singlevenue.iml" />
       <module fileurl="file://$PROJECT_DIR$/wayfindingsample/wayfindingsample.iml" filepath="$PROJECT_DIR$/wayfindingsample/wayfindingsample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webviewsample/webviewsample.iml" filepath="$PROJECT_DIR$/webviewsample/webviewsample.iml" />
     </modules>
   </component>
 </project>
