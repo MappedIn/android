@@ -63,3 +63,7 @@ The `MapView` object is a `Fragment` that controls displaying the actual Map. Ju
 with the map you want to display (available from `venue.getMaps()`).
 
 That's the basics. Directions, Markers and other features will be covered in a future tutorial, but you can see them in action right now in the Single Venue project.
+
+# Mappedin Web Android Sample
+
+There is also a sample app in this repo that demonstrates creating a Web View in an Android application, and displaying Mappedin Web. The example can be found in the webviewsample folder. This example does not use the Android SDK. You will require a Mappedin Web API Key for the sample to function. Please talk to your representative if you need one. 
