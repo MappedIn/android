@@ -23,15 +23,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Setup a WebView to be used for Mappedin Web
-        WebView webView = (WebView) findViewById(R.id.webview);
+        WebView webView = findViewById(R.id.webview);
 
 
         // Enable Javascript
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-        // Loads the local html file containing the Mappedin Web Snippet
-        // Another option is to load an external url
+        /*
+        Loads a local html file (located in the assets folder) containing the Mappedin Web Snippet.
+        Mappedin api keys, search keys, and the venue's slug will need to be added to this file.
+
+        Another option is to host the site separately, and load an external URL here instead.
+        */
         webView.loadUrl("file:///android_asset/index.html");
 
         /*
