@@ -234,41 +234,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-        LocationGenerator amenity = new LocationGenerator() {
-            @Override
-            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                return new Amenity(data, _index, venue);
-            }
-        };
-        LocationGenerator tenant = new LocationGenerator() {
-            @Override
-            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                return new Tenant(data, _index, venue);
-            }
-        };
-        LocationGenerator elevator = new LocationGenerator() {
-            @Override
-            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                return new Elevator(data, _index, venue);
-            }
-        };
-        LocationGenerator escalatorStairs = new LocationGenerator() {
-            @Override
-            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                return new EscalatorStairs(data, _index, venue);
-            }
-        };
-        //Only use for keys that have these location types in the binary builder
-        final LocationGenerator[] locationGenerators1 = {tenant, amenity, elevator, escalatorStairs};
-
-        LocationGenerator customerLocation = new LocationGenerator() {
-            @Override
-            public Location locationGenerator(ByteBuffer data, int _index, Venue venue){
-                return new CustomerLocation(data, _index, venue);
-            }
-        };
-        final LocationGenerator[] locationGenerators2 = {customerLocation};
-
         // Map View
         mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
         mapView.setDelegate(this);
@@ -327,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
             }
         };
+        final MappedinCallback<List<Venue>> getVenuesCallback = new VenuesCallback(mappedIn, getVenueCallback);
 
         venueListAdapter = new VenueListAdapter(context, null);
         mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
@@ -341,7 +307,8 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                         mapView.getView().setVisibility(View.INVISIBLE);
                         levelPickerLayout.setVisibility(View.INVISIBLE);
                         activeVenue = venues.get(position);
-                        mappedIn.getVenue(activeVenue, locationGenerators2, getVenueCallback);
+                        ((VenuesCallback) getVenuesCallback).setActiveVenue(activeVenue);
+                        mappedIn.getVenues(getVenuesCallback);
                         drawer.closeDrawer(GravityCompat.START);
                     }
                 });
@@ -631,8 +598,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         showWelcomePage();
-
-        MappedinCallback<List<Venue>> getVenuesCallback = new VenuesCallback(mappedIn, getVenueCallback);
 
         mappedIn.getVenues(getVenuesCallback);
     }
