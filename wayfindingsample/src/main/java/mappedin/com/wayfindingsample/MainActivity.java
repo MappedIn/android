@@ -7,6 +7,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,8 +25,10 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -42,7 +46,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ProgressBar;
 
+import com.mappedin.jpct.Logger;
 import com.mappedin.sdk.Coordinate;
 import com.mappedin.sdk.Cylinder;
 import com.mappedin.sdk.Directions;
@@ -50,6 +56,7 @@ import com.mappedin.sdk.Element;
 import com.mappedin.sdk.Focusable;
 import com.mappedin.sdk.Instruction;
 import com.mappedin.sdk.Location;
+import com.mappedin.sdk.LocationGenerator;
 import com.mappedin.sdk.Map;
 import com.mappedin.sdk.MapView;
 import com.mappedin.sdk.MapViewDelegate;
@@ -67,6 +74,7 @@ import com.mappedin.sdk.SmartSearch;
 import com.mappedin.sdk.Vector2;
 import com.mappedin.sdk.Venue;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -121,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     private LinearLayout levelPickerLayout;
     private ListView levelPickerListView;
     private SparseIntArray levelFloorMap = new SparseIntArray(0);
-    private MapListAdapter mapListAdapter;
+    private MapListAdapter mapListAdapter = null;
 
     private FloatingActionButton recenterBtn;
 
@@ -182,6 +190,13 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     SearchResultAdapter searchResultAdapter;
     Location activatedLocation;
 
+    // Venue selector drawer
+    private VenueListAdapter venueListAdapter;
+    private ListView venueList;
+    private Venue activeVenue = null;
+    private ProgressBar venueProgressBar;
+    private Comparator<Map> mapComparator;
+
     @Override
     protected void onResume(){
         super.onResume();
@@ -204,10 +219,107 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mappedIn = new MappedIn(getApplication());
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
         context = this;
         self = this;
-        setContentView(R.layout.activity_main);
+
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        // Map View
+        mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
+        mapView.setDelegate(this);
+        mapComparator = new Comparator<Map>() {
+            @Override
+            public int compare(Map a, Map b) {
+                return (a.getFloor() - b.getFloor());
+            }
+        };
+
+        venueList = findViewById(R.id.venue_list_view);
+
+        // venue loading progress bar
+        venueProgressBar = findViewById(R.id.venue_progressBar);
+        venueProgressBar.bringToFront();
+        venueProgressBar.setVisibility(View.INVISIBLE);
+
+        final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
+            @Override
+            public void onCompleted(Venue venue) {
+                if (venue != null) {
+                    addStoreLabel(venue);
+                    enableSearch(venue);
+
+                    maps = venue.getMaps();
+                    Arrays.sort(maps, mapComparator);
+
+                    iAmHereFloorIndex = 0;
+                    mapView.setMap(maps[iAmHereFloorIndex]);
+                    setMap(maps.length - 1);
+
+                    if (maps.length == 1) {
+                        levelPickerListView.setVisibility(View.INVISIBLE);
+                        levelPickerLayout.setVisibility(View.INVISIBLE);
+                    } else {
+                        levelPickerListView.setVisibility(View.VISIBLE);
+                        levelPickerLayout.setVisibility(View.VISIBLE);
+
+                        for (int i = 0; i < maps.length; i++) {
+                            levelFloorMap.put(maps[i].getFloor(), i);
+                        }
+                    }
+
+                    mapListAdapter =
+                            new MapListAdapter(MainActivity.this, context, maps);
+                    levelPickerListView.setAdapter(mapListAdapter);
+
+                    if (activeVenue != null) {
+                        mapView.frame(currentMap, currentMap.getHeading(), (float) Math.PI / 4, 1f);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        };
+        final MappedinCallback<List<Venue>> getVenuesCallback = new VenuesCallback(mappedIn, getVenueCallback);
+
+        venueListAdapter = new VenueListAdapter(context, null);
+        mappedIn.getVenues(new MappedinCallback<List<Venue>>() {
+            @Override
+            public void onCompleted(final List<Venue> venues) {
+                venueListAdapter.setVenues(venues);
+                venueList.setAdapter(venueListAdapter);
+                venueList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+                        venueProgressBar.setVisibility(View.VISIBLE);
+                        mapView.getView().setVisibility(View.INVISIBLE);
+                        levelPickerLayout.setVisibility(View.INVISIBLE);
+                        activeVenue = venues.get(position);
+                        ((VenuesCallback) getVenuesCallback).setActiveVenue(activeVenue);
+                        mappedIn.getVenues(getVenuesCallback);
+                        drawer.closeDrawer(GravityCompat.START);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception error) {
+                Logger.log("get venues for mappedin failed");
+            }
+        });
+
         // Creating roboto typeface
         robotoRegular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         robotoItalic = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Italic.ttf");
@@ -299,10 +411,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
             }
         });
 
-        // Map View
-        mapView = (MapView) getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-        mapView.setDelegate(this);
-
         // Level Picker
         levelPickerLayout = findViewById(R.id.level_picker_layout);
         levelPickerListView = findViewById(R.id.level_picker_list_view);
@@ -312,6 +420,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                 mapListAdapter.setSelectedIndex(position);
                 if (position != currentMapPosition) {
                     setMap(position);
+                    iAmHereFloorIndex = position;
                     mapView.frame(currentMap, currentMap.getHeading(), (float) Math.PI / 4, 0.5f);
                 }
             }
@@ -345,7 +454,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                                 }
                             }
                         }
-
                     }
                 }
         );
@@ -491,38 +599,6 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
 
         showWelcomePage();
 
-        final MappedinCallback<Venue> getVenueCallback = new MappedinCallback<Venue>() {
-            @Override
-            public void onCompleted(Venue venue) {
-                if (venue != null){
-                    addStoreLabel(venue);
-                    enableSearch(venue);
-                    maps = venue.getMaps();
-                    Arrays.sort(maps, new Comparator<Map>() {
-                        @Override
-                        public int compare(Map left, Map right) {
-                            return right.getFloor() - left.getFloor();
-                        }
-                    });
-                    for (int i = 0; i < maps.length; i ++) {
-                        levelFloorMap.put(maps[i].getFloor(), i);
-                    }
-                    mapListAdapter =
-                            new MapListAdapter(MainActivity.this, context, maps);
-                    levelPickerListView.setAdapter(mapListAdapter);
-                    setMap(maps.length-1);
-                    iAmHereFloorIndex = maps.length-1;
-                }
-            }
-
-            @Override
-            public void onError(Exception exception) {
-
-            }
-        };
-
-        MappedinCallback<List<Venue>> getVenuesCallback = new VenuesCallback(mappedIn, getVenueCallback);
-
         mappedIn.getVenues(getVenuesCallback);
     }
 
@@ -589,7 +665,8 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
         locationNameTextView.setText("");
     }
     private void setMap(final int newMapPosition){
-        if (currentMapPosition == null || newMapPosition != currentMapPosition) {
+        if (currentMapPosition == null || newMapPosition != currentMapPosition ||
+                maps[currentMapPosition] != currentMap) {
             MappedinCallback<Map> setMapCallback = new MappedinCallback<Map>() {
                 @Override
                 public void onCompleted(Map map) {
@@ -605,6 +682,11 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                                     }
                                     mapListAdapter.setSelectedIndex(currentMapPosition);
+                                    venueProgressBar.setVisibility(View.INVISIBLE);
+                                    mapView.getView().setVisibility(View.VISIBLE);
+                                    if (maps.length > 1) {
+                                        levelPickerLayout.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             });
                 }
@@ -901,6 +983,7 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
                 return;
             default:
         }
+        finish();
     }
 
     @Override
@@ -1381,5 +1464,4 @@ public class MainActivity extends AppCompatActivity implements MapViewDelegate, 
             return getResources().getDrawable(R.drawable.ic_direction_u_turn);
         }
     }
-
 }

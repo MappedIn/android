@@ -30,4 +30,6 @@
     <string name="arrive_at_destination_dialog_message">You have reached your destination.</string>
     <string name="confirm_dialog">Yes</string>
     <string name="dismiss_dialog">No</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
