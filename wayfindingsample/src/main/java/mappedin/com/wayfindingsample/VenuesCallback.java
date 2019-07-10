@@ -18,9 +18,14 @@ public class VenuesCallback implements MappedinCallback<List<Venue>> {
     private MappedIn mappedIn;
     private MappedinCallback<Venue> getVenueCallback;
 
-    private LocationGenerator[] customerLocations;
-    // Only use for keys that have these location types in the binary builder
-    private LocationGenerator[] locationGenerators1;
+    // Use this location generator if your data schema has only one location type with externalIds
+    // Most keys use this data schema
+    private LocationGenerator[] genericLocations;
+
+    // Use this generator if your data schema uses multiple complex Location types
+    // (tenant, amenity, elevator, escalatorStairs) you might have a different data schema
+    // A mappedin representative can help you set up any missing types
+    private LocationGenerator[] detailedLocations;
 
     private Venue venue;
 
@@ -57,8 +62,8 @@ public class VenuesCallback implements MappedinCallback<List<Venue>> {
             }
         };
 
-        this.customerLocations = new LocationGenerator[]{customerLocation};
-        this.locationGenerators1 = new LocationGenerator[]{tenant, amenity, elevator, escalatorStairs};
+        this.genericLocations = new LocationGenerator[]{customerLocation};
+        this.detailedLocations = new LocationGenerator[]{tenant, amenity, elevator, escalatorStairs};
 
         this.mappedIn = mappedIn;
         this.getVenueCallback = getVenueCallback;
@@ -77,11 +82,11 @@ public class VenuesCallback implements MappedinCallback<List<Venue>> {
     public void onCompleted(List<Venue> venues) {
         if (venues != null && venues.size() > 0 && this.venue != null) {
             // loads a set active venue
-            mappedIn.getVenue(this.venue, this.customerLocations, this.getVenueCallback);
+            mappedIn.getVenue(this.venue, this.genericLocations, this.getVenueCallback);
         }
         else if (venues != null && venues.size() > 0) {
             // loads the first venue your keys have access to
-            mappedIn.getVenue(venues.get(0), this.customerLocations, this.getVenueCallback);
+            mappedIn.getVenue(venues.get(0), this.genericLocations, this.getVenueCallback);
         }
     }
 
