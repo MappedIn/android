@@ -32,7 +32,11 @@ public class MainActivity extends AppCompatActivity {
 
         /*
         Loads a local html file (located in the assets folder) containing the Mappedin Web Snippet.
-        Mappedin api keys, search keys, and the venue's slug will need to be added to this file.
+
+        To get you started we've provided a Mappedin key and secret that has access to some demo venues.
+        When you're ready to start using your own venues you will need to contact a Mappedin representative
+        to get your own unique key and secret. Add your Mappedin api keys, search keys, and the venue's
+        slug to this file.
 
         Another option is to host the site separately, and load an external URL here instead.
         */

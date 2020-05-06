@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Development-android.iml" filepath="$PROJECT_DIR$/Development-android.iml" group="android" />
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/helloworld/android-helloworld.iml" filepath="$PROJECT_DIR$/helloworld/android-helloworld.iml" group="android/helloworld" />
+      <module fileurl="file://$PROJECT_DIR$/singlevenue/android-singlevenue.iml" filepath="$PROJECT_DIR$/singlevenue/android-singlevenue.iml" group="android/singlevenue" />
+      <module fileurl="file://$PROJECT_DIR$/wayfindingsample/android-wayfindingsample.iml" filepath="$PROJECT_DIR$/wayfindingsample/android-wayfindingsample.iml" group="android/wayfindingsample" />
+      <module fileurl="file://$PROJECT_DIR$/webviewsample/android-webviewsample.iml" filepath="$PROJECT_DIR$/webviewsample/android-webviewsample.iml" group="android/webviewsample" />
       <module fileurl="file://$PROJECT_DIR$/helloworld/helloworld.iml" filepath="$PROJECT_DIR$/helloworld/helloworld.iml" />
       <module fileurl="file://$PROJECT_DIR$/singlevenue/singlevenue.iml" filepath="$PROJECT_DIR$/singlevenue/singlevenue.iml" />
       <module fileurl="file://$PROJECT_DIR$/wayfindingsample/wayfindingsample.iml" filepath="$PROJECT_DIR$/wayfindingsample/wayfindingsample.iml" />
