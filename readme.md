@@ -1,6 +1,12 @@
-# MappedIn Android SDK Example
+# MappedIn Android SDK Examples
 
-This repo contains a simple example to get you started with the MappedIn Android SDK. Before you can do anything, make sure you have an API key from MappedIn. Talk to your representative to get one. The JavaDocs are available [here](http://mappedin.github.io/android/).
+This repo contains a few examples to get you started with the MappedIn Android SDK:
+
+ - helloworld: A basic app that shows minimal code to get a map loaded into a mapView with the SDK
+ - singlevenue: An app that loads a single venue with a tabbed experience including search, and directory. It's a little rough around the edges. While it demos some interesting features and provides useful sample code, we'd recommend you not use it as a base for your own application.
+ - wayfindingSample: The most fully featured sample app. It is integrated with google's location service. You can use a location spoofing app to see a "blue dot" experience and wayfind from the blue dot. We've provided keys with access to a fake mall called "Mappedin Demo Mall." If you want to try out the blue dot, start by spoofing your location to (43.52023014, -80.5352595)
+
+ The JavaDocs are available [here](http://mappedin.github.io/android/).
 
 ## Setup
 Just include compile 'com.mappedin.sdk:mappedin:0.1.+' from Maven Central. You can also clone this repo and use the pre-configured samples. We recommend you ensure your credentials are working with the Hello World sample before anything else.
@@ -34,9 +40,12 @@ This is the class to start with. It controls all communication with the MappedIn
 <meta-data android:name="com.mappedin.sdk.Username" android:value="<your key here>"/>
 <meta-data android:name="com.mappedin.sdk.Password" android:value="<your secret here>"/>
 ```
-If you don't know your key and secret, please talk to your mappedin representative to get access.
 
-Once you have your manifest set up correctly, you can begin writing actual code. Instantiate a `com.mappedin.sdk.MappedIn` object, passing in your application's Context. Then make a call to 
+To get you started we've provided a key and secret in this repo that has access to some demo venues.
+
+When you're ready to start using your own venues with the SDK you will need to contact a Mappedin representative to get your own unique key and secret.
+
+Once you have your manifest set up correctly, you can begin writing actual code. Instantiate a `com.mappedin.sdk.MappedIn` object, passing in your application's Context. Then make a call to
 
 ```mappedin.getVenues( MappedInCallBack<Venue[]> )```
 
@@ -48,7 +57,7 @@ To get all of the data for a specific venue, call
 
 with the venue you are interested in. Similar to `getVenues`, this function will interface with the MappedIn API for you, sending the fully populated `Venue` to your callback's onComplete when it's done.
 
-You can specify when you want accessible directions or not with the `accessible` parameter. 
+You can specify when you want accessible directions or not with the `accessible` parameter.
 
 A `Venue` typically has a few different `Location` types, each with different properties. Passing in a custom `LocationGenerator` will let you build custom `Location` objects that have access to those properties. Your mappedin in representative will help you if this applies to you. If not, just pass in `null`.
 
@@ -66,4 +75,4 @@ That's the basics. Directions, Markers and other features will be covered in a f
 
 # Mappedin Web Android Sample
 
-There is also a sample app in this repo that demonstrates creating a Web View in an Android application, and displaying Mappedin Web. The example can be found in the webviewsample folder. This example does not use the Android SDK. You will require a Mappedin Web API Key for the sample to function. Please talk to your representative if you need one. 
+There is also a sample app in this repo that demonstrates creating a Web View in an Android application, and displaying Mappedin Web. The example can be found in the webviewsample folder. This example does not use the Android SDK. You will require a Mappedin Web API Key for the sample to function. Please talk to your representative if you need one.
