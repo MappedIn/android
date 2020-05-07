@@ -16,8 +16,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:name="com.mappedin.sdk.Username" android:value="Your key here"/>
-        <meta-data android:name="com.mappedin.sdk.Password" android:value="Your secret here"/>
+        <!--
+        //In order to use the Mappedin Android SDK you will need an API Key and Secret.
+        // To get you started we've provided a key and secret in this repo that has
+        // access to some demo venues.
+        //
+        // When you're ready to start using your own venues with the Mappedin iOS SDK
+        // you will need to contact a Mappedin representative to get your own unique
+        // key and secret.
+        -->
+
+        <meta-data android:name="com.mappedin.sdk.Username" android:value="5eb0412d91b055001a68e999"/>
+        <meta-data android:name="com.mappedin.sdk.Password" android:value="rvJ4gYNYV3GSePUO5FUNtU9EBBMJAlHq9dBBkZcot1GCtZUr"/>
+        <meta-data android:name="com.mappedin.sdk.DataSchema" android:value="d5b94aa0"/>
+        <meta-data android:name="com.mappedin.sdk.SearchKey" android:value="theBiutawieneugai2ongoowu3meipai"/>
+        <meta-data android:name="com.mappedin.sdk.SearchSecret" android:value="ahte1Ei7ieXoh6ra"/>
     </application>
 
 </manifest>
