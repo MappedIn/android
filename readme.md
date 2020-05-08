@@ -75,4 +75,8 @@ That's the basics. Directions, Markers and other features will be covered in a f
 
 # Mappedin Web Android Sample
 
-There is also a sample app in this repo that demonstrates creating a Web View in an Android application, and displaying Mappedin Web. The example can be found in the webviewsample folder. This example does not use the Android SDK. You will require a Mappedin Web API Key for the sample to function. Please talk to your representative if you need one.
+There is also a sample app in this repo that demonstrates creating a Web View in an Android application, and displaying Mappedin Web. The example can be found in the webviewsample folder. This example does not use the Android SDK. 
+
+To get you started we've provided a Mappedin Web API key and secret that has access to some demo venues.
+
+When you're ready to start using your own venues you will need to contact a Mappedin representative to get your own unique key and secret. Add your Mappedin API keys, search keys, and the venue's slug to this file.
