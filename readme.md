@@ -2,9 +2,9 @@
 
 This repo contains a few examples to get you started with the MappedIn Android SDK:
 
- - helloworld: A basic app that shows minimal code to get a map loaded into a mapView with the SDK
- - singlevenue: An app that loads a single venue with a tabbed experience including search, and directory. It's a little rough around the edges. While it demos some interesting features and provides useful sample code, we'd recommend you not use it as a base for your own application.
- - wayfindingSample: The most fully featured sample app. It is integrated with google's location service. You can use a location spoofing app to see a "blue dot" experience and wayfind from the blue dot. We've provided keys with access to a fake mall called "Mappedin Demo Mall." If you want to try out the blue dot, start by spoofing your location to (43.52023014, -80.5352595)
+ - **helloworld:** A basic app that shows minimal code to get a map loaded into a mapView with the SDK
+ - **singlevenue:** An app that loads a single venue with a tabbed experience including search, and directory. It's a little rough around the edges. While it demos some interesting features and provides useful sample code, we'd recommend you not use it as a base for your own application.
+ - **wayfindingSample:** The most fully featured sample app. It is integrated with google's location service. You can use a location spoofing app to see a "blue dot" experience and wayfind from the blue dot. We've provided keys with access to a fake mall called "Mappedin Demo Mall." If you want to try out the blue dot, start by spoofing your location to (43.52023014, -80.5352595)
 
  The JavaDocs are available [here](http://mappedin.github.io/android/).
 
