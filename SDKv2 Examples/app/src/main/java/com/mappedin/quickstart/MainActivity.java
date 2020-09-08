@@ -3,6 +3,8 @@ package com.mappedin.quickstart;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,6 +55,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        final Button incrementButton = findViewById(R.id.incrementLevelButton);
+        final Button decrementButton = findViewById(R.id.decrementLevelButton);
+
+        incrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.incrementLevel();
+            }
+        });
+
+        decrementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.decrementLevel();
+            }
+        });
+
 
         mapView.setListener(new MiMapViewListener() {
             @Override
@@ -80,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
                 mapView.focusOnCurrentLevel();
                 mapView.setLabelProperties(PropertyFactory.textColor(Color.BLACK));
                 mapView.addLocationSmartLabels(miLevel);
+
+                incrementButton.setEnabled(mapView.canIncrementLevel());
+                decrementButton.setEnabled(mapView.canDecrementLevel());
             }
 
             @Override
