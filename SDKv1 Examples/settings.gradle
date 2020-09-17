@@ -1,2 +1,1 @@
-include ':helloworld', ':singlevenue', ':wayfindingsample', ':webviewsample'
-include ':android-quickstart-sdkv2'
+include ':helloworld', ':singlevenue', ':wayfindingsample'
