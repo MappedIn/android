@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean didTapSpace(@Nullable MiSpace miSpace) {
-                //Called when an MiSpace is tapped
+                //Called when an MiSpace is tapped, return false to be called again if multiple MiSpaces were tapped
                 return false;
             }
 
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean didTapOverlay(@NotNull MiOverlay miOverlay) {
-                //Called when an MiOverlay is tapped
+                //Called when an MiOverlay is tapped, return false to be called again if multiple MiOverlays were tapped
                 return false;
             }
 

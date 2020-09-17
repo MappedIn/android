@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun didTapSpace(miSpace: MiSpace?): Boolean {
-                //Called when an MiSpace is tapped
+                //Called when an MiSpace is tapped, return false to be called again if multiple MiSpaces were tapped
                 return false
             }
 
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun didTapOverlay(miOverlay: MiOverlay): Boolean {
-                //Called when an MiOverlay is tapped
+                //Called when an MiOverlay is tapped, return false to be called again if multiple MiOverlays were tapped
                 return false
             }
 
