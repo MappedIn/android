@@ -1,2 +1,3 @@
 rootProject.name='Quickstart'
-include ':app'
+include ':quickstart-java'
+include ':quickstart-kotlin'
