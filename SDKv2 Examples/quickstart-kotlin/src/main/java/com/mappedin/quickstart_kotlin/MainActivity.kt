@@ -3,9 +3,15 @@ package com.mappedin.quickstart_kotlin
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mappedin.Mappedin
+import com.mappedin.MiGestureType
+import com.mappedin.MiMapViewListener
 import com.mappedin.enums.MiMapStatus
 import com.mappedin.interfaces.VenueCallback
+import com.mappedin.models.MiLevel
+import com.mappedin.models.MiOverlay
+import com.mappedin.models.MiSpace
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +34,35 @@ class MainActivity : AppCompatActivity() {
                     Log.e("MiMapView", "Map failed to load")
                 }
             })
+        })
+
+        //Set an MiMapViewListener to run custom code on certain map events
+        mapView.setListener(object : MiMapViewListener {
+            override fun onTapNothing() {
+                //Called when a point on the map is tapped that isn't a MiSpace or MiOverlay
+            }
+
+            override fun didTapSpace(miSpace: MiSpace?): Boolean {
+                //Called when an MiSpace is tapped
+                return false
+            }
+
+            override fun onTapCoordinates(latLng: LatLng) {
+                //Called when any point is tapped on the map with the LatLng coordinates
+            }
+
+            override fun didTapOverlay(miOverlay: MiOverlay): Boolean {
+                //Called when an MiOverlay is tapped
+                return false
+            }
+
+            override fun onLevelChange(miLevel: MiLevel) {
+                //Called when the level changes
+            }
+
+            override fun onManipulateCamera(miGestureType: MiGestureType) {
+                //Called when the user pinches or pans the map
+            }
         })
     }
 }
