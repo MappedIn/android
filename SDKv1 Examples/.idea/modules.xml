@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SDKv1 Examples.iml" filepath="$PROJECT_DIR$/SDKv1 Examples.iml" group="SDKv1 Examples" />
+      <module fileurl="file://$PROJECT_DIR$/helloworld/helloworld.iml" filepath="$PROJECT_DIR$/helloworld/helloworld.iml" group="SDKv1 Examples/helloworld" />
+      <module fileurl="file://$PROJECT_DIR$/singlevenue/singlevenue.iml" filepath="$PROJECT_DIR$/singlevenue/singlevenue.iml" group="SDKv1 Examples/singlevenue" />
+      <module fileurl="file://$PROJECT_DIR$/wayfindingsample/wayfindingsample.iml" filepath="$PROJECT_DIR$/wayfindingsample/wayfindingsample.iml" group="SDKv1 Examples/wayfindingsample" />
+    </modules>
+  </component>
+</project>
