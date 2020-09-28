@@ -2,13 +2,13 @@
 
 In this repo you can find a number of sample applications demonstrating different ways to integrate with Mappedin to render your maps and begin building your own custom indoor mapping experiences on Android. To learn more about ways to integrate with Mappedin, checkout [developer.mappedin.com](https://developer.mappedin.com/).
 
-The Mappedin SDK for Android enables you to build powerful, highly flexible, unique, indoor mapping experiences natively inside your Android apps. This repo contains projects showcasing versions 1 and 2 of our fully native SDK, with more projects coming soon to get you started on more advanced projects. 
+The Mappedin SDK for Android enables you to build powerful, highly flexible, unique, indoor mapping experiences natively inside your Android apps. This repo contains projects showcasing v1 and v2 of our fully native SDK, with more projects coming soon to get you started on more advanced projects. 
 
 This repo also contains a project demonstrating how to integrate with our our out of the box web product, [Mappedin Web](https://www.mappedin.com/wayfinding/web-app/), within a webview on a mobile app. 
 
 ## Mappedin Android SDK v2 Examples
 
-We're very excited to launch version 2 of The Mappedin SDK for Android! Version 2 is a completely new SDK built from the ground up to enable us to take indoor mapping experiences further than ever before. The SDK supports much of the sample functionality as version 1 and more, but in version 2, rendering is powered by the [Mapbox Maps SDK](https://docs.mapbox.com/android/maps/overview/). This means that you'll be able to use some features of the Mapbox Maps SDK as well as Mappedin features.
+We're very excited to launch v2 of The Mappedin SDK for Android! V2 is a completely new SDK built from the ground up to enable us to take indoor mapping experiences further than ever before. The SDK supports much of the sample functionality as v1 and more, but in v2, rendering is powered by the [Mapbox Maps SDK](https://docs.mapbox.com/android/maps/overview/). This means that you'll be able to use some features of the Mapbox Maps SDK as well as Mappedin features.
 
 You can view all the [documentation](https://developer.mappedin.com/docs/android/mappedin/) for the SDK along with informative [guides](https://developer.mappedin.com/guides/android/) at [developer.mappedin.com](https://developer.mappedin.com/).
 
@@ -30,9 +30,9 @@ When you're ready to start using your own venues with the SDK you will need to c
 
 ### helloworld
 
-This is simple walkthrough to get you started with version 1 of the Mappedin Android SDK, with minimal code. The Mappedin Android SDK provides many ways to interact with the MapView and map data, but as this sample demonstrates, there is no built-in UI or default map interactions. You have complete flexibility over the behaviour, look and feel of applications built using the SDK.
+This is simple walkthrough to get you started with v1 of the Mappedin Android SDK, with minimal code. The Mappedin Android SDK provides many ways to interact with the MapView and map data, but as this sample demonstrates, there is no built-in UI or default map interactions. You have complete flexibility over the behaviour, look and feel of applications built using the SDK.
 
-Use this sample to start off if you want to integrate with version 1 of the Mappedin Android SDK from scratch.
+Use this sample to start off if you want to integrate with v1 of the Mappedin Android SDK from scratch.
 
 ### singlevenue
 
