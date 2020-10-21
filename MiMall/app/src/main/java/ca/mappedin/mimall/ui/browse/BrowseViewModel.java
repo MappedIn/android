@@ -6,11 +6,14 @@ import androidx.lifecycle.ViewModel;
 
 public class BrowseViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private MutableLiveData<String> mText = new MutableLiveData<>();
 
     public BrowseViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is Browse fragment");
+//        mText.setValue("This is Browse fragment");
+    }
+
+    public void setText(String text) {
+        mText.setValue(text);
     }
 
     public LiveData<String> getText() {
