@@ -5,9 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -20,6 +20,7 @@ import com.mappedin.enums.MiMapStatus;
 import com.mappedin.interfaces.MiMapViewCallback;
 import com.mappedin.interfaces.VenueCallback;
 import com.mappedin.models.MiLevel;
+import com.mappedin.models.MiLocation;
 import com.mappedin.models.MiOverlay;
 import com.mappedin.models.MiSpace;
 import com.mappedin.models.MiVenue;
@@ -27,6 +28,7 @@ import com.mappedin.models.MiVenue;
 import org.jetbrains.annotations.NotNull;
 
 import ca.mappedin.mimall.R;
+import ca.mappedin.mimall.ui.browse.BrowseViewModel;
 
 public class MapFragment extends Fragment {
 
@@ -47,16 +49,36 @@ public class MapFragment extends Fragment {
 //            }
 //        });
 
+        final ProgressBar progressBar = root.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        final BrowseViewModel browseViewModel =
+                ViewModelProviders.of(this).get(BrowseViewModel.class);
+
         final MiMapView mapView = root.findViewById(R.id.mapView);
 
         Mappedin.getVenue("mappedin-demo-mall", new VenueCallback() {
             @Override
-            public void onVenueLoaded(MiVenue miVenue) {
+            public void onVenueLoaded(final MiVenue miVenue) {
                 mapView.loadMap(miVenue, new MiMapViewCallback() {
                     @Override
                     public void onMapLoaded(MiMapStatus miMapStatus) {
                         if (miMapStatus == MiMapStatus.LOADED) {
-                            Log.i("MiMapView", "Map has loaded");
+                            progressBar.setVisibility(View.GONE);
+
+                            Log.i("MiMapView", "Map has loaded. Levels: " + miVenue.getLevels().size());
+
+                            mapView.displayLocationLabels();
+//                            mapView.setLabelProperties(PropertyFactory.textColor(Color.RED));
+
+                            for (MiLocation location :
+                                    miVenue.getLocations()) {
+                                Log.d("MiMapView Location", "Name: " + location.getName());
+                            }
+
+
+                            browseViewModel.setText(miVenue.getLocations().get(0).getName());
+
                         } else {
                             Log.e("MiMapView", "Map failed to load");
                         }
