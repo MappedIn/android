@@ -20,7 +20,6 @@ import com.mappedin.enums.MiMapStatus;
 import com.mappedin.interfaces.MiMapViewCallback;
 import com.mappedin.interfaces.VenueCallback;
 import com.mappedin.models.MiLevel;
-import com.mappedin.models.MiLocation;
 import com.mappedin.models.MiOverlay;
 import com.mappedin.models.MiSpace;
 import com.mappedin.models.MiVenue;
@@ -28,6 +27,7 @@ import com.mappedin.models.MiVenue;
 import org.jetbrains.annotations.NotNull;
 
 import ca.mappedin.mimall.R;
+import ca.mappedin.mimall.shared.Repository;
 import ca.mappedin.mimall.ui.browse.BrowseViewModel;
 
 public class MapFragment extends Fragment {
@@ -70,12 +70,7 @@ public class MapFragment extends Fragment {
 
                             mapView.displayLocationLabels();
 //                            mapView.setLabelProperties(PropertyFactory.textColor(Color.RED));
-
-                            for (MiLocation location :
-                                    miVenue.getLocations()) {
-                                Log.d("MiMapView Location", "Name: " + location.getName());
-                            }
-
+                            Repository.getInstance().setLocations(miVenue.getLocations());
 
                             browseViewModel.setText(miVenue.getLocations().get(0).getName());
 

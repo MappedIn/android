@@ -1,6 +1,7 @@
 package ca.mappedin.mimall.ui.browse;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.mappedin.models.MiLocation;
+
 import ca.mappedin.mimall.R;
+import ca.mappedin.mimall.shared.Repository;
 
 public class BrowseFragment extends Fragment {
 
@@ -32,6 +36,12 @@ public class BrowseFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        for (MiLocation location :
+                Repository.getInstance().getLocations()) {
+            Log.d("Browse Location", "Name: " + location.getName());
+        }
+
         return root;
     }
 }
