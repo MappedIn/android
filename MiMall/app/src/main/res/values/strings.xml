@@ -3,4 +3,43 @@
     <string name="title_home">Home</string>
     <string name="title_map">Map</string>
     <string name="title_browse">Browse</string>
+
+    <array name="titles">
+        <item>Shopping on your mind?</item>
+        <item>Get some fruits</item>
+        <item>Time for Eggs</item>
+        <item>Apparels</item>
+        <item>Toys</item>
+        <item>Attractive deals</item>
+        <item>Eat what you like</item>
+        <item>Cosmetics you like</item>
+        <item>Great shopping deals</item>
+        <item>Spacious Parking</item>
+    </array>
+
+    <array name="subtitles">
+        <item>Find all your favorite stores here</item>
+        <item>Freshest fruits available</item>
+        <item>Eggs make a great breakfast</item>
+        <item>Shop season\'s fresh</item>
+        <item>Treat your kids</item>
+        <item>Across different products</item>
+        <item>Great options for all choices</item>
+        <item>All leading brands available</item>
+        <item>Season-end sales going on across various stores</item>
+        <item>You won\'t have to worry about parking</item>
+    </array>
+
+    <array name="imgurls">
+        <item>https://unsplash.com/photos/wQ9VuP_Njr4/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/9Jl9Wk9juuE/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/eIzzzwtkBjU/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/dlxLGIy-2VU/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/WwdrJ2eQp58/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/F52I5BtDuhY/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/Orz90t6o0e4/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/mfvTtNPjoPY/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/49mCO5ZRQDk/download?force=true&amp;w=640</item>
+        <item>https://unsplash.com/photos/U-oPiCxTDwc/download?force=true&amp;w=640</item>
+    </array>
 </resources>
