@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,23 +24,8 @@ public class BrowseFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //TODO 'androidx.lifecycle.ViewModelProviders' is deprecated
-        //TODO 'of(androidx.fragment.app.Fragment)' is deprecated
-        browseViewModel =
-                ViewModelProviders.of(this).get(BrowseViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_browse, container, false);
-//        final TextView textView = root.findViewById(R.id.text_notifications);
-//        browseViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
 
-//        for (MiLocation location :
-//                Repository.getInstance().getLocations()) {
-//            Log.d("Browse Location", "Name: " + location.getName());
-//        }
+        View root = inflater.inflate(R.layout.fragment_browse, container, false);
 
         recyclerView = root.findViewById(R.id.locationList);
 
@@ -55,6 +39,7 @@ public class BrowseFragment extends Fragment {
 
         // specify an adapter (see also next example)
         mAdapter = new LocationListAdapter(Repository.getInstance().getLocations());
+//        mAdapter = new LocationListAdapter(Repository.getInstance().getLocations(), this.getContext());
         recyclerView.setAdapter(mAdapter);
 
 
