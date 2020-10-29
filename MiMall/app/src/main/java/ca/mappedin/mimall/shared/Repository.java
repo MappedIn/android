@@ -1,6 +1,9 @@
 package ca.mappedin.mimall.shared;
 
+import android.util.Log;
+
 import com.mappedin.models.MiLocation;
+import com.mappedin.models.MiSpace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +30,29 @@ public class Repository {
         return locations;
     }
 
-    public List<MiLocation> searchLocations(String keyword) {
-        ArrayList<MiLocation> matchingLocations = new ArrayList<MiLocation>();
-        //TODO Perform Search Operation
-        return matchingLocations;
+    public MiSpace searchLocations(String keyword) {
+        for (MiLocation location :
+                locations) {
+            if (location.getName().equals(keyword)) {
+                return location.getSpaces().get(0);
+            }
+        }
+        return null;
+    }
+
+    public String[] getLocationsArray() {
+        ArrayList<String> locations = new ArrayList<String>();
+        for (MiLocation location :
+                this.locations) {
+            locations.add(location.getName());
+
+            for (MiSpace space :
+                    location.getSpaces()) {
+                Log.d("LOG", "" + space.getExternalId());
+            }
+        }
+        String[] searchResults = new String[locations.size()];
+        return locations.toArray(searchResults);
     }
 
     public void setLocations(List<MiLocation> locations) {

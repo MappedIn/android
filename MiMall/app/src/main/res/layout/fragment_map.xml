@@ -15,6 +15,39 @@
         android:layout_width="0dp"
         android:layout_height="0dp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mapView"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="14dp"
+        android:padding="8dp"
+        android:weightSum="3"
+        android:background="@android:color/darker_gray"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/searchBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Search for a place"
+            android:textColor="@android:color/white"
+            android:singleLine="true"
+            android:layout_weight="2.6"
+            android:textColorHint="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_search"
+            android:padding="8dp"
+            android:layout_weight="0.4"
+            android:clickable="true" />
+
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/loadingProgressBar"
         android:layout_width="32dp"
