@@ -36,7 +36,7 @@ public class BrowseFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new LocationListAdapter(Repository.getInstance().getLocations());
+        mAdapter = new LocationListAdapter(Repository.getInstance().getLocations(), this.getContext());
 //        mAdapter = new LocationListAdapter(Repository.getInstance().getLocations(), this.getContext());
         recyclerView.setAdapter(mAdapter);
 
