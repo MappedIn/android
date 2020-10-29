@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,10 +34,18 @@ import ca.mappedin.mimall.shared.Repository;
 
 public class MapFragment extends Fragment {
 
+    private ImageView locationLogo;
+    private TextView locationName;
+    private TextView locationLevel;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_map, container, false);
+
+        locationLogo = root.findViewById(R.id.locationLogo);
+        locationName = root.findViewById(R.id.locationName);
+        locationLevel = root.findViewById(R.id.locationLevel);
 
         final ProgressBar progressBar = root.findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -51,6 +60,7 @@ public class MapFragment extends Fragment {
                 String searchKeyword = searchBar.getText().toString().trim();
                 if (searchKeyword.length() > 0) {
                     mapView.focusOn(Repository.getInstance().searchLocations(searchKeyword), 300);
+//                    locationName.setText();
                 }
             }
         });

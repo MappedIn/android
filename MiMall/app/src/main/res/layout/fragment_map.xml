@@ -48,6 +48,71 @@
 
     </LinearLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detailsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="@+id/mapView"
+        android:background="#ffffff">
+
+        <ImageView
+            android:id="@+id/locationLogo"
+            android:layout_width="130dp"
+            android:layout_height="150dp"
+            android:layout_margin="20dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/locationName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            tools:text="Vans"
+            android:layout_marginLeft="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/locationLogo"
+            app:layout_constraintStart_toEndOf="@+id/locationLogo"
+            app:layout_constraintTop_toTopOf="@+id/locationLogo" />
+
+        <TextView
+            android:id="@+id/locationLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:layout_constraintBottom_toBottomOf="@+id/locationLogo"
+            app:layout_constraintStart_toStartOf="@+id/locationName"
+            app:layout_constraintTop_toBottomOf="@+id/locationName"
+            tools:text="L1" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="#e3e3e3"
+            app:layout_constraintTop_toBottomOf="@+id/locationLogo" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Get Directions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button"
+            android:text="View Details"
+            app:layout_constraintTop_toTopOf="@+id/button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ProgressBar
         android:id="@+id/loadingProgressBar"
         android:layout_width="32dp"
