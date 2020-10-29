@@ -15,8 +15,6 @@ import ca.mappedin.mimall.shared.Repository;
 
 public class BrowseFragment extends Fragment {
 
-    private BrowseViewModel browseViewModel;
-
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -41,7 +39,6 @@ public class BrowseFragment extends Fragment {
         mAdapter = new LocationListAdapter(Repository.getInstance().getLocations());
 //        mAdapter = new LocationListAdapter(Repository.getInstance().getLocations(), this.getContext());
         recyclerView.setAdapter(mAdapter);
-
 
         return root;
     }
