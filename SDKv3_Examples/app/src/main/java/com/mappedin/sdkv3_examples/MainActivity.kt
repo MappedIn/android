@@ -36,8 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         directionsButton.setOnClickListener {
             if (selectedPolygon != null && blueDot?.nearestNode != null) {
+                //Get directions to selected polygon from users nearest node
                 mapView.getDirections(selectedPolygon!!, blueDot?.nearestNode!!, true) { directions ->
                     directions?.path?.let { path ->
+                        //Remove all paths on map before drawing new path from the directions
                         mapView.removeAllPaths() {
                             mapView.drawPath(path, MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0))
                         }
@@ -46,10 +48,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        //Set up MPIMapViewListener for MPIMapView events
         mapView.listener = object : MPIMapViewListener {
             override fun onDataLoaded(data: MPIData) {
                 println("MPIData: " + Json.encodeToString(data))
                 sortedMaps = data.maps.sortedBy{it.elevation}
+
+                //Enable blue dot, does not appear until updatePosition is called with proper coordinates
                 mapView.enableBlueDot()
 
                 mapView.venueData?.polygons?.forEach {
@@ -100,6 +105,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        //Load venue with credentials, if using proxy pass in MPIOptions.Init(noAuth = true, venue="venue_name", baseUrl="proxy_url")
         mapView.loadVenue(MPIOptions.Init("5eab30aa91b055001a68e996", "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1", "mappedin-demo-mall"))
     }
 
