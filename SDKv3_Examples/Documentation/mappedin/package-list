@@ -1,0 +1,8 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.mappedin.sdk
+com.mappedin.sdk.listeners
+com.mappedin.sdk.models
+com.mappedin.sdk.web
+
