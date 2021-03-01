@@ -48,6 +48,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        centerDirectionsButton.setOnClickListener {
+            mapView?.getNearestNodeByScreenCoordinates(mapView?.width?.div(2) ?: 0, mapView?.height?.div(2) ?: 0) { node ->
+                if (node != null && selectedPolygon != null) {
+                    mapView.getDirections(selectedPolygon!!, node, true) { directions ->
+                        directions?.path?.let { path ->
+                            mapView.drawJourney(directions,
+                                MPIOptions.Journey(
+                                    connectionTemplateString = """<div style=\"font-size: 13px;display: flex; align-items: center; justify-content: center;\"><div style=\"margin: 10px;\">{{capitalize type}} {{#if isEntering}}to{{else}}from{{/if}} {{toMapName}}</div><div style=\"width: 40px; height: 40px; border-radius: 50%;background: green;display: flex;align-items: center;margin: 5px;margin-left: 0px;justify-content: center;\"><svg height=\"16\" viewBox=\"0 0 36 36\" width=\"16\"><g fill=\"white\">{{{icon}}}</g></svg></div></div>""",
+                                    pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0)))
+                        }
+                    }
+                }
+            }
+        }
+
+        followButton.setOnClickListener {
+            mapView?.blueDotManager?.setState(MPIState.FOLLOW)
+        }
+
         //Set up MPIMapViewListener for MPIMapView events
         mapView.listener = object : MPIMapViewListener {
             override fun onDataLoaded(data: MPIData) {
@@ -55,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                 sortedMaps = data.maps.sortedBy{it.elevation}
 
                 //Enable blue dot, does not appear until updatePosition is called with proper coordinates
-                mapView.enableBlueDot()
+                mapView.enableBlueDot(MPIOptions.BlueDot(smoothing = false, showBearing = true))
 
                 mapView.venueData?.polygons?.forEach {
                     if (it.locations.isNullOrEmpty()) {
@@ -73,6 +92,16 @@ class MainActivity : AppCompatActivity() {
                 println("MPIPolygon Clicked:" + Json.encodeToString(polygon))
                 runOnUiThread {
                     selectPolygon(polygon)
+                }
+            }
+
+            override fun onStateChanged(state: MPIState) {
+                runOnUiThread {
+                    if (state == MPIState.FOLLOW) {
+                        followButton.visibility = View.GONE
+                    } else {
+                        followButton.visibility = View.VISIBLE
+                    }
                 }
             }
 
@@ -107,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Load venue with credentials, if using proxy pass in MPIOptions.Init(noAuth = true, venue="venue_name", baseUrl="proxy_url")
-        mapView.loadVenue(MPIOptions.Init("5eab30aa91b055001a68e996", "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1", "mappedin-demo-mall", headers = listOf(MPIHeader("testName", "testValue"))), MPIOptions.ShowVenue(labelAllLocationsOnInit = false, backgroundColor = "#CDCDCD"))
+        mapView.loadVenue(MPIOptions.Init("5eab30aa91b055001a68e996", "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1", "mappedin-demo-mall", headers = listOf(MPIHeader("testName", "testValue"))), MPIOptions.ShowVenue(labelAllLocationsOnInit = true, backgroundColor = "#CDCDCD"))
     }
 
     fun clearPolygon() {
