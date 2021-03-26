@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                     directions?.path?.let { path ->
                         mapView.drawJourney(directions,
                             MPIOptions.Journey(
-                                connectionTemplateString = """<div style=\"font-size: 13px;display: flex; align-items: center; justify-content: center;\"><div style=\"margin: 10px;\">{{capitalize type}} {{#if isEntering}}to{{else}}from{{/if}} {{toMapName}}</div><div style=\"width: 40px; height: 40px; border-radius: 50%;background: green;display: flex;align-items: center;margin: 5px;margin-left: 0px;justify-content: center;\"><svg height=\"16\" viewBox=\"0 0 36 36\" width=\"16\"><g fill=\"white\">{{{icon}}}</g></svg></div></div>""",
+                                connectionTemplateString = "<div style=\"font-size: 13px;display: flex; align-items: center; justify-content: center;\"><div style=\"margin: 10px;\">{{capitalize type}} {{#if isEntering}}to{{else}}from{{/if}} {{toMapName}}</div><div style=\"width: 40px; height: 40px; border-radius: 50%;background: green;display: flex;align-items: center;margin: 5px;margin-left: 0px;justify-content: center;\"><svg height=\"16\" viewBox=\"0 0 36 36\" width=\"16\"><g fill=\"white\">{{{icon}}}</g></svg></div></div>",
                                 pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0)))
                     }
                 }
@@ -134,7 +134,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         //Load venue with credentials, if using proxy pass in MPIOptions.Init(noAuth = true, venue="venue_name", baseUrl="proxy_url")
-        mapView.loadVenue(MPIOptions.Init("5eab30aa91b055001a68e996", "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1", "mappedin-demo-mall", headers = listOf(MPIHeader("testName", "testValue"))), MPIOptions.ShowVenue(labelAllLocationsOnInit = true, backgroundColor = "#CDCDCD"))
+        //mapView.loadVenue(MPIOptions.Init("5eab30aa91b055001a68e996", "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1", "mappedin-demo-mall", headers = listOf(MPIHeader("testName", "testValue"))), MPIOptions.ShowVenue(labelAllLocationsOnInit = true, backgroundColor = "#CDCDCD"))
+        val venueDataJson = application.assets.open("mappedin-demo-mall.json").bufferedReader().use{
+            it.readText()
+        }
+        mapView.showVenue(venueDataJson)
     }
 
     fun clearPolygon() {
