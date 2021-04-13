@@ -100,6 +100,8 @@ class MainActivity : AppCompatActivity() {
 
                 // Create an MPICoordinate from Latitude and Longitude
                 val coord = map.createCoordinate(43.5214,-80.5369)
+                val x_value = coord?.x
+                val y_value = coord?.y
             }
             override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
                 println("MPIPolygon Clicked:" + Json.encodeToString(polygon))
