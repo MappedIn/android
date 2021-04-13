@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
     var sortedMaps: List<MPIMap>? = null
     var blueDot: MPIBlueDot? = null
     var selectedPolygon: MPINavigatable.MPIPolygon? = null
+    var presentMarkerId: String? = null
+    var markerId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +41,15 @@ class MainActivity : AppCompatActivity() {
                 //Get directions to selected polygon from users nearest node
                 mapView.getDirections(selectedPolygon!!, blueDot?.nearestNode!!, true) { directions ->
                     directions?.path?.let { path ->
+                        // Remove Marker before DrawJourney
+                        mapView.removeMarker(presentMarkerId!!)
                         mapView.drawJourney(directions,
                             MPIOptions.Journey(
                                 connectionTemplateString = "<div style=\"font-size: 13px;display: flex; align-items: center; justify-content: center;\"><div style=\"margin: 10px;\">{{capitalize type}} {{#if isEntering}}to{{else}}from{{/if}} {{toMapName}}</div><div style=\"width: 40px; height: 40px; border-radius: 50%;background: green;display: flex;align-items: center;margin: 5px;margin-left: 0px;justify-content: center;\"><svg height=\"16\" viewBox=\"0 0 36 36\" width=\"16\"><g fill=\"white\">{{{icon}}}</g></svg></div></div>",
-                                pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0)))
+                                destinationMarkerTemplateString = "",
+                                departureMarkerTemplateString = "",
+                                pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0),
+                                polygonHighlightColor = "green"))
                     }
                 }
             }
@@ -53,8 +60,13 @@ class MainActivity : AppCompatActivity() {
                 if (node != null && selectedPolygon != null) {
                     mapView.getDirections(selectedPolygon!!, node, true) { directions ->
                         directions?.path?.let { path ->
+                            // Remove Marker before DrawJourney
+                            mapView.removeMarker(presentMarkerId!!)
                             mapView.drawJourney(directions,
-                                MPIOptions.Journey(pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0)))
+                                MPIOptions.Journey(destinationMarkerTemplateString = "<div>Destination</div>",
+                                        departureMarkerTemplateString = "<div>Departure</div>",
+                                        pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0),
+                                        polygonHighlightColor = "orange"))
                         }
                     }
                 }
@@ -85,6 +97,9 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar?.title = map.name
                 }
                 println("MPIMap Changed: " + Json.encodeToString(map))
+
+                // Create an MPICoordinate from Latitude and Longitude
+                val coord = map.createCoordinate(43.5214,-80.5369)
             }
             override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
                 println("MPIPolygon Clicked:" + Json.encodeToString(polygon))
@@ -157,6 +172,18 @@ class MainActivity : AppCompatActivity() {
                 mapView.setPolygonColor(polygon.id, "blue")
             }
             mapView.focusOn(MPIOptions.Focus(polygons=listOf(polygon)))
+
+            if (markerId == presentMarkerId) {
+                mapView?.removeMarker(markerId)
+            }
+
+            //Add a Marker on the node of the polygon being clicked
+            var node = polygon.entrances.get(0)
+            markerId = mapView.createMarker(node,
+                    "<div style=\"width: 32px; height: 32px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 293.334 293.334\"><g fill=\"#010002\"><path d=\"M146.667 0C94.903 0 52.946 41.957 52.946 93.721c0 22.322 7.849 42.789 20.891 58.878 4.204 5.178 11.237 13.331 14.903 18.906 21.109 32.069 48.19 78.643 56.082 116.864 1.354 6.527 2.986 6.641 4.743.212 5.629-20.609 20.228-65.639 50.377-112.757 3.595-5.619 10.884-13.483 15.409-18.379a94.561 94.561 0 0016.154-24.084c5.651-12.086 8.882-25.466 8.882-39.629C240.387 41.962 198.43 0 146.667 0zm0 144.358c-28.892 0-52.313-23.421-52.313-52.313 0-28.887 23.421-52.307 52.313-52.307s52.313 23.421 52.313 52.307c0 28.893-23.421 52.313-52.313 52.313z\"/><circle cx=\"146.667\" cy=\"90.196\" r=\"21.756\"/></g></svg></div>", MPIOptions.Marker(anchor = MPIOptions.MARKER_ANCHOR.TOP))
+            if (markerId == markerId) {
+                presentMarkerId = markerId
+            }
 
             locationTitle.text = it.name
             locationDescription.text = it.description
