@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 // Create an MPICoordinate from Latitude and Longitude
                 val coord = map.createCoordinate(43.5214,-80.5369)
 
-                // Find Distance between Current Location and Nearest Node
+                // Find Distance between Location and Nearest Node
                 val distance = distanceLocationToNode(map, 43.5214, -80.5369)
             }
             override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
