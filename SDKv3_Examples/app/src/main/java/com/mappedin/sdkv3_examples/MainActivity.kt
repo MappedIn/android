@@ -180,8 +180,7 @@ class MainActivity : AppCompatActivity() {
                 val yDist = (p2_y!! - p1_y)
                 val mappedinDistance = sqrt(xDist * xDist + yDist * yDist)
                 // Convert the Distance from Mappedin Units to Meters
-                val worldDistance = mappedinDistance * map.x_scale!!
-                return worldDistance
+                return mappedinDistance * map.x_scale!!
             }
         }
         return null
