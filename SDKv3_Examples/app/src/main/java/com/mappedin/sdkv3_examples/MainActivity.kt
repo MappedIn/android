@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
     var sortedMaps: List<MPIMap>? = null
@@ -100,8 +101,9 @@ class MainActivity : AppCompatActivity() {
 
                 // Create an MPICoordinate from Latitude and Longitude
                 val coord = map.createCoordinate(43.5214,-80.5369)
-                val x_value = coord?.x
-                val y_value = coord?.y
+
+                // Find Distance between Current Location and Nearest Node
+                val distance = distanceLocationToNode(map, 43.5214, -80.5369)
             }
             override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
                 println("MPIPolygon Clicked:" + Json.encodeToString(polygon))
@@ -162,6 +164,27 @@ class MainActivity : AppCompatActivity() {
         selectedPolygon = null
         locationView.visibility = View.GONE
         mapView.clearAllPolygonColors()
+    }
+
+    fun distanceLocationToNode(map: MPIMap, latitude: Double, longitude: Double): Double? {
+        // Create an MPICoordinate from Latitude and Longitude
+        val coordinate = map.createCoordinate(latitude, longitude)
+        // Calculate Distance Between Coordinate and the Nearest Node
+        if ((coordinate?.x != null) && (coordinate?.y != null)) {
+            val p1_x = coordinate.x
+            val p1_y = coordinate.y
+            if ((blueDot?.nearestNode?.y != null) && (blueDot?.nearestNode?.x != null)) {
+                val p2_x = blueDot?.nearestNode!!.x
+                val p2_y = blueDot?.nearestNode!!.y
+                val xDist = (p2_x!! - p1_x)
+                val yDist = (p2_y!! - p1_y)
+                val mappedinDistance = sqrt(xDist * xDist + yDist * yDist)
+                // Convert the Distance from Mappedin Units to Meters
+                val worldDistance = mappedinDistance * map.x_scale!!
+                return worldDistance
+            }
+        }
+        return null
     }
 
     fun selectPolygon(polygon: MPINavigatable.MPIPolygon) {
