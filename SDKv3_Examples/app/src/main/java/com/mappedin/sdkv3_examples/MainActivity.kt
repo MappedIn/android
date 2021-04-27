@@ -16,7 +16,7 @@ import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
     var sortedMaps: List<MPIMap>? = null
-    var blueDot: MPIBlueDot? = null
+    var blueDot: MPIBlueDotPositionUpdate? = null
     var selectedPolygon: MPINavigatable.MPIPolygon? = null
     var presentMarkerId: String? = null
     var markerId: String = ""
@@ -84,8 +84,8 @@ class MainActivity : AppCompatActivity() {
                 println("MPIData: " + Json.encodeToString(data))
                 sortedMaps = data.maps.sortedBy{it.elevation}
 
-                //Enable blue dot, does not appear until updatePosition is called with proper coordinates
-                mapView.enableBlueDot(MPIOptions.BlueDot(smoothing = false, showBearing = true))
+                //Enable blueDot, does not appear until updatePosition is called with proper coordinates
+                mapView.enableBlueDot(MPIOptions.BlueDot(smoothing = false, showBearing = true, baseColor = "#2266ff"))
 
                 mapView.venueData?.polygons?.forEach {
                     if (it.locations.isNullOrEmpty()) {
@@ -123,8 +123,19 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onBlueDotUpdated(blueDot: MPIBlueDot) {
-                this@MainActivity.blueDot = blueDot
-                nearestNode.text = "BlueDot Nearest Node: " + (blueDot.nearestNode?.id ?: "N/A")
+//                this@MainActivity.blueDot = blueDot
+//                nearestNode.text = "BlueDot Nearest Node: " + (blueDot.nearestNode?.id ?: "N/A")
+            }
+
+            override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
+                this@MainActivity.blueDot = update
+                nearestNode.text = "BlueDot Nearest Node: " + (update.nearestNode?.id ?: "N/A")
+            }
+
+            override fun onBlueDotStateChange(stateChange: MPIBlueDotStateChange) {
+//                println(stateChange.name)
+                println(stateChange.markerVisibility)
+//                println(stateChange.reason)
             }
 
             override fun onNothingClicked() {
@@ -157,7 +168,11 @@ class MainActivity : AppCompatActivity() {
         val venueDataJson = application.assets.open("mappedin-demo-mall.json").bufferedReader().use{
             it.readText()
         }
-        mapView.showVenue(venueDataJson)
+        mapView.showVenue(venueDataJson) {
+            it?.let {
+                println(it.errorMessage)
+            }
+        }
     }
 
     fun clearPolygon() {
