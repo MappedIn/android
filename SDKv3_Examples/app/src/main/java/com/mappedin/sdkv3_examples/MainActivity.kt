@@ -3,6 +3,7 @@ package com.mappedin.sdkv3_examples
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
 import com.mappedin.sdk.listeners.MPIMapViewListener
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     var selectedPolygon: MPINavigatable.MPIPolygon? = null
     var presentMarkerId: String? = null
     var markerId: String = ""
+    var defaultRotation: Double? = null
+    var defaultTilt: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,8 +77,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        followButton.setOnClickListener {
+        followMode.setOnClickListener {
             mapView?.blueDotManager?.setState(MPIState.FOLLOW)
+        }
+
+        resetCamera.setOnClickListener {
+            mapView.cameraControlsManager.setRotation(defaultRotation ?: 0.0) { _, error ->
+                if (error == null) {
+                    // access rotation here
+                    Log.d("Camera", mapView.cameraControlsManager.rotation.toString())
+                }
+            }
+            mapView.cameraControlsManager.setTilt(defaultTilt ?: 0.0) { _, error ->
+                if (error == null) {
+                    // access rotation here
+                    Log.d("Camera", mapView.cameraControlsManager.tilt.toString())
+                }
+            }
         }
 
         //Set up MPIMapViewListener for MPIMapView events
@@ -115,9 +133,9 @@ class MainActivity : AppCompatActivity() {
             override fun onStateChanged(state: MPIState) {
                 runOnUiThread {
                     if (state == MPIState.FOLLOW) {
-                        followButton.visibility = View.GONE
+                        followMode.visibility = View.GONE
                     } else {
-                        followButton.visibility = View.VISIBLE
+                        followMode.visibility = View.VISIBLE
                     }
                 }
             }
@@ -146,6 +164,12 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFirstMapLoaded() {
                 runOnUiThread {
+                    defaultRotation = defaultRotation ?: mapView.cameraControlsManager.rotation
+                    defaultTilt = defaultTilt ?: mapView.cameraControlsManager.tilt
+
+                    mapView.cameraControlsManager.setRotation(180.0)
+                    mapView.cameraControlsManager.setTilt(0.0)
+
                     val fileName = "position.json"
                     val string = application.assets.open(fileName).bufferedReader().use {
                         it.readText()
