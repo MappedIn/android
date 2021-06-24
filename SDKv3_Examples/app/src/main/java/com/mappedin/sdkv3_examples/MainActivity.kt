@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.util.*
+import kotlin.concurrent.timerTask
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
@@ -169,6 +171,49 @@ class MainActivity : AppCompatActivity() {
 
                     mapView.cameraControlsManager.setRotation(180.0)
                     mapView.cameraControlsManager.setTilt(0.0)
+
+                    // label all locations to be light on dark
+                    mapView.labelAllLocations(
+                        options=MPIOptions.LabelAllLocations(
+                            appearance=MPIOptions.LabelAppearance.lightOnDark
+                        )
+                    )
+
+                    // create a multi-destination journey between 4 sample locations
+                    mapView.venueData?.locations?.let { locations ->
+                        if (locations.size < 8) return@let
+
+                        mapView.getDirections(
+                            to=MPIDestinationSet(destinations= listOf(locations[4], locations[5], locations[6])),
+                            from=locations[7],
+                            accessible=false
+                        ) {
+                            it?.let { directions ->
+                                // draw the journey
+                                mapView.journeyManager.draw(
+                                    directions=directions,
+                                    options=MPIOptions.Journey(connectionTemplateString="<div style=\"font-size: 13px;display: flex; align-items: center; justify-content: center;\"><div style=\"margin: 10px;\">{{capitalize type}} {{#if isEntering}}to{{else}}from{{/if}} {{toMapName}}</div><div style=\"width: 40px; height: 40px; border-radius: 50%;background: blue;display: flex;align-items: center;margin: 5px;margin-left: 0px;justify-content: center;\"><svg height=\"16\" viewBox=\"0 0 36 36\" width=\"16\"><g fill=\"white\">{{{icon}}}</g></svg></div></div>")
+                                )
+
+                                val maxSteps = 3
+                                val startDelay = 15
+                                val stepDelay = 5
+
+                                for (step in 0..maxSteps) {
+                                    // manipulate journey after a delay
+                                    Timer(false).schedule(timerTask {
+                                        if (step == maxSteps) {
+                                            // change the journey step
+                                            mapView.journeyManager.clear()
+                                        } else {
+                                            // clear journey
+                                            mapView.journeyManager.setStep(step)
+                                        }
+                                    }, (startDelay + stepDelay * step) * 1000L)
+                                }
+                            }
+                        }
+                    }
 
                     val fileName = "position.json"
                     val string = application.assets.open(fileName).bufferedReader().use {
