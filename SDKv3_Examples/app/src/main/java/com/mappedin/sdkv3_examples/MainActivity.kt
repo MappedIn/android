@@ -13,16 +13,23 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.util.*
+import kotlin.concurrent.timerTask
 import kotlin.math.sqrt
 
 class MainActivity : AppCompatActivity() {
-    var sortedMaps: List<MPIMap>? = null
-    var blueDot: MPIBlueDotPositionUpdate? = null
-    var selectedPolygon: MPINavigatable.MPIPolygon? = null
-    var presentMarkerId: String? = null
-    var markerId: String = ""
-    var defaultRotation: Double? = null
-    var defaultTilt: Double? = null
+    private var sortedMaps: List<MPIMap>? = null
+    private var blueDot: MPIBlueDotPositionUpdate? = null
+    private var selectedPolygon: MPINavigatable.MPIPolygon? = null
+    private var presentMarkerId: String? = null
+    private var markerId: String = ""
+    private var defaultRotation: Double? = null
+    private var defaultTilt: Double? = null
+
+    private val connectionTemplateString: String by lazy { readFileContentFromAssets("connectionTemplate.html") }
+    private val venueDataString: String by lazy { readFileContentFromAssets("mappedin-demo-mall.json") }
+    private val markerString: String by lazy { readFileContentFromAssets("marker.html") }
+    private val positionsString: String by lazy { readFileContentFromAssets("position.json").replace("\n", "") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +49,21 @@ class MainActivity : AppCompatActivity() {
 
         directionsButton.setOnClickListener {
             if (selectedPolygon != null && blueDot?.nearestNode != null) {
-                //Get directions to selected polygon from users nearest node
-                mapView.getDirections(selectedPolygon!!, blueDot?.nearestNode!!, true) { directions ->
-                    directions?.path?.let { path ->
+                // Get directions to selected polygon from users nearest node
+                mapView.getDirections(selectedPolygon!!, blueDot?.nearestNode!!, true) {
+                    it?.let { directions ->
                         // Remove Marker before DrawJourney
                         mapView.removeMarker(presentMarkerId!!)
-                        mapView.drawJourney(directions,
+                        mapView.journeyManager.draw(
+                            directions,
                             MPIOptions.Journey(
-                                connectionTemplateString = "<div style=\"font-size: 13px;display: flex; align-items: center; justify-content: center;\"><div style=\"margin: 10px;\">{{capitalize type}} {{#if isEntering}}to{{else}}from{{/if}} {{toMapName}}</div><div style=\"width: 40px; height: 40px; border-radius: 50%;background: green;display: flex;align-items: center;margin: 5px;margin-left: 0px;justify-content: center;\"><svg height=\"16\" viewBox=\"0 0 36 36\" width=\"16\"><g fill=\"white\">{{{icon}}}</g></svg></div></div>",
+                                connectionTemplateString = connectionTemplateString,
                                 destinationMarkerTemplateString = "",
                                 departureMarkerTemplateString = "",
                                 pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0),
-                                polygonHighlightColor = "green"))
+                                polygonHighlightColor = "green"
+                            )
+                        )
                     }
                 }
             }
@@ -62,15 +72,19 @@ class MainActivity : AppCompatActivity() {
         centerDirectionsButton.setOnClickListener {
             mapView?.getNearestNodeByScreenCoordinates(mapView?.width?.div(2) ?: 0, mapView?.height?.div(2) ?: 0) { node ->
                 if (node != null && selectedPolygon != null) {
-                    mapView.getDirections(selectedPolygon!!, node, true) { directions ->
-                        directions?.path?.let { path ->
+                    mapView.getDirections(selectedPolygon!!, node, true) {
+                        it?.let { directions ->
                             // Remove Marker before DrawJourney
                             mapView.removeMarker(presentMarkerId!!)
-                            mapView.drawJourney(directions,
-                                MPIOptions.Journey(destinationMarkerTemplateString = "<div>Destination</div>",
-                                        departureMarkerTemplateString = "<div>Departure</div>",
-                                        pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0),
-                                        polygonHighlightColor = "orange"))
+                            mapView.journeyManager.draw(
+                                directions,
+                                MPIOptions.Journey(
+                                    destinationMarkerTemplateString = "<div>Destination</div>",
+                                    departureMarkerTemplateString = "<div>Departure</div>",
+                                    pathOptions = MPIOptions.Path(drawDuration = 0.0, pulseIterations = 0.0),
+                                    polygonHighlightColor = "orange"
+                                )
+                            )
                         }
                     }
                 }
@@ -96,14 +110,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //Set up MPIMapViewListener for MPIMapView events
+        // Set up MPIMapViewListener for MPIMapView events
         mapView.listener = object : MPIMapViewListener {
             override fun onDataLoaded(data: MPIData) {
                 println("MPIData: " + Json.encodeToString(data))
                 sortedMaps = data.maps.sortedBy{it.elevation}
 
-                //Enable blueDot, does not appear until updatePosition is called with proper coordinates
-                mapView.enableBlueDot(MPIOptions.BlueDot(smoothing = false, showBearing = true, baseColor = "#2266ff"))
+                // Enable blueDot, does not appear until updatePosition is called with proper coordinates
+                mapView.blueDotManager.enable(MPIOptions.BlueDot(smoothing = false, showBearing = true, baseColor = "#2266ff"))
 
                 mapView.venueData?.polygons?.forEach {
                     if (it.locations.isNullOrEmpty()) {
@@ -119,9 +133,11 @@ class MainActivity : AppCompatActivity() {
 
                 // Create an MPICoordinate from Latitude and Longitude
                 val coord = map.createCoordinate(43.5214,-80.5369)
+                println("MPICoordinate: $coord")
 
                 // Find Distance between Location and Nearest Node
                 val distance = distanceLocationToNode(map, 43.5214, -80.5369)
+                println("Distance: $distance")
             }
             override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
                 println("MPIPolygon Clicked:" + Json.encodeToString(polygon))
@@ -147,13 +163,11 @@ class MainActivity : AppCompatActivity() {
 
             override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
                 this@MainActivity.blueDot = update
-                nearestNode.text = "BlueDot Nearest Node: " + (update.nearestNode?.id ?: "N/A")
+                nearestNode.text = getString(R.string.blueDotNearestNode, update.nearestNode?.id ?: "N/A")
             }
 
             override fun onBlueDotStateChange(stateChange: MPIBlueDotStateChange) {
-//                println(stateChange.name)
-                println(stateChange.markerVisibility)
-//                println(stateChange.reason)
+                println("State change: ${stateChange.name} ${stateChange.markerVisibility} ${stateChange.reason}")
             }
 
             override fun onNothingClicked() {
@@ -170,29 +184,74 @@ class MainActivity : AppCompatActivity() {
                     mapView.cameraControlsManager.setRotation(180.0)
                     mapView.cameraControlsManager.setTilt(0.0)
 
-                    val fileName = "position.json"
-                    val string = application.assets.open(fileName).bufferedReader().use {
-                        it.readText()
-                    }.toString()
-                    println(string.replace("\n", ""))
+                    // label all locations to be light on dark
+                    mapView.labelAllLocations(
+                        options=MPIOptions.LabelAllLocations(
+                            appearance=MPIOptions.LabelAppearance.lightOnDark
+                        )
+                    )
 
-                    val positions = Json.decodeFromString<List<MPIPosition>>(string)
+                    // create a multi-destination journey between 4 sample locations
+                    mapView.venueData?.locations?.let { locations ->
+                        if (locations.size < 8) return@let
+
+                        mapView.getDirections(
+                            to=MPIDestinationSet(destinations= listOf(locations[4], locations[5], locations[6])),
+                            from=locations[7],
+                            accessible=false
+                        ) {
+                            it?.let { directions ->
+                                // draw the journey
+                                mapView.journeyManager.draw(
+                                    directions=directions,
+                                    options=MPIOptions.Journey(connectionTemplateString=connectionTemplateString)
+                                )
+
+                                val maxSteps = 3
+                                val startDelay = 15
+                                val stepDelay = 5
+
+                                for (step in 0..maxSteps) {
+                                    // manipulate journey after a delay
+                                    Timer(false).schedule(timerTask {
+                                        if (step == maxSteps) {
+                                            // change the journey step
+                                            mapView.journeyManager.clear()
+                                        } else {
+                                            // clear journey
+                                            mapView.journeyManager.setStep(step)
+                                        }
+                                    }, (startDelay + stepDelay * step) * 1000L)
+                                }
+                            }
+                        }
+                    }
+
+                    val positions = Json.decodeFromString<List<MPIPosition>>(positionsString)
                     val handler = Handler()
                     positions.forEachIndexed { index, position ->
                         handler.postDelayed({
-                            mapView.updatePosition(position)
-                        }, (3000*index).toLong())
+                            mapView.blueDotManager.updatePosition(position)
+                        }, 3000L * index)
                     }
                 }
             }
         }
 
-        //Load venue with credentials, if using proxy pass in MPIOptions.Init(noAuth = true, venue="venue_name", baseUrl="proxy_url")
-        //mapView.loadVenue(MPIOptions.Init("5eab30aa91b055001a68e996", "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1", "mappedin-demo-mall", headers = listOf(MPIHeader("testName", "testValue"))), MPIOptions.ShowVenue(labelAllLocationsOnInit = true, backgroundColor = "#CDCDCD"))
-        val venueDataJson = application.assets.open("mappedin-demo-mall.json").bufferedReader().use{
-            it.readText()
-        }
-        mapView.showVenue(venueDataJson) {
+        // Load venue with credentials, if using proxy pass in MPIOptions.Init(noAuth = true, venue="venue_name", baseUrl="proxy_url")
+//        mapView.loadVenue(
+//            MPIOptions.Init(
+//                "5eab30aa91b055001a68e996",
+//                "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
+//                "mappedin-demo-mall",
+//                headers = listOf(MPIHeader("testName", "testValue"))
+//            ),
+//            MPIOptions.ShowVenue(
+//                labelAllLocationsOnInit = true,
+//                backgroundColor = "#CDCDCD"
+//            )
+//        )
+        mapView.showVenue(venueDataString) {
             it?.let {
                 println(it.errorMessage)
             }
@@ -207,9 +266,8 @@ class MainActivity : AppCompatActivity() {
 
     fun distanceLocationToNode(map: MPIMap, latitude: Double, longitude: Double): Double? {
         // Create an MPICoordinate from Latitude and Longitude
-        val coordinate = map.createCoordinate(latitude, longitude)
-        // Calculate Distance Between Coordinate and the Nearest Node
-        if ((coordinate?.x != null) && (coordinate?.y != null)) {
+        map.createCoordinate(latitude, longitude)?.let { coordinate ->
+            // Calculate Distance Between Coordinate and the Nearest Node
             val p1_x = coordinate.x
             val p1_y = coordinate.y
             if ((blueDot?.nearestNode?.y != null) && (blueDot?.nearestNode?.x != null)) {
@@ -226,7 +284,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun selectPolygon(polygon: MPINavigatable.MPIPolygon) {
-        polygon.locations?.firstOrNull()?.let {
+        polygon.locations.firstOrNull()?.let {
 
             selectedPolygon = polygon
             locationView.visibility = View.VISIBLE
@@ -240,15 +298,9 @@ class MainActivity : AppCompatActivity() {
                 mapView?.removeMarker(markerId)
             }
 
-            //Add a Marker on the node of the polygon being clicked
-            var node = polygon.entrances.get(0)
-            markerId = mapView.createMarker(node,
-                    "<div style=\"width: 32px; height: 32px;\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 293.334 293.334\"><g fill=\"#010002\">" +
-                            "<path d=\"M146.667 0C94.903 0 52.946 41.957 52.946 93.721c0 22.322 7.849 42.789 20.891 58.878 4.204 5.178 11.237 13.331 14.903 18.906 21.109 32.069 " +
-                            "48.19 78.643 56.082 116.864 1.354 6.527 2.986 6.641 4.743.212 5.629-20.609 20.228-65.639 50.377-112.757 3.595-5.619 10.884-13.483 15.409-18.379a94.561 " +
-                            "94.561 0 0016.154-24.084c5.651-12.086 8.882-25.466 8.882-39.629C240.387 41.962 198.43 0 146.667 0zm0 144.358c-28.892 0-52.313-23.421-52.313-52.313 0-28.887 " +
-                            "23.421-52.307 52.313-52.307s52.313 23.421 52.313 52.307c0 28.893-23.421 52.313-52.313 52.313z\"/><circle cx=\"146.667\" cy=\"90.196\" r=\"21.756\"/></g></svg></div>",
-                    MPIOptions.Marker(anchor = MPIOptions.MARKER_ANCHOR.TOP))
+            // Add a Marker on the node of the polygon being clicked
+            val node = polygon.entrances[0]
+            markerId = mapView.createMarker(node, markerString, MPIOptions.Marker(anchor = MPIOptions.MARKER_ANCHOR.TOP))
             presentMarkerId = markerId
 
             locationTitle.text = it.name
@@ -257,11 +309,11 @@ class MainActivity : AppCompatActivity() {
                 .with(this@MainActivity)
                 .load(it.logo?.original)
                 .centerCrop()
-                .into(locationImage);
+                .into(locationImage)
         }
     }
 
-    fun changeMap(isIncrementing: Boolean = true) {
+    private fun changeMap(isIncrementing: Boolean = true) {
         mapView.currentMap?.let {
             val currentIndex = sortedMaps?.indexOf(it) ?: 0
             val nextIndex = if(isIncrementing) currentIndex+1 else currentIndex-1
@@ -271,4 +323,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun readFileContentFromAssets(file: String): String {
+        return application.assets.open(file).bufferedReader().use {
+            it.readText()
+        }
+    }
 }
