@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SDKv4_Examples</string>
+    <string name="blueDotNearestNode">BlueDot Nearest Node: %1$s</string>
+</resources>

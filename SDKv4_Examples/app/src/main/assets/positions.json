@@ -1,0 +1,112 @@
+[
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52023014,
+      "longitude": -80.5352595,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52023014,
+      "longitude": -80.5352595,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52023014,
+      "longitude": -80.5354595,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52059014,
+      "longitude": -80.5354095,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52104014,
+      "longitude": -80.5353595,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52111014,
+      "longitude": -80.5360055,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52113014,
+      "longitude": -80.5363055,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52115214,
+      "longitude": -80.5366055,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52130214,
+      "longitude": -80.5366055,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52150214,
+      "longitude": -80.5366055,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  },
+  {
+    "timestamp": 25,
+    "coords": {
+      "latitude": 43.52165214,
+      "longitude": -80.53675,
+      "accuracy": 7.170562529369844,
+      "floorLevel": 0
+    },
+    "type": "SUCCESS"
+  }
+]
