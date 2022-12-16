@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Mappedin Web Embed Example</title>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+            charset="UTF-8"
+    />
+    <link
+            href="/assets/mappedin-web.css"
+            rel="stylesheet"
+    />
+    <style>
+      body,
+      html,
+      #mappedin-map {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        position: relative;
+        touch-action: none;
+      }
+    </style>
+</head>
+<body>
+<div data-key="externalId" id="mappedin-map"></div>
+<script type="text/javascript">
+      window.mappedin = {
+        miKey: {
+          // See Trial API key Terms and Conditions
+          // https://developer.mappedin.com/guides/api-keys
+          id: "5eab30aa91b055001a68e996",
+          key: "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1"
+        },
+        venue: "mappedin-demo-mall",
+        language: "en",
+        legal: {
+          termsOfUse: "https://info.mappedin.com/privacy-policy",
+          privacyPolicy: () => alert("Privacy policy callback"),
+          cookiePolicy: "https://example.com",
+          cookieSettings: () => {
+            console.log(
+              "Cookie settings callback function can do whatever you want"
+            );
+          }
+        },
+        enableBlueDot: true,
+        forceBlueDot: true
+      };
+    </script>
+<script
+        type="module"
+        src="/assets/mappedin-web.js"
+></script>
+</body>
+</html>
