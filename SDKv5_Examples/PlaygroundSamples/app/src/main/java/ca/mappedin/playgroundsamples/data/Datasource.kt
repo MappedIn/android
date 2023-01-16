@@ -10,7 +10,6 @@ class Datasource {
             Example("Display a map", "Basic venue loading and map rendering", RenderMap::class.java),
             Example("Add interactivity", "Make locations clickable with onPolygonClicked -callback", AddInteractivity::class.java),
 //            Example("Markers", "Adding HTML markers to the map view"),
-//            Example("Tooltips", "Adding clickable HTML tooltips to the map view"),
 //            Example("A-B navigation", "Get directions from A to B displayed on the map"),
 //            Example("Blue Dot onClick", "Display the Blue Dot and move it by tapping on the map"),
 //            Example("Camera controls", "Set, animate or focus the camera on a set of map objects"),

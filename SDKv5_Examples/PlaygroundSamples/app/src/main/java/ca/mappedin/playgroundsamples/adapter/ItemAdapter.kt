@@ -19,11 +19,6 @@ class ItemAdapter(private val context: Context, private val dataset: List<Exampl
 ) :
     RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
-    private fun onListItemClick(position: Int): Unit {
-        Log.d("TAG", "CLICK $position is titled ${dataset[position]}")
-
-    }
-
     class ItemViewHolder(private val view: View, private val onItemClicked: (position: Int) -> Unit):
          RecyclerView.ViewHolder(view), View.OnClickListener {
         init {
