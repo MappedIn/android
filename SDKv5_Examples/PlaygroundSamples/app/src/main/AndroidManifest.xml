@@ -33,6 +33,10 @@
             android:name=".examples.AddInteractivity"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".examples.Markers"
+            android:exported="false">
+        </activity>
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!--only needed if displaying user location-->

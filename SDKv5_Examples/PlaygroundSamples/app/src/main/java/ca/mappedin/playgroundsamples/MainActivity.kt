@@ -1,14 +1,12 @@
 package ca.mappedin.playgroundsamples
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import ca.mappedin.playgroundsamples.adapter.ItemAdapter
 import ca.mappedin.playgroundsamples.data.Datasource
-import ca.mappedin.playgroundsamples.examples.RenderMap
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,9 +15,9 @@ class MainActivity : AppCompatActivity() {
 
         // Vaguely following https://developer.android.com/codelabs/basic-android-kotlin-training-recyclerview-scrollable-list#4
 
-        val dataset = Datasource().loadExamples();
+        val dataset = Datasource().loadExamples()
 
-        fun onListItemClick(position: Int): Unit {
+        fun onListItemClick(position: Int) {
             Log.d(javaClass.simpleName, "$position clicked")
             val intent = Intent(this, dataset[position].example)
             this.startActivity(intent)
@@ -28,6 +26,5 @@ class MainActivity : AppCompatActivity() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
         recyclerView.adapter = ItemAdapter(this, dataset) { position -> onListItemClick(position) }
         recyclerView.setHasFixedSize(true)
-
     }
 }
