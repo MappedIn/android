@@ -8,14 +8,19 @@ import com.mappedin.sdk.MPIMapView
 import com.mappedin.sdk.listeners.MPIMapViewListener
 import com.mappedin.sdk.models.*
 import com.mappedin.sdk.web.MPIOptions
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import java.util.*
+import kotlin.concurrent.schedule
 
-class RenderMap : AppCompatActivity(), MPIMapViewListener {
+class BlueDot : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
+    private val positionsString: String by lazy { readFileContentFromAssets("blue-dot-positions.json").replace("\n", "") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
-        this.title = "Render a Map"
+        this.title = "Blue Dot"
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -40,6 +45,16 @@ class RenderMap : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
+        mapView.blueDotManager.enable(options = MPIOptions.BlueDot(smoothing = false, showBearing = true))
+        Log.d("BLUE DOT", "Enabled")
+        // Load positions from blue-dot-positions.json
+        val positions = Json.decodeFromString<List<MPIPosition>>(positionsString)
+        val timer = Timer("Position Updater", false)
+        positions.forEachIndexed { index, position ->
+            timer.schedule(3000L * index) {
+                mapView.blueDotManager.updatePosition(position)
+            }
+        }
     }
 
     override fun onMapChanged(map: MPIMap) {
@@ -52,5 +67,11 @@ class RenderMap : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onStateChanged(state: MPIState) {
+    }
+
+    private fun readFileContentFromAssets(file: String): String {
+        return application.assets.open(file).bufferedReader().use {
+            it.readText()
+        }
     }
 }

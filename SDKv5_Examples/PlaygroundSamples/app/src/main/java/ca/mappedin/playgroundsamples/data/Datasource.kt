@@ -3,6 +3,8 @@ package ca.mappedin.playgroundsamples.data
 import ca.mappedin.playgroundsamples.examples.AddInteractivity
 import ca.mappedin.playgroundsamples.examples.RenderMap
 import ca.mappedin.playgroundsamples.examples.Markers
+import ca.mappedin.playgroundsamples.examples.ABWayfinding
+import ca.mappedin.playgroundsamples.examples.BlueDot
 import ca.mappedin.playgroundsamples.model.Example
 
 class Datasource {
@@ -11,8 +13,8 @@ class Datasource {
             Example("Display a map", "Basic venue loading and map rendering", RenderMap::class.java),
             Example("Add interactivity", "Make locations clickable with onPolygonClicked -callback", AddInteractivity::class.java),
             Example("Markers", "Adding HTML markers to the map view", Markers::class.java),
-//            Example("A-B navigation", "Get directions from A to B displayed on the map"),
-//            Example("Blue Dot onClick", "Display the Blue Dot and move it by tapping on the map"),
+            Example("A-B navigation", "Get directions from A to B displayed on the map", ABWayfinding::class.java),
+            Example("Blue Dot onClick", "Display the Blue Dot and move it by tapping on the map", BlueDot::class.java),
 //            Example("Camera controls", "Set, animate or focus the camera on a set of map objects"),
 //            Example("List locations", "List locations of a venue without rendering the map"),
 //            Example("List categories", "List locations in sectioned by category"),

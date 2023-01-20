@@ -9,13 +9,13 @@ import com.mappedin.sdk.listeners.MPIMapViewListener
 import com.mappedin.sdk.models.*
 import com.mappedin.sdk.web.MPIOptions
 
-class RenderMap : AppCompatActivity(), MPIMapViewListener {
+class ABWayfinding : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
-        this.title = "Render a Map"
+        this.title = "A-B Wayfinding"
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -40,6 +40,16 @@ class RenderMap : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
+        val departure = mapView.venueData?.locations?.first { it.name == "Pet World" }
+        val destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
+
+        if (departure == null || destination == null) return
+
+        mapView.getDirections(to = destination, from = departure) {
+            if (it != null) {
+                mapView.journeyManager.draw(directions = it)
+            }
+        }
     }
 
     override fun onMapChanged(map: MPIMap) {
