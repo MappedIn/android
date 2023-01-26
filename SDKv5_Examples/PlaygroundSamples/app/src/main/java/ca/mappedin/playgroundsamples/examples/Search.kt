@@ -38,6 +38,8 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
         val linearLayout = findViewById<LinearLayout>(R.id.linearLayout)
         val searchView = SearchView(this)
         linearLayout.addView(searchView)
+        searchView.queryHint = "Search..."
+        searchView.isIconifiedByDefault = false
         searchView.setOnQueryTextListener(this)
 
         recyclerView = RecyclerView(this)
