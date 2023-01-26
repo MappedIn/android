@@ -35,7 +35,7 @@ class ListLocations : AppCompatActivity(), MPIMapViewListener {
     private fun setupRecyclerView() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
 
-        recyclerView.adapter = LocationAdapter(sortedLocations)
+        recyclerView.adapter = LocationAdapter(sortedLocations){}
         recyclerView.setHasFixedSize(true)
     }
 

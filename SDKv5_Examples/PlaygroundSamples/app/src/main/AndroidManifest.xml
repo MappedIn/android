@@ -57,6 +57,14 @@
             android:name=".examples.LevelSelector"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".examples.TurnByTurnDirections"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".examples.Search"
+            android:exported="false">
+        </activity>
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!--only needed if displaying user location-->
