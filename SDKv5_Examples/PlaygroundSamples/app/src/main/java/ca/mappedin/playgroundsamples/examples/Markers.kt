@@ -26,7 +26,8 @@ class Markers : AppCompatActivity(), MPIMapViewListener {
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall"
-            )
+            ),
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false)
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -61,10 +62,12 @@ class Markers : AppCompatActivity(), MPIMapViewListener {
                     <div style="background-color:white; border: 2px solid black; padding: 0.4rem; border-radius: 0.4rem;">
                     ${polygon.locations[0].name}
                     </div>
-            """.trimIndent(),
+            """,
             options = MPIOptions.Marker(rank = 4.0, anchor = MPIOptions.MARKER_ANCHOR.CENTER)
         )
-        markerIds.add(markerId)
+        markerId.let {
+            markerIds.add(it)
+        }
     }
 
     override fun onStateChanged(state: MPIState) {

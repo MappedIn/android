@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import ca.mappedin.playgroundsamples.adapter.ItemAdapter
+import ca.mappedin.playgroundsamples.adapter.ExampleAdapter
 import ca.mappedin.playgroundsamples.data.Datasource
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
-        recyclerView.adapter = ItemAdapter(this, dataset) { position -> onListItemClick(position) }
+        recyclerView.adapter = ExampleAdapter(dataset) { position -> onListItemClick(position) }
         recyclerView.setHasFixedSize(true)
     }
 }

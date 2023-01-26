@@ -30,7 +30,8 @@ class BlueDot : AppCompatActivity(), MPIMapViewListener {
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall"
-            )
+            ),
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false)
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -46,7 +47,6 @@ class BlueDot : AppCompatActivity(), MPIMapViewListener {
 
     override fun onFirstMapLoaded() {
         mapView.blueDotManager.enable(options = MPIOptions.BlueDot(smoothing = false, showBearing = true))
-        Log.d("BLUE DOT", "Enabled")
         // Load positions from blue-dot-positions.json
         val positions = Json.decodeFromString<List<MPIPosition>>(positionsString)
         val timer = Timer("Position Updater", false)

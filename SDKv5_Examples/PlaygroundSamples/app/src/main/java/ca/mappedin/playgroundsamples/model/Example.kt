@@ -1,11 +1,9 @@
 package ca.mappedin.playgroundsamples.model
 
 import androidx.appcompat.app.AppCompatActivity
-import ca.mappedin.playgroundsamples.examples.RenderMap
-
 
 data class Example(
     val title: String,
     val description: String,
-    val example: Class<out AppCompatActivity>,
+    val example: Class<out AppCompatActivity>
 )

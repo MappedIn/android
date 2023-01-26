@@ -2,14 +2,20 @@ package ca.mappedin.playgroundsamples.examples
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
 import com.mappedin.sdk.MPIMapView
+import com.mappedin.sdk.listeners.MPICameraListener
 import com.mappedin.sdk.listeners.MPIMapViewListener
 import com.mappedin.sdk.models.*
 import com.mappedin.sdk.web.MPIOptions
+import kotlin.math.PI
 
-class CameraControls : AppCompatActivity(), MPIMapViewListener {
+class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListener {
     private lateinit var mapView: MPIMapView
     private var defaultTilt: Double? = null
     private var defaultZoom: Double? = null
@@ -18,8 +24,8 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_example)
-        this.title = "Blue Dot"
+        setContentView(R.layout.activity_example_split)
+        this.title = "Camera Controls"
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -29,21 +35,103 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener {
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall"
-            )
+            ),
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false)
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
+
+        setupButtons()
+    }
+
+    private fun setupButtons() {
+        val buttonsLinearLayout = findViewById<LinearLayout>(R.id.linearLayout)
+
+        val tiltBtnLayout = LinearLayout(this)
+        tiltBtnLayout.id = View.generateViewId()
+        tiltBtnLayout.orientation = LinearLayout.HORIZONTAL
+        tiltBtnLayout.gravity = Gravity.CENTER_HORIZONTAL
+        buttonsLinearLayout?.addView(tiltBtnLayout)
+
+        val plusTiltBtn = Button(this)
+        plusTiltBtn.id = View.generateViewId()
+        plusTiltBtn.text = "Increase Tilt"
+        plusTiltBtn.setOnClickListener(
+            View.OnClickListener {
+                val currentTilt = mapView.cameraManager.tilt
+                val delta = PI / 6.0
+                mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(tilt = currentTilt + delta))
+            }
+        )
+        tiltBtnLayout.addView(plusTiltBtn)
+
+        val minusTiltBtn = Button(this)
+        minusTiltBtn.id = View.generateViewId()
+        minusTiltBtn.text = "Decrease Tilt"
+        minusTiltBtn.setOnClickListener(
+            View.OnClickListener {
+                val currentTilt = mapView.cameraManager.tilt
+                val delta = PI / 6.0
+                mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(tilt = currentTilt - delta))
+            }
+        )
+        tiltBtnLayout.addView(minusTiltBtn)
+
+        val zoomBtnLayout = LinearLayout(this)
+        zoomBtnLayout.id = View.generateViewId()
+        zoomBtnLayout.orientation = LinearLayout.HORIZONTAL
+        zoomBtnLayout.gravity = Gravity.CENTER_HORIZONTAL
+        buttonsLinearLayout?.addView(zoomBtnLayout)
+
+        val plusZoomBtn = Button(this)
+        plusZoomBtn.id = View.generateViewId()
+        plusZoomBtn.text = "Zoom In"
+        plusZoomBtn.setOnClickListener(
+            View.OnClickListener {
+                val currentZoom = mapView.cameraManager.zoom
+                val delta = 800.0
+                mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = currentZoom - delta))
+            }
+        )
+        zoomBtnLayout.addView(plusZoomBtn)
+
+        val minusZoomBtn = Button(this)
+        minusZoomBtn.id = View.generateViewId()
+        minusZoomBtn.text = "Zoom Out"
+        minusZoomBtn.setOnClickListener(
+            View.OnClickListener {
+                val currentZoom = mapView.cameraManager.zoom
+                val delta = 800.0
+                mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = currentZoom + delta))
+            }
+        )
+        zoomBtnLayout.addView(minusZoomBtn)
+
+        val resetBtnLayout = LinearLayout(this)
+        resetBtnLayout.id = View.generateViewId()
+        resetBtnLayout.orientation = LinearLayout.HORIZONTAL
+        resetBtnLayout.gravity = Gravity.CENTER_HORIZONTAL
+        buttonsLinearLayout?.addView(resetBtnLayout)
+
+        val resetBtn = Button(this)
+        resetBtn.id = View.generateViewId()
+        resetBtn.text = "Reset"
+        resetBtn.setOnClickListener(
+            View.OnClickListener {
+                val currentZoom = mapView.cameraManager.zoom
+                val delta = 800.0
+                mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = defaultZoom, tilt = defaultTilt, rotation = defaultRotation, position = defaultPosition))
+            }
+        )
+        resetBtnLayout.addView(resetBtn)
     }
 
     override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
-        TODO("Not yet implemented")
     }
 
     override fun onBlueDotStateChange(stateChange: MPIBlueDotStateChange) {
-        TODO("Not yet implemented")
     }
 
     override fun onDataLoaded(data: MPIData) {
-        TODO("Not yet implemented")
     }
 
     override fun onFirstMapLoaded() {
@@ -54,18 +142,21 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onMapChanged(map: MPIMap) {
-        TODO("Not yet implemented")
     }
 
     override fun onNothingClicked() {
-        TODO("Not yet implemented")
     }
 
     override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
-        TODO("Not yet implemented")
     }
 
     override fun onStateChanged(state: MPIState) {
-        TODO("Not yet implemented")
+    }
+
+    override fun onCameraChanged(cameraTransform: MPICameraTransform) {
+        Log.d("Position", cameraTransform.position.toString())
+        Log.d("Rotation", cameraTransform.rotation.toString())
+        Log.d("Tilt", cameraTransform.tilt.toString())
+        Log.d("Zoom", cameraTransform.zoom.toString())
     }
 }
