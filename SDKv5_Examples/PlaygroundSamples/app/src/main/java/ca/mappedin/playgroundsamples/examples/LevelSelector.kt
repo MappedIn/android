@@ -58,7 +58,6 @@ class LevelSelector : AppCompatActivity(), AdapterView.OnItemSelectedListener, M
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        Log.d("Nothing", "nothing")
     }
 
     override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
