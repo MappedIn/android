@@ -50,8 +50,17 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
         recyclerView.setHasFixedSize(true)
     }
 
-    fun onLocationSelected(index: Int) {
-        mapView.cameraManager.focusOn(MPIOptions.CameraTargets(polygons = searchResults[index].polygons))
+    private fun onLocationSelected(index: Int) {
+        val polygons = searchResults[index].polygons
+        val floor = polygons[0].map!!
+        // Move to location floor and focus on
+        mapView.setMap(floor) { err ->
+            err?.message?.let { message ->
+                Log.e("setMap", message)
+            }
+            mapView.setPolygonColor(polygons[0], "#BF4320")
+            mapView.cameraManager.focusOn(MPIOptions.CameraTargets(polygons = polygons))
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
