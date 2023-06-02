@@ -102,14 +102,14 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onDataLoaded(data: MPIData) {
+    }
+
+    override fun onFirstMapLoaded() {
         //Populate the spinners once the data has loaded.
         runOnUiThread {
             setupBuildingSpinner()
             setupLevelSpinner()
         }
-    }
-
-    override fun onFirstMapLoaded() {
     }
 
     override fun onMapChanged(map: MPIMap) {
