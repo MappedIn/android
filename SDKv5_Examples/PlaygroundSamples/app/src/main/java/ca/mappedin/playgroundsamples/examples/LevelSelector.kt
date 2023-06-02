@@ -68,10 +68,6 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     private fun setupLevelSpinner() {
         val controlLayout = findViewById<LinearLayout>(R.id.linearLayout)
         controlLayout.addView(mapSpinner)
-        //On first load, the spinner shows the list of maps from the first map group.
-        val firstMapGroupName = mapView.venueData?.mapGroups?.get(0)?.name.toString()
-        val mapNames = mapView.venueData?.maps?.filter{ it.group?.name.contentEquals(firstMapGroupName)}?.map { it.name }
-        mapNames?.let { mapSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, it) }
 
         mapSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
