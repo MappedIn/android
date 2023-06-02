@@ -21,7 +21,7 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
-        this.title = "Level Selector"
+        this.title = "Building & Level Selection"
 
         mapSpinner = Spinner(this)
         mapSpinner.setPadding(12,16,12,16)
