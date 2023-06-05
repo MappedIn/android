@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ca.mappedin.playgroundsamples.R
 import ca.mappedin.playgroundsamples.adapter.InstructionAdapter
-import ca.mappedin.playgroundsamples.adapter.LocationAdapter
 import com.mappedin.sdk.MPIMapView
 import com.mappedin.sdk.listeners.MPIMapViewListener
 import com.mappedin.sdk.models.*
@@ -36,7 +35,7 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
     }
 
     private fun setupRecyclerView() {
-        val linearLayout = findViewById<LinearLayout>(R.id.linearLayout)
+        val linearLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         val recyclerView = RecyclerView(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         linearLayout.addView(recyclerView)

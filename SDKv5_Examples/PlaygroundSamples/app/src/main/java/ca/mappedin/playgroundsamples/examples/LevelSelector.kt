@@ -42,7 +42,7 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
 
     //Populate the spinner with all map groups (buildings). When changed populate the level spinner with all maps in that group.
     private fun setupBuildingSpinner() {
-        val controlLayout = findViewById<LinearLayout>(R.id.linearLayout)
+        val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         val buildingSpinner = Spinner(this)
         buildingSpinner.setPadding(12,16,12,16)
         controlLayout.addView(buildingSpinner)
@@ -66,7 +66,7 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
 
     //Populate the spinner with the first map group on load. Change the map when the user selects a map.
     private fun setupLevelSpinner() {
-        val controlLayout = findViewById<LinearLayout>(R.id.linearLayout)
+        val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         controlLayout.addView(mapSpinner)
 
         mapSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
