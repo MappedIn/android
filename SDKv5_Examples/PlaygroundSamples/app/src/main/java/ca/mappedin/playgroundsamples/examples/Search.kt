@@ -35,7 +35,7 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
-        val linearLayout = findViewById<LinearLayout>(R.id.linearLayout)
+        val linearLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         val searchView = SearchView(this)
         linearLayout.addView(searchView)
         searchView.queryHint = "Search..."

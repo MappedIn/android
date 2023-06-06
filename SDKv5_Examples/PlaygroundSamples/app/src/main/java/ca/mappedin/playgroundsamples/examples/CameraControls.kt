@@ -44,7 +44,7 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
     }
 
     private fun setupButtons() {
-        val buttonsLinearLayout = findViewById<LinearLayout>(R.id.linearLayout)
+        val buttonsLinearLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
 
         val tiltBtnLayout = LinearLayout(this)
         tiltBtnLayout.id = View.generateViewId()
