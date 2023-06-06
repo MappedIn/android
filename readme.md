@@ -22,6 +22,7 @@ The following table list the sample applications that pertain to the latest vers
 | PlaygroundSamples - AddInteractivity | Demonstrates capturing when a user touches a polygon and changes the polygon color. | [Adding Interactivity](https://developer.mappedin.com/android-sdk/v5/add-interactivity) |
 | PlaygroundSamples - BlueDot | Demonstrates showing the user's location on the map as a blue dot. Uses scripted location coordinates to simulate movement. | [Blue Dot](https://developer.mappedin.com/android-sdk/v5/blue-dot) |
 | PlaygroundSamples - CameraControls | Demonstrates moving the camera to change the way the map is viewed. | [Camera Controls](https://developer.mappedin.com/android-sdk/v5/camera-controls) |
+| PlaygroundSamples - FloatingLabels | Demonstrates displaying and changing the style of floating labels. | |
 | Playground Samples - Level Selector | Demonstrates switching between maps for venues with multiple floors and or multiple buildings. |           |
 | PlaygroundSamples - List Locations | Demonstrates getting the name, description and icon for all locations and displaying them in a list. |           |
 | PlaygroundSamples - Markers | Demonstrates placing markers on the map where a user touches. | [Markers](https://developer.mappedin.com/android-sdk/v5/markers) |
