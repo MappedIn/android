@@ -23,7 +23,7 @@ import com.mappedin.sdk.web.MPIOptions
 class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
     private var styleNames = arrayOf("Default", "Custom Colours", "SVG Icons", "Light on Dark", "Dark on Light")
-    private val TAG = "FloatingLabels";
+    private val TAG = "FloatingLabels"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +43,6 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
-        //Enable all floating labels with the default style.
-        mapView.floatingLabelsManager.labelAllLocations(null)
-
         val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
 
         val spinnerLabel = TextView(this)
@@ -56,7 +53,7 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
         val labelStyleSpinner = Spinner(this)
         labelStyleSpinner.setPadding(12,16,12,16)
         controlLayout.addView(labelStyleSpinner)
-        styleNames.let { labelStyleSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, it) }
+        styleNames.let { labelStyleSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, it) }
 
         labelStyleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -152,6 +149,8 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
                 )
             )
         )
+        //Enable all floating labels with the default style.
+        mapView.floatingLabelsManager.labelAllLocations(null)
     }
 
     override fun onMapChanged(map: MPIMap) { }

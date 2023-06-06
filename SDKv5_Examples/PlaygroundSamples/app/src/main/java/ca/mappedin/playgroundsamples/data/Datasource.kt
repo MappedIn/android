@@ -9,6 +9,7 @@ class Datasource {
             Example("Display a Map", "Basic venue loading and map rendering", RenderMap::class.java),
             Example("Add Interactivity", "React to location tapped", AddInteractivity::class.java),
             Example("Floating Labels", "Display and modify floating labels", FloatingLabels::class.java),
+            Example("Flat Labels", "Display and modify flat labels", FlatLabels::class.java),
             Example("Markers", "Adding HTML markers to the map view", Markers::class.java),
             Example("A-B Navigation", "Get directions from A to B displayed on the map", ABWayfinding::class.java),
             Example("Blue Dot", "Display the Blue Dot on the map", BlueDot::class.java),
