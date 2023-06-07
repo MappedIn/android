@@ -25,7 +25,6 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
     private var styleNames = arrayOf("Default", "Custom Colours", "SVG Icons", "Light on Dark", "Dark on Light")
     private val TAG = "FloatingLabels"
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
@@ -38,40 +37,43 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
             MPIOptions.Init(
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-                "mappedin-demo-mall"
-            )
+                "mappedin-demo-mall",
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
         val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
 
         val spinnerLabel = TextView(this)
-        spinnerLabel.setPadding(12,16,12,16)
+        spinnerLabel.setPadding(12, 16, 12, 16)
         spinnerLabel.setText("Select a Theme", TextView.BufferType.NORMAL)
         controlLayout.addView(spinnerLabel)
 
         val labelStyleSpinner = Spinner(this)
-        labelStyleSpinner.setPadding(12,16,12,16)
+        labelStyleSpinner.setPadding(12, 16, 12, 16)
         controlLayout.addView(labelStyleSpinner)
         styleNames.let { labelStyleSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, it) }
 
-        labelStyleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        labelStyleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-            //Change the Floating Label theme based on the user's selection.
+            // Change the Floating Label theme based on the user's selection.
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 when (position) {
                     0 -> {
                         Log.d(TAG, "Default Style Selected")
-                        //Remove all floating labels and re add using the default style.
+                        // Remove all floating labels and re add using the default style.
                         mapView.floatingLabelsManager.removeAll()
                         mapView.floatingLabelsManager.labelAllLocations(null)
                     }
                     1 -> {
                         Log.d(TAG, "Custom Colours Text Style Selected")
-                        //Remove all floating labels and re-add with custom text color. Color is in RGB format.
+                        // Remove all floating labels and re-add with custom text color. Color is in RGB format.
                         val textAppearance: MPIOptions.FloatingLabelAppearance.Text = MPIOptions.FloatingLabelAppearance.Text(
-                            numLines = 2,foregroundColor = "#DAA520", backgroundColor = "#000000")
+                            numLines = 2,
+                            foregroundColor = "#DAA520",
+                            backgroundColor = "#000000",
+                        )
                         val coloredTextTheme: MPIOptions.FloatingLabelAppearance = MPIOptions.FloatingLabelAppearance(text = textAppearance)
                         val themeOptions: MPIOptions.FloatingLabelAllLocations = MPIOptions.FloatingLabelAllLocations(coloredTextTheme)
                         mapView.floatingLabelsManager.removeAll()
@@ -79,8 +81,8 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
                     }
                     2 -> {
                         Log.d(TAG, "SVG Icons Style Selected")
-                        //Remove all floating labels and re-add with a custom SVG icon.
-                        //Note that SVG must be instantiated using triple " to avoid characters being double escaped.
+                        // Remove all floating labels and re-add with a custom SVG icon.
+                        // Note that SVG must be instantiated using triple " to avoid characters being double escaped.
                         val svgIcon: String = """
                             <svg width="92" height="92" viewBox="-17 0 92 92" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0)">
@@ -93,16 +95,17 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
                             </clipPath>
                             </defs>
                             </svg>
-                            """.trimIndent()
+                        """.trimIndent()
 
-                        //Define colors using RGB values.
-                        val foreGroundColor: MPIOptions.FloatingLabelAppearance.Color = MPIOptions.FloatingLabelAppearance.Color (active = "#BF4320", inactive = "#7E2D16")
+                        // Define colors using RGB values.
+                        val foreGroundColor: MPIOptions.FloatingLabelAppearance.Color = MPIOptions.FloatingLabelAppearance.Color(active = "#BF4320", inactive = "#7E2D16")
                         val backgroundColor: MPIOptions.FloatingLabelAppearance.Color = MPIOptions.FloatingLabelAppearance.Color(active = "#FFFFFF", inactive = "#FAFAFA")
 
                         val markerAppearance: MPIOptions.FloatingLabelAppearance.Marker = MPIOptions.FloatingLabelAppearance.Marker(
                             foregroundColor = foreGroundColor,
                             backgroundColor = backgroundColor,
-                            icon = svgIcon)
+                            icon = svgIcon,
+                        )
 
                         val markerTheme: MPIOptions.FloatingLabelAppearance = MPIOptions.FloatingLabelAppearance(marker = markerAppearance)
                         val themeOptions: MPIOptions.FloatingLabelAllLocations = MPIOptions.FloatingLabelAllLocations(markerTheme)
@@ -112,14 +115,14 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
                     }
                     3 -> {
                         Log.d(TAG, "Light on Dark Theme Selected")
-                        //Remove all floating labels and re-add using the light on dark theme.
+                        // Remove all floating labels and re-add using the light on dark theme.
                         val themeOptions: MPIOptions.FloatingLabelAllLocations = MPIOptions.FloatingLabelAllLocations(MPIOptions.FloatingLabelAppearance.lightOnDark)
                         mapView.floatingLabelsManager.removeAll()
                         mapView.floatingLabelsManager.labelAllLocations(themeOptions)
                     }
                     4 -> {
                         Log.d(TAG, "Dark on Light Theme Selected")
-                        //Remove all floating labels and re-add using the dark on light theme.
+                        // Remove all floating labels and re-add using the dark on light theme.
                         val themeOptions: MPIOptions.FloatingLabelAllLocations = MPIOptions.FloatingLabelAllLocations(MPIOptions.FloatingLabelAppearance.darkOnLight)
                         mapView.floatingLabelsManager.removeAll()
                         mapView.floatingLabelsManager.labelAllLocations(themeOptions)
@@ -139,17 +142,17 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
     override fun onDataLoaded(data: MPIData) { }
 
     override fun onFirstMapLoaded() {
-        //Zoom in when the map loads to better show the Floating Labels.
+        // Zoom in when the map loads to better show the Floating Labels.
         mapView.cameraManager.set(
             MPIOptions.CameraTransformCoordinate(
                 zoom = 800.0,
                 position = mapView.currentMap?.createCoordinate(
                     43.519881426957596,
-                    -80.53906704663625
-                )
-            )
+                    -80.53906704663625,
+                ),
+            ),
         )
-        //Enable all floating labels with the default style.
+        // Enable all floating labels with the default style.
         mapView.floatingLabelsManager.labelAllLocations(null)
     }
 
