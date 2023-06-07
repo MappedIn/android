@@ -122,7 +122,7 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
                         //Remove all floating labels and re-add using the dark on light theme.
                         val themeOptions: MPIOptions.FloatingLabelAllLocations = MPIOptions.FloatingLabelAllLocations(MPIOptions.FloatingLabelAppearance.darkOnLight)
                         mapView.floatingLabelsManager.removeAll()
-                        mapView.floatingLabelsManager.labelAllLocations(themeOptions )
+                        mapView.floatingLabelsManager.labelAllLocations(themeOptions)
                     }
                     else -> {
                         Log.d(TAG, "Unknown style selected")
