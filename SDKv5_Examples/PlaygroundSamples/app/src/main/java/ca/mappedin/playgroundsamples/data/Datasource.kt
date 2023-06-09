@@ -1,6 +1,17 @@
 package ca.mappedin.playgroundsamples.data
 
-import ca.mappedin.playgroundsamples.examples.*
+import ca.mappedin.playgroundsamples.examples.ABWayfinding
+import ca.mappedin.playgroundsamples.examples.AddInteractivity
+import ca.mappedin.playgroundsamples.examples.BlueDot
+import ca.mappedin.playgroundsamples.examples.CameraControls
+import ca.mappedin.playgroundsamples.examples.FlatLabels
+import ca.mappedin.playgroundsamples.examples.FloatingLabels
+import ca.mappedin.playgroundsamples.examples.LevelSelector
+import ca.mappedin.playgroundsamples.examples.ListLocations
+import ca.mappedin.playgroundsamples.examples.Markers
+import ca.mappedin.playgroundsamples.examples.RenderMap
+import ca.mappedin.playgroundsamples.examples.Search
+import ca.mappedin.playgroundsamples.examples.TurnByTurnDirections
 import ca.mappedin.playgroundsamples.model.Example
 
 class Datasource {
@@ -17,7 +28,7 @@ class Datasource {
             Example("List Locations", "List locations of a venue without rendering the map", ListLocations::class.java),
             Example("Building & Level Selection", "Add a building & level selector", LevelSelector::class.java),
             Example("Turn-by-Turn Directions", "Display text-based turn-by-turn directions", TurnByTurnDirections::class.java),
-            Example("Search", "Search locations within a venue", Search::class.java)
+            Example("Search", "Search locations within a venue", Search::class.java),
         )
     }
 }

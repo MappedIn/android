@@ -10,7 +10,7 @@ import com.mappedin.sdk.models.MPINavigatable
 
 class LocationAdapter(
     private val dataset: List<MPINavigatable.MPILocation>,
-    private val onListItemClicked: (position: Int) -> Unit
+    private val onListItemClicked: (position: Int) -> Unit,
 ) : RecyclerView.Adapter<LocationAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(view: View, val onItemClicked: (position: Int) -> Unit) :
