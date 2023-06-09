@@ -152,8 +152,6 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
                 ),
             ),
         )
-        // Enable all floating labels with the default style.
-        mapView.floatingLabelsManager.labelAllLocations(null)
     }
 
     override fun onMapChanged(map: MPIMap) { }

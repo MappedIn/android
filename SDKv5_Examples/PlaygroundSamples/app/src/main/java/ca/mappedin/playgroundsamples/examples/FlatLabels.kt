@@ -41,6 +41,7 @@ class FlatLabels : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
+            MPIOptions.ShowVenue(labelAllLocationsOnInit = false), // Disable Floating Labels from loading on start.
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
@@ -105,8 +106,6 @@ class FlatLabels : AppCompatActivity(), MPIMapViewListener {
                 ),
             ),
         )
-        // Remove all floating labels.
-        mapView.floatingLabelsManager.removeAll()
         // Enable all flat labels with the default style.
         mapView.flatLabelsManager.labelAllLocations(null)
     }
