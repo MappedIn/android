@@ -1,16 +1,25 @@
 # Mappedin Android SDK Playground Samples
 
-This repository contains small individual examples of Mappedin Android SDK features. Mappedin Web SDK have an interactive [playground on the Developer Portal](https://developer.mappedin.com/playground/latest/) and these aim to emulate a similar experience on mobile.
+This project contains examples of key features of version 5 of the Mappedin SDK for Android. 
+
+The Mappedin Web SDK has an interactive [Playground](https://developer.mappedin.com/playground/latest/) where you can also view these features in a browser.
+
 
 ## Usage
-- Start the project in Android Studio.
-- Run the application in an emulator
-- Explore the examples
-- Read the sample code 
-- Contact us if you have any questions :) 
 
-## Adding examples
-To add an example, three files need to be modified or created.
-1. `AndroidManifest.xml` need a new `<activity` definition
-2. Example activity class in `examples`-folder
-3. `Datasource.kt` needs to have a title, short description and link to the example class file
+1. Clone the repo to your computer.
+2. Launch Android Studio.
+3. Click on File menu, Open.
+4. Navigate to the PlaygroundSamples directory and click OK.
+5. Run the application in an Android emulator or device
+6. Explore the examples
+7. Read the sample code
+
+
+------
+
+## Additional Resources
+
+- [Mappedin Developer Site](https://developer.mappedin.com/)
+- [Mappedin SDK for Android API Docs](https://developer.mappedin.com/android-sdk-api/latest/)
+- [Mappedin Developer Blog](https://www.mappedin.com/blog/developers/)
