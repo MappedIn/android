@@ -26,8 +26,8 @@ class ListLocations : AppCompatActivity(), MPIMapViewListener {
             MPIOptions.Init(
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-                "mappedin-demo-mall"
-            )
+                "mappedin-demo-mall",
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -35,7 +35,7 @@ class ListLocations : AppCompatActivity(), MPIMapViewListener {
     private fun setupRecyclerView() {
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
 
-        recyclerView.adapter = LocationAdapter(sortedLocations){}
+        recyclerView.adapter = LocationAdapter(sortedLocations) {}
         recyclerView.setHasFixedSize(true)
     }
 

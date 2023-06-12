@@ -34,9 +34,9 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
             MPIOptions.Init(
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-                "mappedin-demo-mall"
+                "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false)
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
@@ -60,7 +60,7 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
                 val currentTilt = mapView.cameraManager.tilt
                 val delta = PI / 6.0
                 mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(tilt = currentTilt + delta))
-            }
+            },
         )
         tiltBtnLayout.addView(plusTiltBtn)
 
@@ -72,7 +72,7 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
                 val currentTilt = mapView.cameraManager.tilt
                 val delta = PI / 6.0
                 mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(tilt = currentTilt - delta))
-            }
+            },
         )
         tiltBtnLayout.addView(minusTiltBtn)
 
@@ -90,7 +90,7 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
                 val currentZoom = mapView.cameraManager.zoom
                 val delta = 800.0
                 mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = currentZoom - delta))
-            }
+            },
         )
         zoomBtnLayout.addView(plusZoomBtn)
 
@@ -102,7 +102,7 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
                 val currentZoom = mapView.cameraManager.zoom
                 val delta = 800.0
                 mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = currentZoom + delta))
-            }
+            },
         )
         zoomBtnLayout.addView(minusZoomBtn)
 
@@ -120,7 +120,7 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
                 val currentZoom = mapView.cameraManager.zoom
                 val delta = 800.0
                 mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = defaultZoom, tilt = defaultTilt, rotation = defaultRotation, position = defaultPosition))
-            }
+            },
         )
         resetBtnLayout.addView(resetBtn)
     }

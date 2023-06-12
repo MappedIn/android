@@ -65,6 +65,14 @@
             android:name=".examples.Search"
             android:exported="false">
         </activity>
+        <activity
+            android:name=".examples.FloatingLabels"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".examples.FlatLabels"
+            android:exported="false">
+        </activity>
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!--only needed if displaying user location-->

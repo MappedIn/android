@@ -30,8 +30,8 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
             MPIOptions.Init(
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-                "mappedin-demo-mall"
-            )
+                "mappedin-demo-mall",
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
@@ -83,9 +83,11 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
                         for (match in matches) {
                             mapView.venueData?.locations?.first { it.name == match.value }
                                 ?.let { location ->
-                                    if (!filteredSearchResults.contains(location)) filteredSearchResults.add(
-                                        location
-                                    )
+                                    if (!filteredSearchResults.contains(location)) {
+                                        filteredSearchResults.add(
+                                            location,
+                                        )
+                                    }
                                 }
                         }
                         searchResults = filteredSearchResults

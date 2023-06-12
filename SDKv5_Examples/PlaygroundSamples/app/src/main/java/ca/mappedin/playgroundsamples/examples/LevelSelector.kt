@@ -16,7 +16,7 @@ import com.mappedin.sdk.web.MPIOptions
 
 class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
-    private lateinit var mapSpinner: Spinner //The spinner that contains the map (level) names.
+    private lateinit var mapSpinner: Spinner // The spinner that contains the map (level) names.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +24,7 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
         this.title = "Building & Level Selection"
 
         mapSpinner = Spinner(this)
-        mapSpinner.setPadding(12,16,12,16)
+        mapSpinner.setPadding(12, 16, 12, 16)
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -33,38 +33,43 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
             MPIOptions.Init(
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-                "mappedin-demo-campus"
+                "mappedin-demo-campus",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false)
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
 
-    //Populate the spinner with all map groups (buildings). When changed populate the level spinner with all maps in that group.
+    // Populate the spinner with all map groups (buildings). When changed populate the level spinner with all maps in that group.
     private fun setupBuildingSpinner() {
         val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         val buildingSpinner = Spinner(this)
-        buildingSpinner.setPadding(12,16,12,16)
+        buildingSpinner.setPadding(12, 16, 12, 16)
         controlLayout.addView(buildingSpinner)
         val mapGroupNames = mapView.venueData?.mapGroups?.map { it.name }
         mapGroupNames?.let { buildingSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, it) }
 
-        buildingSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        buildingSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-            //When a new map group (building) is selected, update the level spinner with the list of maps for that building.
+            // When a new map group (building) is selected, update the level spinner with the list of maps for that building.
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedMapGroupName = parent?.getItemAtPosition(position).toString()
-                val mapNames = mapView.venueData?.maps?.filter{ it.group?.name.contentEquals(selectedMapGroupName)}?.map { it.name }
-                mapNames?.let { mapSpinner.adapter = parent?.context?.let { it1 ->
-                    ArrayAdapter<String>(
-                        it1, android.R.layout.simple_spinner_item, it)
-                } }
+                val mapNames = mapView.venueData?.maps?.filter { it.group?.name.contentEquals(selectedMapGroupName) }?.map { it.name }
+                mapNames?.let {
+                    mapSpinner.adapter = parent?.context?.let { it1 ->
+                        ArrayAdapter<String>(
+                            it1,
+                            android.R.layout.simple_spinner_item,
+                            it,
+                        )
+                    }
+                }
             }
         }
     }
 
-    //Populate the spinner with the first map group on load. Change the map when the user selects a map.
+    // Populate the spinner with the first map group on load. Change the map when the user selects a map.
     private fun setupLevelSpinner() {
         val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         controlLayout.addView(mapSpinner)
@@ -76,7 +81,7 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
-                id: Long
+                id: Long,
             ) {
                 parent?.getItemAtPosition(position)?.let { mapName ->
                     mapView.venueData?.maps?.first { it.name == mapName }?.let { map ->
@@ -101,7 +106,7 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
-        //Populate the spinners once the data has loaded.
+        // Populate the spinners once the data has loaded.
         runOnUiThread {
             setupBuildingSpinner()
             setupLevelSpinner()

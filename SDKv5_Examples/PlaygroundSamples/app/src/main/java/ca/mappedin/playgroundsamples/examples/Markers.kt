@@ -25,9 +25,9 @@ class Markers : AppCompatActivity(), MPIMapViewListener {
             MPIOptions.Init(
                 "5eab30aa91b055001a68e996",
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-                "mappedin-demo-mall"
+                "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false)
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -63,7 +63,7 @@ class Markers : AppCompatActivity(), MPIMapViewListener {
                     ${polygon.locations[0].name}
                     </div>
             """,
-            options = MPIOptions.Marker(rank = 4.0, anchor = MPIOptions.MARKER_ANCHOR.CENTER)
+            options = MPIOptions.Marker(rank = 4.0, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
         )
         markerId.let {
             markerIds.add(it)

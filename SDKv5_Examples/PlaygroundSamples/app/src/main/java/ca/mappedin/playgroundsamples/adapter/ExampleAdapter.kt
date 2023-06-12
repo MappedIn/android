@@ -10,7 +10,7 @@ import ca.mappedin.playgroundsamples.model.Example
 
 class ExampleAdapter(
     private val dataset: List<Example>,
-    private val onListItemClicked: (position: Int) -> Unit
+    private val onListItemClicked: (position: Int) -> Unit,
 ) :
     RecyclerView.Adapter<ExampleAdapter.ItemViewHolder>() {
 
