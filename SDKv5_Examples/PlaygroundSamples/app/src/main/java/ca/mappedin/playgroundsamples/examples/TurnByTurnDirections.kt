@@ -53,7 +53,7 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
-        val departure = mapView.venueData?.locations?.first { it.name == "Pet World" }
+        val departure = mapView.venueData?.locations?.first { it.name == "Apple" }
         val destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
 
         if (departure == null || destination == null) return
