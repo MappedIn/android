@@ -15,7 +15,7 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
-        this.title = "Markers"
+        this.title = "Add Interactivity"
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
