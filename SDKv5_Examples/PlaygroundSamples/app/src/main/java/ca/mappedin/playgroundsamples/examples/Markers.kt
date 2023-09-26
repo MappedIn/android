@@ -5,11 +5,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
 import com.mappedin.sdk.MPIMapView
+import com.mappedin.sdk.listeners.MPIMapClickListener
 import com.mappedin.sdk.listeners.MPIMapViewListener
 import com.mappedin.sdk.models.*
 import com.mappedin.sdk.web.MPIOptions
 
-class Markers : AppCompatActivity(), MPIMapViewListener {
+class Markers : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
     private lateinit var mapView: MPIMapView
     private val markerIds = mutableListOf<String>()
 
@@ -30,6 +31,7 @@ class Markers : AppCompatActivity(), MPIMapViewListener {
             showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
+        mapView.mapClickListener = this
     }
 
     override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
@@ -48,26 +50,34 @@ class Markers : AppCompatActivity(), MPIMapViewListener {
     override fun onMapChanged(map: MPIMap) {
     }
 
+    @Deprecated("Use MPIMapClickListener instead.")
     override fun onNothingClicked() {
-        markerIds.forEach {
-            mapView.removeMarker(it)
-        }
-        markerIds.clear()
     }
 
-    override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
-        val markerId = mapView.createMarker(
-            node = polygon.entrances[0],
-            contentHtml = """
+    override fun onClick(mapClickEvent: MPIMapClickEvent) {
+        if (!mapClickEvent.polygons.isEmpty()) {
+            val markerId = mapView.createMarker(
+                node = mapClickEvent.polygons.first().entrances[0],
+                contentHtml = """
                     <div style="background-color:white; border: 2px solid black; padding: 0.4rem; border-radius: 0.4rem;">
-                    ${polygon.locations[0].name}
+                    ${mapClickEvent.polygons.first().locations[0].name}
                     </div>
             """,
-            options = MPIOptions.Marker(rank = 4.0, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
-        )
-        markerId.let {
-            markerIds.add(it)
+                options = MPIOptions.Marker(rank = 4.0, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
+            )
+            markerId.let {
+                markerIds.add(it)
+            }
+        } else {
+            markerIds.forEach {
+                mapView.removeMarker(it)
+            }
+            markerIds.clear()
         }
+    }
+
+    @Deprecated("Use MPIMapClickListener instead.")
+    override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
     }
 
     override fun onStateChanged(state: MPIState) {

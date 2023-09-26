@@ -38,6 +38,7 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
         val linearLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         val recyclerView = RecyclerView(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setPadding(16, 16, 16, 16)
         linearLayout.addView(recyclerView)
         recyclerView.adapter = InstructionAdapter(instructions)
         recyclerView.setHasFixedSize(true)

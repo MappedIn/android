@@ -26,6 +26,7 @@ class ABWayfinding : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
+            MPIOptions.ShowVenue(multiBufferRendering = true, xRayPath = true),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -40,14 +41,27 @@ class ABWayfinding : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
-        val departure = mapView.venueData?.locations?.first { it.name == "Apple" }
-        val destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
+        var departure = mapView.venueData?.locations?.first { it.name == "Apple" }
+        var destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
 
         if (departure == null || destination == null) return
 
+        // Draw a path using a journey manager.
         mapView.getDirections(to = destination, from = departure) {
             if (it != null) {
                 mapView.journeyManager.draw(directions = it)
+            }
+        }
+
+        departure = mapView.venueData?.locations?.first { it.name == "Uniqlo" }
+        destination = mapView.venueData?.locations?.first { it.name == "Nespresso" }
+
+        if (departure == null || destination == null) return
+
+        // Draw a path using path manager.
+        mapView.getDirections(to = destination, from = departure) {
+            if (it != null) {
+                mapView.pathManager.add(nodes = it.path)
             }
         }
     }
