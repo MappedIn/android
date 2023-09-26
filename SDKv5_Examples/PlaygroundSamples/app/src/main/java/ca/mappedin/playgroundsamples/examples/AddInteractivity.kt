@@ -5,11 +5,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
 import com.mappedin.sdk.MPIMapView
+import com.mappedin.sdk.listeners.MPIMapClickListener
 import com.mappedin.sdk.listeners.MPIMapViewListener
 import com.mappedin.sdk.models.*
 import com.mappedin.sdk.web.MPIOptions
 
-class AddInteractivity : AppCompatActivity(), MPIMapViewListener {
+class AddInteractivity : AppCompatActivity(), MPIMapClickListener {
     private lateinit var mapView: MPIMapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,31 +28,13 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener {
                 "mappedin-demo-mall",
             ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
-        mapView.listener = this
+        mapView.mapClickListener = this
     }
 
-    override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
-    }
-
-    override fun onBlueDotStateChange(stateChange: MPIBlueDotStateChange) {
-    }
-
-    override fun onDataLoaded(data: MPIData) {
-    }
-
-    override fun onFirstMapLoaded() {
-    }
-
-    override fun onMapChanged(map: MPIMap) {
-    }
-
-    override fun onNothingClicked() {
-    }
-
-    override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
-        mapView.setPolygonColor(polygon, "#BF4320")
-    }
-
-    override fun onStateChanged(state: MPIState) {
+    override fun onClick(mapClickEvent: MPIMapClickEvent) {
+        if (!mapClickEvent.polygons.isEmpty()) {
+            val polygon = mapClickEvent.polygons.first()
+            mapView.setPolygonColor(polygon, "#BF4320")
+        }
     }
 }
