@@ -69,9 +69,11 @@ class ABWayfinding : AppCompatActivity(), MPIMapViewListener {
     override fun onMapChanged(map: MPIMap) {
     }
 
+    @Deprecated("Use MPIMapClickListener instead")
     override fun onNothingClicked() {
     }
 
+    @Deprecated("Use MPIMapClickListener instead")
     override fun onPolygonClicked(polygon: MPINavigatable.MPIPolygon) {
     }
 

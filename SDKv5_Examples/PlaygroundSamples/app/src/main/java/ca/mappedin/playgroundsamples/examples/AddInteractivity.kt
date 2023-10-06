@@ -38,26 +38,26 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
         val message = StringBuilder()
 
         // Use the map name as the title.
-        if (!mapClickEvent.maps.isEmpty()) {
+        if (mapClickEvent.maps.isNotEmpty()) {
             title = mapClickEvent.maps.first().name
         }
 
         // If a floating label was clicked, add its text to the message.
-        if (!mapClickEvent.floatingLabels.isEmpty()) {
+        if (mapClickEvent.floatingLabels.isNotEmpty()) {
             message.append("Floating Label Clicked: ")
             message.append(mapClickEvent.floatingLabels.first().second)
             message.append("\n")
         }
 
         // If a polygon was clicked, add it's location name to the message.
-        if (!mapClickEvent.polygons.isEmpty()) {
+        if (mapClickEvent.polygons.isNotEmpty()) {
             message.append("Polygon clicked: ")
             message.append(mapClickEvent.polygons.first().locations.first().name)
             message.append("\n")
         }
 
         // If a path was clicked, add it to the message.
-        if (!mapClickEvent.paths.isEmpty()) {
+        if (mapClickEvent.paths.isNotEmpty()) {
             message.append("You clicked a path.\n")
         }
 
