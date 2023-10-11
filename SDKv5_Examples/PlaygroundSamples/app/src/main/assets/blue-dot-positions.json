@@ -3,8 +3,8 @@
     "timestamp": 1583957906820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.5198632380776,
-      "longitude": -80.53942986675524,
+      "latitude": 43.862108600668506,
+      "longitude": -78.9467383078573,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -13,8 +13,8 @@
     "timestamp": 1583957907820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.51987180954568,
-      "longitude": -80.53937797787238,
+      "latitude": 43.86204357853135,
+      "longitude": -78.946820540577,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -23,8 +23,8 @@
     "timestamp": 1583957908820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.51987362130144,
-      "longitude": -80.53936701024787,
+      "latitude": 43.862003811747755,
+      "longitude": -78.94675913354384,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -33,8 +33,8 @@
     "timestamp": 1583957909820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.51987845601218,
-      "longitude": -80.53933774239817,
+      "latitude": 43.86197014853335,
+      "longitude": -78.94670599431743,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -43,8 +43,8 @@
     "timestamp": 1583957910820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.51994773222684,
-      "longitude": -80.53935968787466,
+      "latitude": 43.86190802623676,
+      "longitude": -78.9466411893701,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -53,8 +53,8 @@
     "timestamp": 1583957911820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.51998464311041,
-      "longitude": -80.53940792494183,
+      "latitude": 43.86187909449966,
+      "longitude": -78.9466493303359,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -63,8 +63,8 @@
     "timestamp": 1583957912820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520035382363034,
-      "longitude": -80.53942363601355,
+      "latitude": 43.861833876623486,
+      "longitude": -78.94652489834935,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -73,8 +73,8 @@
     "timestamp": 1583957913820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52008531864664,
-      "longitude": -80.53944076787833,
+      "latitude": 43.86175924085103,
+      "longitude": -78.94651719087712,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -83,8 +83,8 @@
     "timestamp": 1583957914820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52013617153354,
-      "longitude": -80.53945774305696,
+      "latitude": 43.86172800401522,
+      "longitude": -78.94644032325735,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -93,8 +93,8 @@
     "timestamp": 1583957915820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520187024417936,
-      "longitude": -80.5394747182642,
+      "latitude": 43.861735409197124,
+      "longitude": -78.94639694322467,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -103,8 +103,8 @@
     "timestamp": 1583957916820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52024952044421,
-      "longitude": -80.53949498678301,
+      "latitude": 43.86167515067344,
+      "longitude": -78.94645711280846,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -113,8 +113,8 @@
     "timestamp": 1583957917820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52025954844024,
-      "longitude": -80.53943905711499,
+      "latitude": 43.86167768207693,
+      "longitude": -78.94647485045375,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -123,8 +123,8 @@
     "timestamp": 1583957918820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52027280747624,
-      "longitude": -80.53936510653637,
+      "latitude": 43.86165952631669,
+      "longitude": -78.94657522896318,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -133,8 +133,8 @@
     "timestamp": 1583957919820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52027863805572,
-      "longitude": -80.5393325871301,
+      "latitude": 43.86162161199238,
+      "longitude": -78.94650897606807,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -143,8 +143,8 @@
     "timestamp": 1583957920820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52033810452238,
-      "longitude": -80.53935390965088,
+      "latitude": 43.86154526316589,
+      "longitude": -78.94652622583344,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -153,8 +153,8 @@
     "timestamp": 1583957921820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520346154512055,
-      "longitude": -80.53930852037288,
+      "latitude": 43.86152244592366,
+      "longitude": -78.9464944735053,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -163,8 +163,8 @@
     "timestamp": 1583957922820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520391889398205,
-      "longitude": -80.53932429163909,
+      "latitude": 43.86148877506558,
+      "longitude": -78.9465014138967,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -173,8 +173,8 @@
     "timestamp": 1583957923820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52043561313185,
-      "longitude": -80.53933082065123,
+      "latitude": 43.86143911908102,
+      "longitude": -78.94639569287247,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -183,8 +183,8 @@
     "timestamp": 1583957924820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520481467021604,
-      "longitude": -80.53933721280485,
+      "latitude": 43.86141741938665,
+      "longitude": -78.9463510480013,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -193,8 +193,8 @@
     "timestamp": 1583957925820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520538023234295,
-      "longitude": -80.53934154779414,
+      "latitude": 43.861408467492474,
+      "longitude": -78.9464177225712,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -203,8 +203,8 @@
     "timestamp": 1583957926820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52055725729579,
-      "longitude": -80.53934373497076,
+      "latitude": 43.8613182738863,
+      "longitude": -78.94635512354668,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -213,8 +213,8 @@
     "timestamp": 1583957927820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520622545891584,
-      "longitude": -80.53933636160151,
+      "latitude": 43.861290117695894,
+      "longitude": -78.94633929223637,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -223,8 +223,8 @@
     "timestamp": 1583957928820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520639645340935,
-      "longitude": -80.5393331573046,
+      "latitude": 43.86121812681116,
+      "longitude": -78.94631922593855,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -233,8 +233,8 @@
     "timestamp": 1583957929820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52069716421815,
-      "longitude": -80.53932075595065,
+      "latitude": 43.86121304550675,
+      "longitude": -78.94632579395187,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -243,8 +243,8 @@
     "timestamp": 1583957930820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520699313488244,
-      "longitude": -80.53932066917616,
+      "latitude": 43.861187869571694,
+      "longitude": -78.94624459253798,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -253,8 +253,8 @@
     "timestamp": 1583957931820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520754114891794,
-      "longitude": -80.53930203424432,
+      "latitude": 43.86117390120355,
+      "longitude": -78.9463073105636,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -263,8 +263,8 @@
     "timestamp": 1583957932820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52076225070207,
-      "longitude": -80.53929935971195,
+      "latitude": 43.86113473515182,
+      "longitude": -78.94627508272784,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -273,8 +273,8 @@
     "timestamp": 1583957933820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52077436899362,
-      "longitude": -80.5392962849662,
+      "latitude": 43.861109026306565,
+      "longitude": -78.94629883651784,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -283,8 +283,8 @@
     "timestamp": 1583957934820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52084120738598,
-      "longitude": -80.53926660744943,
+      "latitude": 43.861056702533524,
+      "longitude": -78.94625601940315,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -293,8 +293,8 @@
     "timestamp": 1583957935820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52088556033178,
-      "longitude": -80.53924233859227,
+      "latitude": 43.8610229634325,
+      "longitude": -78.94629345005129,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -303,8 +303,8 @@
     "timestamp": 1583957936820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.520913982579636,
-      "longitude": -80.53922721100702,
+      "latitude": 43.860955011962176,
+      "longitude": -78.94630114609565,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -313,8 +313,8 @@
     "timestamp": 1583957937820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52096475922802,
-      "longitude": -80.5391915757677,
+      "latitude": 43.86086058522052,
+      "longitude": -78.94634479032177,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -323,8 +323,8 @@
     "timestamp": 1583957938820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52103017459775,
-      "longitude": -80.53911172372483,
+      "latitude": 43.86083649397855,
+      "longitude": -78.94636524444438,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -333,8 +333,8 @@
     "timestamp": 1583957939820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.5210812799373,
-      "longitude": -80.53904289166316,
+      "latitude": 43.860775566759514,
+      "longitude": -78.94644421999388,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -343,8 +343,8 @@
     "timestamp": 1583957940820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521127602178325,
-      "longitude": -80.53896350626384,
+      "latitude": 43.86066502562762,
+      "longitude": -78.94642438093746,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -353,8 +353,8 @@
     "timestamp": 1583957941820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52117120422298,
-      "longitude": -80.53886877265982,
+      "latitude": 43.860670230971856,
+      "longitude": -78.94648458663369,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -363,8 +363,8 @@
     "timestamp": 1583957942820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521171893537506,
-      "longitude": -80.53886608778633,
+      "latitude": 43.86060330656747,
+      "longitude": -78.94651821001437,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -373,8 +373,8 @@
     "timestamp": 1583957943820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52120036036772,
-      "longitude": -80.53878934402991,
+      "latitude": 43.860628020458144,
+      "longitude": -78.94651473420589,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -383,8 +383,8 @@
     "timestamp": 1583957944820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521201049680386,
-      "longitude": -80.53878665915423,
+      "latitude": 43.86059547912028,
+      "longitude": -78.94664560047111,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -393,8 +393,8 @@
     "timestamp": 1583957945820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521225622744126,
-      "longitude": -80.53870801408902,
+      "latitude": 43.86053311854348,
+      "longitude": -78.94659584477252,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -403,8 +403,8 @@
     "timestamp": 1583957946820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52122791797037,
-      "longitude": -80.53870248760465,
+      "latitude": 43.86057301778537,
+      "longitude": -78.9466018379113,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -413,8 +413,8 @@
     "timestamp": 1583957947820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521229985902046,
-      "longitude": -80.53869443297074,
+      "latitude": 43.86054879866281,
+      "longitude": -78.94661877499541,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -423,8 +423,8 @@
     "timestamp": 1583957948820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52124116983198,
-      "longitude": -80.53863994819058,
+      "latitude": 43.86054494195771,
+      "longitude": -78.94666255320371,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -433,8 +433,8 @@
     "timestamp": 1583957949820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52124746078121,
-      "longitude": -80.53860930049287,
+      "latitude": 43.86051135353881,
+      "longitude": -78.94665670274956,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -443,8 +443,8 @@
     "timestamp": 1583957950820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521250573795726,
-      "longitude": -80.5385818145397,
+      "latitude": 43.8605056000892,
+      "longitude": -78.94673675334077,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -453,8 +453,8 @@
     "timestamp": 1583957951820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.5212543761108,
-      "longitude": -80.53855164370295,
+      "latitude": 43.86048702735274,
+      "longitude": -78.94674754217175,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -463,8 +463,8 @@
     "timestamp": 1583957952820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52125898878479,
-      "longitude": -80.53850978272553,
+      "latitude": 43.86048173315984,
+      "longitude": -78.94674900363313,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -473,8 +473,8 @@
     "timestamp": 1583957953820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521259806559826,
-      "longitude": -80.53848782325782,
+      "latitude": 43.8604695589871,
+      "longitude": -78.94684603967137,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -483,8 +483,8 @@
     "timestamp": 1583957954820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52126134325523,
-      "longitude": -80.53842210158435,
+      "latitude": 43.8604717548176,
+      "longitude": -78.9468576600871,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -493,8 +493,8 @@
     "timestamp": 1583957955820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521259080997034,
-      "longitude": -80.53839487758911,
+      "latitude": 43.86042900891566,
+      "longitude": -78.94696367743663,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -503,8 +503,8 @@
     "timestamp": 1583957956820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52124998555934,
-      "longitude": -80.53828542480895,
+      "latitude": 43.860420668708215,
+      "longitude": -78.94705724893906,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -513,8 +513,8 @@
     "timestamp": 1583957957820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52123793840294,
-      "longitude": -80.53815143296968,
+      "latitude": 43.860434090744775,
+      "longitude": -78.94709896127084,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -523,8 +523,8 @@
     "timestamp": 1583957958820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.521347930889895,
-      "longitude": -80.53813262446992,
+      "latitude": 43.86045614894909,
+      "longitude": -78.94714357965499,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -533,8 +533,8 @@
     "timestamp": 1583957959820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52144417431346,
-      "longitude": -80.5381161669764,
+      "latitude": 43.860414011373415,
+      "longitude": -78.94724837709875,
       "floorLevel": 0
     },
     "type": "SUCCESS"
@@ -543,38 +543,8 @@
     "timestamp": 1583957960820,
     "coords": {
       "accuracy": 5,
-      "latitude": 43.52143587756753,
-      "longitude": -80.53802388929816,
-      "floorLevel": 0
-    },
-    "type": "SUCCESS"
-  },
-  {
-    "timestamp": 1583957961820,
-    "coords": {
-      "accuracy": 5,
-      "latitude": 43.52143133137389,
-      "longitude": -80.53797332619757,
-      "floorLevel": 0
-    },
-    "type": "SUCCESS"
-  },
-  {
-    "timestamp": 1583957962820,
-    "coords": {
-      "accuracy": 5,
-      "latitude": 43.52142508032127,
-      "longitude": -80.53790380194671,
-      "floorLevel": 0
-    },
-    "type": "SUCCESS"
-  },
-  {
-    "timestamp": 1583957963820,
-    "coords": {
-      "accuracy": 5,
-      "latitude": 43.52147182711135,
-      "longitude": -80.53789580812601,
+      "latitude": 43.86044824594682,
+      "longitude": -78.94722110759074,
       "floorLevel": 0
     },
     "type": "SUCCESS"

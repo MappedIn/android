@@ -101,15 +101,14 @@ class FlatLabels : AppCompatActivity(), MPIMapViewListener {
             MPIOptions.CameraTransformCoordinate(
                 zoom = 800.0,
                 position = mapView.currentMap?.createCoordinate(
-                    43.519881426957596,
-                    -80.53906704663625,
+                    43.86181934825464,
+                    -78.94672121994297,
                 ),
             ),
         )
         // Enable all flat labels with the default style.
         mapView.flatLabelsManager.labelAllLocations(null)
     }
-
     override fun onMapChanged(map: MPIMap) { }
 
     @Deprecated("Use MPIMapClickListener instead")
