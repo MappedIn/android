@@ -14,8 +14,8 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://oriient.jfrog.io/artifactory/libs-release-local")
             credentials {
-                username = "mappedindev"
-                password = "MappedinSDK1"
+                username = ""
+                password = ""
             }
         }
     }
