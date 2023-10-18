@@ -8,7 +8,12 @@ import ca.mappedin.playgroundsamples.R
 import ca.mappedin.playgroundsamples.adapter.LocationAdapter
 import com.mappedin.sdk.MPIMapView
 import com.mappedin.sdk.listeners.MPIMapViewListener
-import com.mappedin.sdk.models.*
+import com.mappedin.sdk.models.MPIBlueDotPositionUpdate
+import com.mappedin.sdk.models.MPIBlueDotStateChange
+import com.mappedin.sdk.models.MPIData
+import com.mappedin.sdk.models.MPIMap
+import com.mappedin.sdk.models.MPINavigatable
+import com.mappedin.sdk.models.MPIState
 import com.mappedin.sdk.web.MPIOptions
 
 class ListLocations : AppCompatActivity(), MPIMapViewListener {
