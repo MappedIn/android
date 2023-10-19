@@ -11,19 +11,25 @@ import ca.mappedin.playgroundsamples.R
 import ca.mappedin.playgroundsamples.adapter.LocationAdapter
 import com.mappedin.sdk.MPIMapView
 import com.mappedin.sdk.listeners.MPIMapViewListener
-import com.mappedin.sdk.models.*
+import com.mappedin.sdk.models.MPIBlueDotPositionUpdate
+import com.mappedin.sdk.models.MPIBlueDotStateChange
+import com.mappedin.sdk.models.MPIData
+import com.mappedin.sdk.models.MPIMap
+import com.mappedin.sdk.models.MPINavigatable
+import com.mappedin.sdk.models.MPIOfflineSearchResultLocation
+import com.mappedin.sdk.models.MPIState
 import com.mappedin.sdk.web.MPIOptions
 
 class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextListener {
     private lateinit var mapView: MPIMapView
     private lateinit var recyclerView: RecyclerView
-    private var searchResults = listOf<MPINavigatable.MPILocation>()
+    private var searchResults: MutableList<MPINavigatable.MPILocation> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Search"
 
-        mapView = findViewById<MPIMapView>(R.id.mapView)
+        mapView = findViewById(R.id.mapView)
         // See Trial API key Terms and Conditions
         // https://developer.mappedin.com/api-keys/
         mapView.loadVenue(
@@ -71,31 +77,31 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
 
     override fun onQueryTextChange(query: String?): Boolean {
         if (query == null || query == "") {
-            searchResults = mapView.venueData?.locations ?: listOf()
+            searchResults = (mapView.venueData?.locations ?: listOf()).toMutableList()
             runOnUiThread {
                 reloadAdapter()
             }
         } else {
             mapView.searchManager.search(query) { results ->
-                val filteredSearchResults = mutableListOf<MPINavigatable.MPILocation>()
-                results?.flatMap { result -> result.matches.filter { match -> match.matchesOn == "name" } }
-                    ?.let { matches ->
-                        for (match in matches) {
-                            mapView.venueData?.locations?.first { it.name == match.value }
-                                ?.let { location ->
-                                    if (!filteredSearchResults.contains(location)) {
-                                        filteredSearchResults.add(
-                                            location,
-                                        )
-                                    }
-                                }
-                        }
-                        searchResults = filteredSearchResults
-                        runOnUiThread {
-                            recyclerView.adapter =
-                                LocationAdapter(searchResults) { index -> onLocationSelected(index) }
-                        }
-                    }
+                // This sample only shows locations of type tenant.
+                // The filters below filter results that are MPIOfflineSearchResultLocation (removing categories MPIOfflineSearchResultCategory)
+                // and where the location type is tenant (removing amenities it.location.type = "amenities"). Location types can be unique
+                // to each venue. The list is then sorted, with the highest score first.
+                val searchLocations = results
+                    ?.filterIsInstance<MPIOfflineSearchResultLocation>()
+                    ?.filter { it.location.type == "tenant" }
+                    ?.sortedByDescending { it.score }
+                searchResults.clear()
+
+                searchLocations?.forEach { searchResultLocation ->
+                    searchResults.add(searchResultLocation.location)
+                    // Print out the MPIOfflineSearchMatch to logcat to show search match justification.
+                    Log.d("Search Matches On: ", searchResultLocation.matches.toString())
+                }
+                runOnUiThread {
+                    recyclerView.adapter =
+                        LocationAdapter(searchResults) { index -> onLocationSelected(index) }
+                }
             }
         }
         return false
@@ -108,7 +114,7 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
     }
 
     override fun onDataLoaded(data: MPIData) {
-        searchResults = mapView.venueData?.locations ?: listOf()
+        searchResults = (mapView.venueData?.locations ?: listOf()).toMutableList()
         runOnUiThread {
             reloadAdapter()
         }
