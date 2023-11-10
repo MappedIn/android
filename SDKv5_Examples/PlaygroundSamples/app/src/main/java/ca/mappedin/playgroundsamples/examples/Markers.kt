@@ -63,7 +63,7 @@ class Markers : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
                     ${mapClickEvent.polygons.first().locations[0].name}
                     </div>
             """,
-                options = MPIOptions.Marker(rank = 4.0, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
+                options = MPIOptions.Marker(rank = MPIOptions.COLLISION_RANK.MEDIUM, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
             )
             markerId.let {
                 markerIds.add(it)
