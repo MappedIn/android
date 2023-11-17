@@ -54,6 +54,10 @@
             android:exported="false">
         </activity>
         <activity
+            android:name=".examples.Tooltips"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".examples.LevelSelector"
             android:exported="false">
         </activity>
