@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
 import com.mappedin.sdk.MPIMapView
@@ -17,6 +18,7 @@ import kotlin.math.PI
 
 class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private var defaultTilt: Double? = null
     private var defaultZoom: Double? = null
     private var defaultRotation: Double? = null
@@ -26,6 +28,9 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Camera Controls"
+
+        progressBar = findViewById(R.id.splitLoadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -135,6 +140,8 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
     }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         defaultTilt = mapView.cameraManager.tilt
         defaultZoom = mapView.cameraManager.zoom
         defaultRotation = mapView.cameraManager.rotation

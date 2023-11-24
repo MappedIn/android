@@ -2,6 +2,7 @@ package ca.mappedin.playgroundsamples.examples
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
@@ -13,11 +14,15 @@ import com.mappedin.sdk.web.MPIOptions
 
 class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
         this.title = "Add Interactivity"
+
+        progressBar = findViewById(R.id.loadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -77,6 +82,8 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
     override fun onDataLoaded(data: MPIData) {}
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         // Make the floating labels interactive.
         mapView.floatingLabelsManager.labelAllLocations(MPIOptions.FloatingLabelAllLocations(interactive = true))
 

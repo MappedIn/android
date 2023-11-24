@@ -3,6 +3,7 @@ package ca.mappedin.playgroundsamples.examples
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,12 +23,16 @@ import com.mappedin.sdk.web.MPIOptions
 
 class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private var searchResults: MutableList<MPINavigatable.MPILocation> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Search"
+
+        progressBar = findViewById(R.id.splitLoadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -121,6 +126,7 @@ class Search : AppCompatActivity(), MPIMapViewListener, SearchView.OnQueryTextLi
     }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
     }
 
     override fun onMapChanged(map: MPIMap) {

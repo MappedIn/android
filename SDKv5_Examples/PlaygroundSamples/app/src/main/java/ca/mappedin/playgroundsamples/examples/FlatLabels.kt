@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ import com.mappedin.sdk.web.MPIOptions
 
 class FlatLabels : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private var styleNames = arrayOf("Default", "Small Red", "Medium Blue", "Large Purple")
     private var fontSizes = arrayOf(12f, 4f, 8f, 16f) // The font sizes used for flat labels.
     private var textColours = arrayOf("#000000", "#e31a0b", "#0a0dbf", "#7c08d4") // The colours used for flat labels.
@@ -31,6 +33,9 @@ class FlatLabels : AppCompatActivity(), MPIMapViewListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Flat Labels"
+
+        progressBar = findViewById(R.id.splitLoadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -96,6 +101,8 @@ class FlatLabels : AppCompatActivity(), MPIMapViewListener {
     override fun onDataLoaded(data: MPIData) { }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         // Zoom in when the map loads to better show the flat labels.
         mapView.cameraManager.set(
             MPIOptions.CameraTransformCoordinate(

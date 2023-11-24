@@ -3,6 +3,7 @@ package ca.mappedin.playgroundsamples.examples
 import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,11 +16,15 @@ import com.mappedin.sdk.web.MPIOptions
 
 class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private var instructions = listOf<MPIDirections.MPIInstruction>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Turn by Turn Directions"
+
+        progressBar = findViewById(R.id.splitLoadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -54,6 +59,8 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         val departure = mapView.venueData?.locations?.first { it.name == "Apple" }
         val destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
 
@@ -61,8 +68,8 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
 
         mapView.getDirections(to = destination, from = departure) {
                 directions ->
-            mapView.journeyManager.draw(directions!!)
-            instructions = directions.instructions
+            directions?.let { mapView.journeyManager.draw(it) }
+            directions?.instructions?.let { instructions = it }
             runOnUiThread {
                 setupRecyclerView()
             }
