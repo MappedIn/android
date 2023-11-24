@@ -2,6 +2,7 @@ package ca.mappedin.playgroundsamples.examples
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
 import com.mappedin.sdk.MPIMapView
@@ -15,12 +16,16 @@ import kotlin.concurrent.schedule
 
 class BlueDot : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private val positionsString: String by lazy { readFileContentFromAssets("blue-dot-positions.json").replace("\n", "") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example)
         this.title = "Blue Dot"
+
+        progressBar = findViewById(R.id.loadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -31,7 +36,7 @@ class BlueDot : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = true),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -46,7 +51,11 @@ class BlueDot : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         mapView.blueDotManager.enable(options = MPIOptions.BlueDot(smoothing = false, showBearing = true))
+        mapView.blueDotManager.setState(MPIState.FOLLOW)
+        mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = 700.0))
         // Load positions from blue-dot-positions.json
         val positions = Json.decodeFromString<List<MPIPosition>>(positionsString)
         val timer = Timer("Position Updater", false)

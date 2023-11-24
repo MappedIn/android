@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import ca.mappedin.playgroundsamples.R
@@ -16,12 +17,16 @@ import com.mappedin.sdk.web.MPIOptions
 
 class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private lateinit var mapSpinner: Spinner // The spinner that contains the map (level) names.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Building & Level Selection"
+
+        progressBar = findViewById(R.id.splitLoadingIndicator)
+        progressBar.bringToFront()
 
         mapSpinner = Spinner(this)
         mapSpinner.setPadding(12, 16, 12, 16)
@@ -106,6 +111,8 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
     }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         // Populate the spinners once the data has loaded.
         runOnUiThread {
             setupBuildingSpinner()

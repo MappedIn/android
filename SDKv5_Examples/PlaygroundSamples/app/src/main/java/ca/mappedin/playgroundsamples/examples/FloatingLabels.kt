@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ import com.mappedin.sdk.web.MPIOptions
 
 class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
     private lateinit var mapView: MPIMapView
+    private lateinit var progressBar: ProgressBar
     private var styleNames = arrayOf("Default", "Custom Colours", "SVG Icons", "Light on Dark", "Dark on Light")
     private val TAG = "FloatingLabels"
 
@@ -29,6 +31,9 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_example_split)
         this.title = "Floating Labels"
+
+        progressBar = findViewById(R.id.splitLoadingIndicator)
+        progressBar.bringToFront()
 
         mapView = findViewById(R.id.mapView)
         // See Trial API key Terms and Conditions
@@ -142,6 +147,8 @@ class FloatingLabels : AppCompatActivity(), MPIMapViewListener {
     override fun onDataLoaded(data: MPIData) { }
 
     override fun onFirstMapLoaded() {
+        progressBar.visibility = ProgressBar.INVISIBLE
+
         // Zoom in when the map loads to better show the Floating Labels.
         mapView.cameraManager.set(
             MPIOptions.CameraTransformCoordinate(
