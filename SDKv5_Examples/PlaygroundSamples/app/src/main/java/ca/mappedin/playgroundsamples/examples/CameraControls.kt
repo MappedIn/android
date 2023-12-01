@@ -135,8 +135,6 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
         resetBtn.text = "Reset"
         resetBtn.setOnClickListener(
             View.OnClickListener {
-                val currentZoom = mapView.cameraManager.zoom
-                val delta = 800.0
                 mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = defaultZoom, tilt = defaultTilt, rotation = defaultRotation, position = defaultPosition))
             },
         )
