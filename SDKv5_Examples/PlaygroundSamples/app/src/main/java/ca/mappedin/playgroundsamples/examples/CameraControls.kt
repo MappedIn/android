@@ -117,6 +117,19 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
         resetBtnLayout.gravity = Gravity.CENTER_HORIZONTAL
         buttonsLinearLayout?.addView(resetBtnLayout)
 
+        val aniateBtn = Button(this)
+        aniateBtn.id = View.generateViewId()
+        aniateBtn.text = "Animate"
+        aniateBtn.setOnClickListener(
+            View.OnClickListener {
+                val zoomTarget = mapView.venueData?.locations?.first { it.name == "Sunglass Hut" }
+                val cameraTransform = MPIOptions.CameraTransformNode(zoom = 50.0, tilt = 2.0, rotation = 180.0, position = zoomTarget?.nodes?.first())
+                val cameraAnimation = MPIOptions.CameraAnimation(duration = 3000.0, easing = MPIOptions.EASING_MODE.EASE_IN)
+                mapView.cameraManager.animate(cameraTransform, cameraAnimation)
+            },
+        )
+        resetBtnLayout.addView(aniateBtn)
+
         val resetBtn = Button(this)
         resetBtn.id = View.generateViewId()
         resetBtn.text = "Reset"
