@@ -56,7 +56,33 @@ class Tooltips : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
 
     override fun onFirstMapLoaded() {
         progressBar.visibility = ProgressBar.INVISIBLE
-        mapView.flatLabelsManager.labelAllLocations(MPIOptions.FlatLabelAllLocations())
+
+        val departure = mapView.venueData?.locations?.first { it.name == "Cleo" }
+        val destination = mapView.venueData?.locations?.first { it.name == "Pandora" }
+
+        if (departure == null || destination == null) return
+
+        // Draw a path using path manager.
+        mapView.getDirections(to = destination, from = departure) { directions ->
+            if (directions != null) {
+                mapView.pathManager.add(nodes = directions.path)
+                // Add tooltips of each instruction at its node.
+                directions.instructions.forEach() { instruction ->
+                    instruction.node?.let { node ->
+                        mapView.createTooltip(
+                            node = node,
+                            """<span style="background-color: azure; padding:0.2rem; font-size:0.7rem">${instruction.instruction}</span>""",
+                            MPIOptions.Tooltip(
+                                collisionRank = MPIOptions.COLLISION_RANK.MEDIUM,
+                            ),
+                        )
+                    }
+                }
+                // Focus the camera on the path.
+                val targets = MPIOptions.CameraTargets(nodes = directions.path)
+                mapView.cameraManager.focusOn(targets = targets, options = MPIOptions.FocusOn(minZoom = 1800.0))
+            }
+        }
     }
 
     override fun onMapChanged(map: MPIMap) {
@@ -70,7 +96,7 @@ class Tooltips : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
         if (!mapClickEvent.polygons.isEmpty()) {
             mapView.createTooltip(
                 node = mapClickEvent.polygons.first().entrances[0],
-                """<div tabindex="0" style="padding: 10px; background-color: gray;">${mapClickEvent.polygons.first().locations[0].name}</div>""",
+                """<div style=\"background-color:white; border: 2px solid black; padding: 0.4rem; border-radius: 0.4rem;\">${mapClickEvent.polygons.first().locations[0].name}</div>""",
                 MPIOptions.Tooltip(
                     collisionRank = MPIOptions.COLLISION_RANK.MEDIUM,
                 ),
