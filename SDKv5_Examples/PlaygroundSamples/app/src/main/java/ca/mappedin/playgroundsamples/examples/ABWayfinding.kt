@@ -48,8 +48,8 @@ class ABWayfinding : AppCompatActivity(), MPIMapViewListener {
     override fun onFirstMapLoaded() {
         progressBar.visibility = ProgressBar.INVISIBLE
 
-        var departure = mapView.venueData?.locations?.first { it.name == "Apple" }
-        var destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
+        var departure = mapView.venueData?.locations?.first { it.name == "Uniqlo" }
+        var destination = mapView.venueData?.locations?.first { it.name == "Foot Locker" }
 
         if (departure == null || destination == null) return
 
@@ -60,8 +60,8 @@ class ABWayfinding : AppCompatActivity(), MPIMapViewListener {
             }
         }
 
-        departure = mapView.venueData?.locations?.first { it.name == "Uniqlo" }
-        destination = mapView.venueData?.locations?.first { it.name == "Nespresso" }
+        departure = mapView.venueData?.locations?.first { it.name == "Apple" }
+        destination = mapView.venueData?.locations?.first { it.name == "Microsoft" }
 
         if (departure == null || destination == null) return
 
