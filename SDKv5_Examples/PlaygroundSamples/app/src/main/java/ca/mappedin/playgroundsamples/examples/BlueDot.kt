@@ -36,7 +36,8 @@ class BlueDot : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = true),
+            showVenueOptions = MPIOptions.ShowVenue(multiBufferRendering = true, labelAllLocationsOnInit = true,
+                shadingAndOutlines = true, outdoorView = MPIOptions.OutdoorView(enabled = true)),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
