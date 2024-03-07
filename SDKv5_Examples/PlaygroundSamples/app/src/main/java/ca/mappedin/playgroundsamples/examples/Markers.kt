@@ -33,7 +33,8 @@ class Markers : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            showVenueOptions = MPIOptions.ShowVenue(multiBufferRendering = true, labelAllLocationsOnInit = false,
+                shadingAndOutlines = true, outdoorView = MPIOptions.OutdoorView(enabled = true)),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
         mapView.mapClickListener = this

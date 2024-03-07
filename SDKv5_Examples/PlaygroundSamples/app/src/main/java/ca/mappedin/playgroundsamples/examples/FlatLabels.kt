@@ -46,7 +46,8 @@ class FlatLabels : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            MPIOptions.ShowVenue(labelAllLocationsOnInit = false), // Disable Floating Labels from loading on start.
+            MPIOptions.ShowVenue(multiBufferRendering = true, labelAllLocationsOnInit = false, // Disable Floating Labels from loading on start.
+                shadingAndOutlines = true, outdoorView = MPIOptions.OutdoorView(enabled = true)),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 

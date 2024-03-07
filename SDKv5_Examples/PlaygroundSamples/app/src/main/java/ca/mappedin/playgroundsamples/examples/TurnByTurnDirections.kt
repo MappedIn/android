@@ -26,7 +26,7 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
         progressBar = findViewById(R.id.splitLoadingIndicator)
         progressBar.bringToFront()
 
-        mapView = findViewById<MPIMapView>(R.id.mapView)
+        mapView = findViewById(R.id.mapView)
         // See Trial API key Terms and Conditions
         // https://developer.mappedin.com/api-keys/
         mapView.loadVenue(
@@ -35,6 +35,8 @@ class TurnByTurnDirections : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
+            showVenueOptions = MPIOptions.ShowVenue(multiBufferRendering = true, labelAllLocationsOnInit = false,
+                shadingAndOutlines = true, outdoorView = MPIOptions.OutdoorView(enabled = true)),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }

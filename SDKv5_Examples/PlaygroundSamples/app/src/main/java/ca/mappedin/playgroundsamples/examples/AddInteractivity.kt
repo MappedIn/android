@@ -33,6 +33,9 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
+                showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = true,
+                    shadingAndOutlines = true, outdoorView = MPIOptions.OutdoorView(enabled = true)
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.mapClickListener = this
         mapView.listener = this
@@ -50,7 +53,7 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
         // If a floating label was clicked, add its text to the message.
         if (mapClickEvent.floatingLabels.isNotEmpty()) {
             message.append("Floating Label Clicked: ")
-            message.append(mapClickEvent.floatingLabels.first().second)
+            message.append(mapClickEvent.floatingLabels.first().text)
             message.append("\n")
         }
 

@@ -40,7 +40,8 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-campus",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            MPIOptions.ShowVenue(multiBufferRendering = true, labelAllLocationsOnInit = false, // Disable Floating Labels from loading on start.
+                shadingAndOutlines = true, outdoorView = MPIOptions.OutdoorView(enabled = true)),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
