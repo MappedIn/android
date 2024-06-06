@@ -50,7 +50,7 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
         // If a floating label was clicked, add its text to the message.
         if (mapClickEvent.floatingLabels.isNotEmpty()) {
             message.append("Floating Label Clicked: ")
-            message.append(mapClickEvent.floatingLabels.first().second)
+            message.append(mapClickEvent.floatingLabels.first().text)
             message.append("\n")
         }
 
