@@ -33,7 +33,12 @@ class Markers : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            MPIOptions.ShowVenue(
+                labelAllLocationsOnInit = false,
+                shadingAndOutlines = true,
+                multiBufferRendering = true,
+                outdoorView = MPIOptions.OutdoorView(enabled = true),
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
         mapView.mapClickListener = this
@@ -63,21 +68,22 @@ class Markers : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
 
     override fun onClick(mapClickEvent: MPIMapClickEvent) {
         if (!mapClickEvent.polygons.isEmpty()) {
-            val markerId = mapView.createMarker(
+            mapView.markerManager.add(
                 node = mapClickEvent.polygons.first().entrances[0],
                 contentHtml = """
                     <div style="background-color:white; border: 2px solid black; padding: 0.4rem; border-radius: 0.4rem;">
                     ${mapClickEvent.polygons.first().locations[0].name}
                     </div>
             """,
-                options = MPIOptions.Marker(rank = MPIOptions.COLLISION_RANK.MEDIUM, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
-            )
-            markerId.let {
-                markerIds.add(it)
+                markerOptions = MPIOptions.Marker(rank = MPIOptions.COLLISION_RANK.MEDIUM, anchor = MPIOptions.MARKER_ANCHOR.CENTER),
+            ) {
+                if (it != null) {
+                    markerIds.add(it)
+                }
             }
         } else {
             markerIds.forEach {
-                mapView.removeMarker(it)
+                mapView.markerManager.remove(it)
             }
             markerIds.clear()
         }

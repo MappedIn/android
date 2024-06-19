@@ -29,7 +29,7 @@ class Tooltips : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
 
         progressBar = findViewById(R.id.loadingIndicator)
         progressBar.bringToFront()
-        
+
         mapView = findViewById<MPIMapView>(R.id.mapView)
         // See Trial API key Terms and Conditions
         // https://developer.mappedin.com/api-keys/
@@ -39,7 +39,12 @@ class Tooltips : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            MPIOptions.ShowVenue(
+                labelAllLocationsOnInit = false,
+                shadingAndOutlines = true,
+                multiBufferRendering = true,
+                outdoorView = MPIOptions.OutdoorView(enabled = true),
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
         mapView.mapClickListener = this
@@ -65,9 +70,9 @@ class Tooltips : AppCompatActivity(), MPIMapViewListener, MPIMapClickListener {
         // Draw a path using path manager.
         mapView.getDirections(to = destination, from = departure) { directions ->
             if (directions != null) {
-                mapView.pathManager.add(nodes = directions.path)
+                mapView.pathManager.add(nodes = directions.path, MPIOptions.Path(nearRadius = 1.0))
                 // Add tooltips of each instruction at its node.
-                directions.instructions.forEach() { instruction ->
+                directions.instructions.forEach { instruction ->
                     instruction.node?.let { node ->
                         mapView.createTooltip(
                             node = node,

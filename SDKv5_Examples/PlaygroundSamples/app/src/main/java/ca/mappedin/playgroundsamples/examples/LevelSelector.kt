@@ -40,7 +40,12 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-campus",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            MPIOptions.ShowVenue(
+                labelAllLocationsOnInit = false,
+                shadingAndOutlines = true,
+                multiBufferRendering = true,
+                outdoorView = MPIOptions.OutdoorView(enabled = true),
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }
@@ -54,24 +59,31 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
         val mapGroupNames = mapView.venueData?.mapGroups?.map { it.name }
         mapGroupNames?.let { buildingSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, it) }
 
-        buildingSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        buildingSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-            // When a new map group (building) is selected, update the level spinner with the list of maps for that building.
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedMapGroupName = parent?.getItemAtPosition(position).toString()
-                val mapNames = mapView.venueData?.maps?.filter { it.group?.name.contentEquals(selectedMapGroupName) }?.map { it.name }
-                mapNames?.let {
-                    mapSpinner.adapter = parent?.context?.let { it1 ->
-                        ArrayAdapter<String>(
-                            it1,
-                            android.R.layout.simple_spinner_item,
-                            it,
-                        )
+                // When a new map group (building) is selected, update the level spinner with the list of maps for that building.
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    val selectedMapGroupName = parent?.getItemAtPosition(position).toString()
+                    val mapNames = mapView.venueData?.maps?.filter { it.group?.name.contentEquals(selectedMapGroupName) }?.map { it.name }
+                    mapNames?.let {
+                        mapSpinner.adapter =
+                            parent?.context?.let { it1 ->
+                                ArrayAdapter<String>(
+                                    it1,
+                                    android.R.layout.simple_spinner_item,
+                                    it,
+                                )
+                            }
                     }
                 }
             }
-        }
     }
 
     // Populate the spinner with the first map group on load. Change the map when the user selects a map.
@@ -79,26 +91,27 @@ class LevelSelector : AppCompatActivity(), MPIMapViewListener {
         val controlLayout = findViewById<LinearLayout>(R.id.controlsLinearLayout)
         controlLayout.addView(mapSpinner)
 
-        mapSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        mapSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
-                parent?.getItemAtPosition(position)?.let { mapName ->
-                    mapView.venueData?.maps?.first { it.name == mapName }?.let { map ->
-                        mapView.setMap(map) { err ->
-                            err?.message?.let { message ->
-                                Log.e("setMap", message)
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    parent?.getItemAtPosition(position)?.let { mapName ->
+                        mapView.venueData?.maps?.first { it.name == mapName }?.let { map ->
+                            mapView.setMap(map) { err ->
+                                err?.message?.let { message ->
+                                    Log.e("setMap", message)
+                                }
                             }
                         }
                     }
                 }
             }
-        }
     }
 
     override fun onBlueDotPositionUpdate(update: MPIBlueDotPositionUpdate) {
