@@ -33,6 +33,11 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
+            MPIOptions.ShowVenue(
+                shadingAndOutlines = true,
+                multiBufferRendering = true,
+                outdoorView = MPIOptions.OutdoorView(enabled = true),
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.mapClickListener = this
         mapView.listener = this
@@ -124,7 +129,10 @@ class AddInteractivity : AppCompatActivity(), MPIMapViewListener, MPIMapClickLis
 
     override fun onStateChanged(state: MPIState) {}
 
-    private fun showMessage(title: String, message: String) {
+    private fun showMessage(
+        title: String,
+        message: String,
+    ) {
         runOnUiThread(
             Runnable {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(this)

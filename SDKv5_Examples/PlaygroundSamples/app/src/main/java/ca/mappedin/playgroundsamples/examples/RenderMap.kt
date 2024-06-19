@@ -34,6 +34,11 @@ class RenderMap : AppCompatActivity(), MPIMapViewListener {
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
+            MPIOptions.ShowVenue(
+                shadingAndOutlines = true,
+                multiBufferRendering = true,
+                outdoorView = MPIOptions.OutdoorView(enabled = true),
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
     }

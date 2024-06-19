@@ -41,7 +41,11 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
                 "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
                 "mappedin-demo-mall",
             ),
-            showVenueOptions = MPIOptions.ShowVenue(labelAllLocationsOnInit = false),
+            MPIOptions.ShowVenue(
+                shadingAndOutlines = true,
+                multiBufferRendering = true,
+                outdoorView = MPIOptions.OutdoorView(enabled = true),
+            ),
         ) { Log.e(javaClass.simpleName, "Error loading map view") }
         mapView.listener = this
 
@@ -123,7 +127,13 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
         aniateBtn.setOnClickListener(
             View.OnClickListener {
                 val zoomTarget = mapView.venueData?.locations?.first { it.name == "Sunglass Hut" }
-                val cameraTransform = MPIOptions.CameraTransformNode(zoom = 50.0, tilt = 2.0, rotation = 180.0, position = zoomTarget?.nodes?.first())
+                val cameraTransform =
+                    MPIOptions.CameraTransformNode(
+                        zoom = 50.0,
+                        tilt = 2.0,
+                        rotation = 180.0,
+                        position = zoomTarget?.nodes?.first(),
+                    )
                 val cameraAnimation = MPIOptions.CameraAnimation(duration = 3000.0, easing = MPIOptions.EASING_MODE.EASE_IN)
                 mapView.cameraManager.animate(cameraTransform, cameraAnimation)
             },
@@ -135,7 +145,14 @@ class CameraControls : AppCompatActivity(), MPIMapViewListener, MPICameraListene
         resetBtn.text = "Reset"
         resetBtn.setOnClickListener(
             View.OnClickListener {
-                mapView.cameraManager.set(MPIOptions.CameraTransformCoordinate(zoom = defaultZoom, tilt = defaultTilt, rotation = defaultRotation, position = defaultPosition))
+                mapView.cameraManager.set(
+                    MPIOptions.CameraTransformCoordinate(
+                        zoom = defaultZoom,
+                        tilt = defaultTilt,
+                        rotation = defaultRotation,
+                        position = defaultPosition,
+                    ),
+                )
             },
         )
         resetBtnLayout.addView(resetBtn)
