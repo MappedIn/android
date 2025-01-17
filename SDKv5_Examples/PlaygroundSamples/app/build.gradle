@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'ca.mappedin.playgroundsamples'
-    compileSdk 33
+    compileSdk 35
 
     defaultConfig {
         applicationId "ca.mappedin.playgroundsamples"
         minSdk 30
-        targetSdk 33
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -43,5 +43,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.squareup.picasso:picasso:2.8'
 
-    implementation 'com.mappedin.sdk:mappedin:5.5.0'
+    implementation 'com.mappedin.sdk:mappedin:5.6.0'
 }
