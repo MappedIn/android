@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<uses-permission android:name="android.permission.INTERNET" />
+
+	<application
+		android:largeHeap="true"
+		android:label="Mappedin v6 Demo"
+		android:icon="@mipmap/ic_launcher"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:theme="@style/Theme.Material3.DayNight">
+		<activity
+			android:name="com.mappedin.demo.MainActivity"
+			android:exported="true"
+			android:windowSoftInputMode="adjustResize">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="com.mappedin.demo.LabelsDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.BuildingFloorSelectionDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.DisplayMapDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.MarkersDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.Image3DDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.InteractivityDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.ModelsDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.PathsDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.AreaShapesDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.NavigationDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.CameraDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.QueryDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.SearchDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+	</application>
+</manifest>

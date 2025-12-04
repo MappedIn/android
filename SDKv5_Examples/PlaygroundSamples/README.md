@@ -1,9 +1,6 @@
 # Mappedin Android SDK Playground Samples
 
-This project contains examples of key features of version 5 of the Mappedin SDK for Android. 
-
-The Mappedin Web SDK has an interactive [Playground](https://developer.mappedin.com/playground/latest/) where you can also view these features in a browser.
-
+This project contains examples of key features of version 5 of the Mappedin SDK for Android.
 
 ## Usage
 
@@ -15,11 +12,10 @@ The Mappedin Web SDK has an interactive [Playground](https://developer.mappedin.
 6. Explore the examples
 7. Read the sample code
 
-
-------
+---
 
 ## Additional Resources
 
 - [Mappedin Developer Site](https://developer.mappedin.com/)
-- [Mappedin SDK for Android API Docs](https://developer.mappedin.com/android-sdk-api/latest/)
-- [Mappedin Developer Blog](https://www.mappedin.com/blog/developers/)
+- [Mappedin SDK for Android Getting Started Guide](https://developer.mappedin.com/android-sdk/5.0/getting-started)
+- [Mappedin SDK for Android API Docs](https://docs.mappedin.com/android-sdk-api/v5/latest/)
