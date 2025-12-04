@@ -8,7 +8,8 @@
 		android:label="Mappedin v6 Demo"
 		android:icon="@mipmap/ic_launcher"
 		android:roundIcon="@mipmap/ic_launcher_round"
-		android:theme="@style/Theme.Material3.DayNight">
+		android:theme="@style/Theme.Material3.DayNight"
+        android:hardwareAccelerated="true">
 		<activity
 			android:name="com.mappedin.demo.MainActivity"
 			android:exported="true"
