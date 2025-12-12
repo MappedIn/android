@@ -1,2 +1,0 @@
-include ':quickstart-java'
-include ':quickstart-kotlin'
