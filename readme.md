@@ -4,8 +4,6 @@ This repo contains sample applications demonstrating different ways to integrate
 
 The Mappedin SDK for Android enables you to build powerful and highly flexible indoor mapping experiences natively on Android.
 
-This repo also contains a project demonstrating how to use an Android WebView to integrate with our out of the box web product, [Mappedin Web](https://www.mappedin.com/wayfinding/web-app/).
-
 ---
 
 ## Mappedin SDK for Android v6 Samples
@@ -41,4 +39,3 @@ The following table lists the sample activities that pertain to the latest versi
 - [Mappedin SDK for Android API Docs](https://docs.mappedin.com/android-sdk-api/v6/latest/)
 
 ---
-
