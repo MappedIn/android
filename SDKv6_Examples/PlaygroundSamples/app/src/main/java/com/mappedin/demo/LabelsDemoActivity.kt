@@ -193,4 +193,3 @@ class LabelsDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-

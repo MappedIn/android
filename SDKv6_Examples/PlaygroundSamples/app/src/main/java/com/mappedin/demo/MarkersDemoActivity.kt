@@ -158,4 +158,3 @@ class MarkersDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-

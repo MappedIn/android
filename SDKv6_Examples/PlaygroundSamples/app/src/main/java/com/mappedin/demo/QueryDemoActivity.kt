@@ -44,7 +44,7 @@ class QueryDemoActivity : AppCompatActivity() {
 						dp(16),
 						systemBars.top + dp(12),
 						dp(16),
-						dp(12)
+						dp(12),
 					)
 					insets
 				}
@@ -86,10 +86,11 @@ class QueryDemoActivity : AppCompatActivity() {
 
 		// Add loading indicator
 		loadingIndicator = ProgressBar(this)
-		val loadingParams = FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT
-		)
+		val loadingParams =
+			FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+			)
 		loadingParams.gravity = Gravity.CENTER
 		mapContainer.addView(loadingIndicator, loadingParams)
 
@@ -135,7 +136,7 @@ class QueryDemoActivity : AppCompatActivity() {
 			// Reset previously highlighted space to its original color
 			highlightedSpace?.let { space ->
 				originalColor?.let { color ->
-					mapView.updateState(space, mapOf("color" to color)) { }
+					mapView.updateState(space, GeometryUpdateState(color = color)) { }
 				}
 			}
 
@@ -154,16 +155,16 @@ class QueryDemoActivity : AppCompatActivity() {
 							// Get the current color of the space before highlighting
 							mapView.getState(space) { stateResult ->
 								stateResult.onSuccess { state ->
-									originalColor = state?.get("color") as? String
+									originalColor = state?.color
 
 									// Highlight the space with a new color
-									mapView.updateState(space, mapOf("color" to "#FF6B35")) { }
+									mapView.updateState(space, GeometryUpdateState(color = "#FF6B35")) { }
 
 									// Update the highlighted space reference
 									highlightedSpace = space
 
-								// Update instruction text
-								instructionText.text = "Highlighted: ${space.name} (${String.format(Locale.getDefault(), "%.1f", nearestResult.distance)}m away)"
+									// Update instruction text
+									instructionText.text = "Highlighted: ${space.name} (${String.format(Locale.getDefault(), "%.1f", nearestResult.distance)}m away)"
 								}
 							}
 						}
@@ -186,4 +187,3 @@ class QueryDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-

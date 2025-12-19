@@ -1,6 +1,8 @@
 package com.mappedin.demo
 
+import android.R
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -18,9 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mappedin.MapView
 import com.mappedin.models.EnterpriseLocation
+import com.mappedin.models.GeometryUpdateState
 import com.mappedin.models.GetMapDataWithCredentialsOptions
+import com.mappedin.models.MapDataType
 import com.mappedin.models.SearchResultEnterpriseLocations
 import com.mappedin.models.Show3DMapOptions
+import com.mappedin.models.Space
 
 // Simple wrapper to hold either a suggestion or a location
 sealed class SearchListItem {
@@ -168,7 +173,7 @@ class SearchDemoActivity : AppCompatActivity() {
 	private fun loadAllLocations() {
 		if (!searchReady) return
 
-		mapView.mapData.getByType<EnterpriseLocation>(com.mappedin.models.MapDataType.ENTERPRISE_LOCATION) { result ->
+		mapView.mapData.getByType<EnterpriseLocation>(MapDataType.ENTERPRISE_LOCATION) { result ->
 			result.onSuccess { locations ->
 				runOnUiThread {
 					searchResults.clear()
@@ -238,8 +243,17 @@ class SearchDemoActivity : AppCompatActivity() {
 				mapView.camera.focusOn(location) { focusResult ->
 					focusResult.onSuccess {
 						// Highlight all spaces for this location
-						location.spaces.forEach { space ->
-							mapView.updateState(space, mapOf("color" to "#BF4320")) { }
+						location.spaces.forEach { spaceId ->
+							mapView.mapData.getById<Space>(
+								MapDataType.SPACE,
+								spaceId,
+							) { result ->
+								result.onSuccess { space ->
+									space?.let {
+										mapView.updateState(it, GeometryUpdateState(color = "#BF4320")) { }
+									}
+								}
+							}
 						}
 					}
 				}
@@ -255,8 +269,8 @@ class SearchDemoActivity : AppCompatActivity() {
 		class ViewHolder(
 			view: View,
 		) : RecyclerView.ViewHolder(view) {
-			val nameTextView: TextView = view.findViewById(android.R.id.text1)
-			val descriptionTextView: TextView? = view.findViewById(android.R.id.text2)
+			val nameTextView: TextView = view.findViewById(R.id.text1)
+			val descriptionTextView: TextView? = view.findViewById(R.id.text2)
 		}
 
 		override fun onCreateViewHolder(
@@ -275,13 +289,13 @@ class SearchDemoActivity : AppCompatActivity() {
 				}
 			val nameView =
 				TextView(parent.context).apply {
-					id = android.R.id.text1
+					id = R.id.text1
 					textSize = 16f
 					setTextColor(Color.BLACK)
 				}
 			val descView =
 				TextView(parent.context).apply {
-					id = android.R.id.text2
+					id = R.id.text2
 					textSize = 14f
 					setTextColor(Color.GRAY)
 				}
@@ -315,11 +329,10 @@ class SearchDemoActivity : AppCompatActivity() {
 
 		private fun dp(value: Int): Int {
 			val density =
-				android.content.res.Resources
+				Resources
 					.getSystem()
 					.displayMetrics.density
 			return (value * density).toInt()
 		}
 	}
 }
-

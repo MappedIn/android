@@ -19,12 +19,15 @@ import com.mappedin.MapView
 import com.mappedin.models.AddPathOptions
 import com.mappedin.models.ClickPayload
 import com.mappedin.models.Events
+import com.mappedin.models.GeometryUpdateState
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
 import com.mappedin.models.NavigationTarget
 import com.mappedin.models.Path
+import com.mappedin.models.PathUpdateState
 import com.mappedin.models.Show3DMapOptions
 import com.mappedin.models.Space
+import com.mappedin.models.Width
 
 class PathsDemoActivity : AppCompatActivity() {
 	private var startSpace: Space? = null
@@ -48,7 +51,7 @@ class PathsDemoActivity : AppCompatActivity() {
 						dp(16),
 						systemBars.top + dp(12),
 						dp(16),
-						dp(12)
+						dp(12),
 					)
 					insets
 				}
@@ -90,10 +93,11 @@ class PathsDemoActivity : AppCompatActivity() {
 
 		// Add loading indicator
 		loadingIndicator = ProgressBar(this)
-		val loadingParams = FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT
-		)
+		val loadingParams =
+			FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+			)
 		loadingParams.gravity = Gravity.CENTER
 		mapContainer.addView(loadingIndicator, loadingParams)
 
@@ -133,7 +137,7 @@ class PathsDemoActivity : AppCompatActivity() {
 		mapView.mapData.getByType<Space>(MapDataType.SPACE) { result ->
 			result.onSuccess { spaces ->
 				spaces.forEach { space ->
-					mapView.updateState(space, mapOf("interactive" to true)) { }
+					mapView.updateState(space, GeometryUpdateState(interactive = true)) { }
 				}
 
 				// Handle click events
@@ -172,7 +176,7 @@ class PathsDemoActivity : AppCompatActivity() {
 									if (directions != null) {
 										val opts =
 											AddPathOptions(
-												width = AddPathOptions.Width.Fixed(1.0),
+												width = Width.Value(1.0),
 												color = "#1871fb",
 											)
 										mapView.paths.add(directions.coordinates, opts) { pathResult ->
@@ -207,7 +211,7 @@ class PathsDemoActivity : AppCompatActivity() {
 		mapView.mapData.getByType<Space>(MapDataType.SPACE) { result ->
 			result.onSuccess { spaces ->
 				spaces.forEach { space ->
-					mapView.updateState(space, mapOf("interactive" to interactive)) { }
+					mapView.updateState(space, GeometryUpdateState(interactive = interactive)) { }
 				}
 			}
 		}
@@ -218,4 +222,3 @@ class PathsDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-
