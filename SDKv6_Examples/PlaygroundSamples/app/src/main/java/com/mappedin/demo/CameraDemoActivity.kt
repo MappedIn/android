@@ -322,4 +322,3 @@ class CameraDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-

@@ -250,4 +250,3 @@ class ModelsDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-

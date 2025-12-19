@@ -401,4 +401,3 @@ class AreaShapesDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-

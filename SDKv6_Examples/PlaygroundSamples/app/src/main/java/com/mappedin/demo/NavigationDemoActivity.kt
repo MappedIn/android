@@ -342,4 +342,3 @@ class NavigationDemoActivity : AppCompatActivity() {
 		return (value * density).toInt()
 	}
 }
-
