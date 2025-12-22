@@ -71,5 +71,9 @@
 			android:name="com.mappedin.demo.SearchDemoActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.LocationsDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 	</application>
 </manifest>
