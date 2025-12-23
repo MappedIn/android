@@ -47,6 +47,10 @@
 			android:name="com.mappedin.demo.ModelsDemoActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.MultiFloorViewDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 		<activity
 			android:name="com.mappedin.demo.PathsDemoActivity"
 			android:exported="false"
@@ -73,6 +77,10 @@
 			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
         <activity
             android:name="com.mappedin.demo.LocationsDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.StackedMapsDemoActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 	</application>
