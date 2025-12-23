@@ -30,10 +30,12 @@ class MainActivity : AppCompatActivity() {
                 "Locations",
                 "Markers",
                 "Models",
+                "Multi-Floor View",
                 "Navigation",
                 "Paths",
                 "Query",
                 "Search",
+                "Stacked Maps",
             )
         listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, demos)
         listView.setOnItemClickListener { _, _, position, _ ->
@@ -48,10 +50,12 @@ class MainActivity : AppCompatActivity() {
                 7 -> startActivity(Intent(this, LocationsDemoActivity::class.java))
                 8 -> startActivity(Intent(this, MarkersDemoActivity::class.java))
                 9 -> startActivity(Intent(this, ModelsDemoActivity::class.java))
-                10 -> startActivity(Intent(this, NavigationDemoActivity::class.java))
-                11 -> startActivity(Intent(this, PathsDemoActivity::class.java))
-                12 -> startActivity(Intent(this, QueryDemoActivity::class.java))
-                13 -> startActivity(Intent(this, SearchDemoActivity::class.java))
+                10 -> startActivity(Intent(this, MultiFloorViewDemoActivity::class.java))
+                11 -> startActivity(Intent(this, NavigationDemoActivity::class.java))
+                12 -> startActivity(Intent(this, PathsDemoActivity::class.java))
+                13 -> startActivity(Intent(this, QueryDemoActivity::class.java))
+                14 -> startActivity(Intent(this, SearchDemoActivity::class.java))
+                15 -> startActivity(Intent(this, StackedMapsDemoActivity::class.java))
             }
         }
     }
