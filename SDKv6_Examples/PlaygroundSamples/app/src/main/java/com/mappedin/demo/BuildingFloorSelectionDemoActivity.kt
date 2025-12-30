@@ -16,7 +16,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
 import com.mappedin.models.Events
 import com.mappedin.models.Floor
-import com.mappedin.models.FloorChangePayload
 import com.mappedin.models.FloorStack
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
@@ -238,8 +237,7 @@ class BuildingFloorSelectionDemoActivity : AppCompatActivity() {
 
 	private fun setupListeners() {
 		// Act on the floor-change event to update the floor selector.
-		mapView.on(Events.FLOOR_CHANGE) { data ->
-			val payload = data as? FloorChangePayload
+		mapView.on(Events.FloorChange) { payload ->
 			payload?.let {
 				Log.d(
 					"MappedinDemo",

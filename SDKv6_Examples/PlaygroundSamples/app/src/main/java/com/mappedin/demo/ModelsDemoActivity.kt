@@ -1,6 +1,5 @@
 package com.mappedin.demo
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -18,8 +17,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
 import com.mappedin.models.AddModelOptions
-import com.mappedin.models.ClickPayload
 import com.mappedin.models.Coordinate
+import com.mappedin.models.Events
 import com.mappedin.models.Floor
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
@@ -45,7 +44,7 @@ class ModelsDemoActivity : AppCompatActivity() {
 						dp(16),
 						systemBars.top + dp(12),
 						dp(16),
-						dp(12)
+						dp(12),
 					)
 					insets
 				}
@@ -80,10 +79,11 @@ class ModelsDemoActivity : AppCompatActivity() {
 
 		// Add loading indicator
 		loadingIndicator = ProgressBar(this)
-		val loadingParams = FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT
-		)
+		val loadingParams =
+			FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+			)
 		loadingParams.gravity = Gravity.CENTER
 		mapContainer.addView(loadingIndicator, loadingParams)
 
@@ -142,9 +142,8 @@ class ModelsDemoActivity : AppCompatActivity() {
 		}
 
 		// Remove models that are clicked on.
-		mapView.on("click") { payload ->
-			val click = payload as? ClickPayload
-			val clickedModel = click?.models?.firstOrNull() ?: return@on
+		mapView.on(Events.Click) { clickPayload ->
+			val clickedModel = clickPayload?.models?.firstOrNull() ?: return@on
 			mapView.models.remove(clickedModel) { }
 		}
 	}

@@ -1,7 +1,6 @@
 package com.mappedin.demo
 
 import com.mappedin.MapView
-import com.mappedin.data.MapData
 import com.mappedin.models.Floor
 import com.mappedin.models.FloorUpdateState
 import com.mappedin.models.MapDataType
@@ -48,7 +47,6 @@ data class CollapseOptions(
  * ```
  */
 object StackedMapsUtils {
-
 	/**
 	 * Expands all floors vertically to create a stacked view.
 	 *
@@ -208,4 +206,3 @@ object StackedMapsUtils {
 		}
 	}
 }
-

@@ -1,6 +1,5 @@
 package com.mappedin.demo
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.TypedValue
@@ -17,14 +16,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
 import com.mappedin.models.AddPathOptions
-import com.mappedin.models.ClickPayload
 import com.mappedin.models.Events
 import com.mappedin.models.GeometryUpdateState
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
 import com.mappedin.models.NavigationTarget
 import com.mappedin.models.Path
-import com.mappedin.models.PathUpdateState
 import com.mappedin.models.Show3DMapOptions
 import com.mappedin.models.Space
 import com.mappedin.models.Width
@@ -141,8 +138,8 @@ class PathsDemoActivity : AppCompatActivity() {
 				}
 
 				// Handle click events
-				mapView.on(Events.CLICK) { event ->
-					val clickPayload = event as? ClickPayload ?: return@on
+				mapView.on(Events.Click) { clickPayload ->
+					clickPayload ?: return@on
 					val spaces = clickPayload.spaces
 
 					if (spaces == null || spaces.isEmpty()) {

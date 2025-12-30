@@ -1,6 +1,5 @@
 package com.mappedin.demo
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.Color
@@ -268,10 +267,9 @@ class SearchDemoActivity : AppCompatActivity() {
 	) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 		class ViewHolder(
 			view: View,
-		) : RecyclerView.ViewHolder(view) {
-			val nameTextView: TextView = view.findViewById(R.id.text1)
-			val descriptionTextView: TextView? = view.findViewById(R.id.text2)
-		}
+			val nameTextView: TextView,
+			val descriptionTextView: TextView,
+		) : RecyclerView.ViewHolder(view)
 
 		override fun onCreateViewHolder(
 			parent: ViewGroup,
@@ -289,20 +287,18 @@ class SearchDemoActivity : AppCompatActivity() {
 				}
 			val nameView =
 				TextView(parent.context).apply {
-					id = R.id.text1
 					textSize = 16f
 					setTextColor(Color.BLACK)
 				}
 			val descView =
 				TextView(parent.context).apply {
-					id = R.id.text2
 					textSize = 14f
 					setTextColor(Color.GRAY)
 				}
 			layout.addView(nameView)
 			layout.addView(descView)
 
-			return ViewHolder(layout)
+			return ViewHolder(layout, nameView, descView)
 		}
 
 		override fun onBindViewHolder(
@@ -313,13 +309,13 @@ class SearchDemoActivity : AppCompatActivity() {
 			when (item) {
 				is SearchListItem.Suggestion -> {
 					holder.nameTextView.text = item.suggestion.suggestion
-					holder.descriptionTextView?.text = ""
-					holder.descriptionTextView?.visibility = View.GONE
+					holder.descriptionTextView.text = ""
+					holder.descriptionTextView.visibility = View.GONE
 				}
 				is SearchListItem.Location -> {
 					holder.nameTextView.text = item.result.item.name
-					holder.descriptionTextView?.text = item.result.item.description ?: ""
-					holder.descriptionTextView?.visibility = View.VISIBLE
+					holder.descriptionTextView.text = item.result.item.description ?: ""
+					holder.descriptionTextView.visibility = View.VISIBLE
 				}
 			}
 			holder.itemView.setOnClickListener { onItemClick(item) }
