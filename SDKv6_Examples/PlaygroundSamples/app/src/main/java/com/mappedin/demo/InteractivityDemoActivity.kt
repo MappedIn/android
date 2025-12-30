@@ -1,6 +1,5 @@
 package com.mappedin.demo
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -142,8 +141,8 @@ class InteractivityDemoActivity : AppCompatActivity() {
 		}
 
 		// Set up click listener
-		mapView.on(Events.CLICK) { event ->
-			val clickPayload = event as? ClickPayload ?: return@on
+		mapView.on(Events.Click) { clickPayload ->
+			clickPayload ?: return@on
 			handleClick(clickPayload)
 		}
 

@@ -1,6 +1,5 @@
 package com.mappedin.demo
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +16,13 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
-import com.mappedin.models.*
+import com.mappedin.models.Events
+import com.mappedin.models.FindNearestResult
+import com.mappedin.models.GeometryUpdateState
+import com.mappedin.models.GetMapDataWithCredentialsOptions
+import com.mappedin.models.MapDataType
+import com.mappedin.models.Show3DMapOptions
+import com.mappedin.models.Space
 import java.util.Locale
 
 class QueryDemoActivity : AppCompatActivity() {
@@ -127,8 +132,8 @@ class QueryDemoActivity : AppCompatActivity() {
 
 	private fun onMapReady() {
 		// Handle click events
-		mapView.on(Events.CLICK) { event ->
-			val clickPayload = event as? ClickPayload ?: return@on
+		mapView.on(Events.Click) { clickPayload ->
+			clickPayload ?: return@on
 			val coordinate = clickPayload.coordinate
 
 			Log.d("Query", "Click coordinate: lat=${coordinate.latitude}, lon=${coordinate.longitude}, floor=${coordinate.floorId}")

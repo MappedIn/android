@@ -1,9 +1,7 @@
 package com.mappedin.demo
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -21,7 +19,6 @@ import com.mappedin.MapView
 import com.mappedin.models.AddMarkerOptions
 import com.mappedin.models.CollisionRankingTier
 import com.mappedin.models.Directions
-import com.mappedin.models.FocusOnOptions
 import com.mappedin.models.FocusTarget
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.NavigationOptions

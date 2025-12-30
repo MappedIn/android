@@ -1,6 +1,5 @@
 package com.mappedin.demo
 
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +7,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -19,7 +17,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
 import com.mappedin.models.AddLabelOptions
-import com.mappedin.models.ClickPayload
+import com.mappedin.models.Events
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.LabelAppearance
 import com.mappedin.models.MapDataType
@@ -61,7 +59,7 @@ class LabelsDemoActivity : AppCompatActivity() {
 						dp(16),
 						systemBars.top + dp(12),
 						dp(16),
-						dp(12)
+						dp(12),
 					)
 					insets
 				}
@@ -102,10 +100,11 @@ class LabelsDemoActivity : AppCompatActivity() {
 
 		// Add loading indicator
 		loadingIndicator = ProgressBar(this)
-		val loadingParams = FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT
-		)
+		val loadingParams =
+			FrameLayout.LayoutParams(
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT,
+			)
 		loadingParams.gravity = Gravity.CENTER
 		mapContainer.addView(loadingIndicator, loadingParams)
 
@@ -132,14 +131,11 @@ class LabelsDemoActivity : AppCompatActivity() {
 								loadingIndicator.visibility = View.GONE
 							}
 							Log.d("MappedinDemo", "show3dMap success")
-							mapView.on("debug") { Log.d("MappedinDemo", "debug: $it") }
-							mapView.on("error") { Log.e("MappedinDemo", "error: $it") }
 
-							mapView.on("click") { payload ->
-								val click = payload as? ClickPayload
-								val text = click?.labels?.firstOrNull()?.text
+							mapView.on(Events.Click) { clickPayload ->
+								val text = clickPayload?.labels?.firstOrNull()?.text
 								text?.let { Log.d("MappedinDemo", "removing label: $it") }
-								click?.labels?.firstOrNull()?.let {
+								clickPayload?.labels?.firstOrNull()?.let {
 									mapView.labels.remove(it)
 								}
 							}
