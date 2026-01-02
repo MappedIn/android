@@ -83,5 +83,9 @@
             android:name="com.mappedin.demo.StackedMapsDemoActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.TurnByTurnDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 	</application>
 </manifest>
