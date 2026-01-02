@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
                 "Query",
                 "Search",
                 "Stacked Maps",
+                "Turn by Turn Directions",
             )
         listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, demos)
         listView.setOnItemClickListener { _, _, position, _ ->
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                 13 -> startActivity(Intent(this, QueryDemoActivity::class.java))
                 14 -> startActivity(Intent(this, SearchDemoActivity::class.java))
                 15 -> startActivity(Intent(this, StackedMapsDemoActivity::class.java))
+                16 -> startActivity(Intent(this, TurnByTurnDemoActivity::class.java))
             }
         }
     }
