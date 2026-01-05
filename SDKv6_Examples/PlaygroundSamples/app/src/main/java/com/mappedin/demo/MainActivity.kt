@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
                 "Areas & Shapes",
                 "Building & Floor Selection",
                 "Camera",
+                "Colors & Textures",
                 "Display a Map",
                 "Image3D",
                 "Interactivity",
@@ -44,20 +45,21 @@ class MainActivity : AppCompatActivity() {
                 0 -> startActivity(Intent(this, AreaShapesDemoActivity::class.java))
                 1 -> startActivity(Intent(this, BuildingFloorSelectionDemoActivity::class.java))
                 2 -> startActivity(Intent(this, CameraDemoActivity::class.java))
-                3 -> startActivity(Intent(this, DisplayMapDemoActivity::class.java))
-                4 -> startActivity(Intent(this, Image3DDemoActivity::class.java))
-                5 -> startActivity(Intent(this, InteractivityDemoActivity::class.java))
-                6 -> startActivity(Intent(this, LabelsDemoActivity::class.java))
-                7 -> startActivity(Intent(this, LocationsDemoActivity::class.java))
-                8 -> startActivity(Intent(this, MarkersDemoActivity::class.java))
-                9 -> startActivity(Intent(this, ModelsDemoActivity::class.java))
-                10 -> startActivity(Intent(this, MultiFloorViewDemoActivity::class.java))
-                11 -> startActivity(Intent(this, NavigationDemoActivity::class.java))
-                12 -> startActivity(Intent(this, PathsDemoActivity::class.java))
-                13 -> startActivity(Intent(this, QueryDemoActivity::class.java))
-                14 -> startActivity(Intent(this, SearchDemoActivity::class.java))
-                15 -> startActivity(Intent(this, StackedMapsDemoActivity::class.java))
-                16 -> startActivity(Intent(this, TurnByTurnDemoActivity::class.java))
+                3 -> startActivity(Intent(this, ColorsAndTexturesDemoActivity::class.java))
+                4 -> startActivity(Intent(this, DisplayMapDemoActivity::class.java))
+                5 -> startActivity(Intent(this, Image3DDemoActivity::class.java))
+                6 -> startActivity(Intent(this, InteractivityDemoActivity::class.java))
+                7 -> startActivity(Intent(this, LabelsDemoActivity::class.java))
+                8 -> startActivity(Intent(this, LocationsDemoActivity::class.java))
+                9 -> startActivity(Intent(this, MarkersDemoActivity::class.java))
+                10 -> startActivity(Intent(this, ModelsDemoActivity::class.java))
+                11 -> startActivity(Intent(this, MultiFloorViewDemoActivity::class.java))
+                12 -> startActivity(Intent(this, NavigationDemoActivity::class.java))
+                13 -> startActivity(Intent(this, PathsDemoActivity::class.java))
+                14 -> startActivity(Intent(this, QueryDemoActivity::class.java))
+                15 -> startActivity(Intent(this, SearchDemoActivity::class.java))
+                16 -> startActivity(Intent(this, StackedMapsDemoActivity::class.java))
+                17 -> startActivity(Intent(this, TurnByTurnDemoActivity::class.java))
             }
         }
     }
