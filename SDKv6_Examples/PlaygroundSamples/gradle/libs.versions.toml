@@ -4,7 +4,7 @@ kotlin = "2.2.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 appcompat = "1.7.1"
-mappedin = "6.2.0-alpha.1"
+mappedin = "6.2.0-alpha.2"
 material = "1.13.0"
 
 [libraries]
