@@ -45,5 +45,6 @@ The following table lists the sample activities that pertain to the latest versi
 - [Mappedin Developer Site](https://developer.mappedin.com/)
 - [Mappedin SDK for Android Getting Started Guide](https://developer.mappedin.com/android-sdk/getting-started)
 - [Mappedin SDK for Android API Docs](https://docs.mappedin.com/android-sdk-api/v6/latest/)
+- [Release Notes](https://developer.mappedin.com/android-sdk/release-notes)
 
 ---
