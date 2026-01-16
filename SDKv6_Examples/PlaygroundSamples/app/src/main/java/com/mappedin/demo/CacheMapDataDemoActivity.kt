@@ -158,6 +158,8 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
         cachedData: ByteArray,
         options: GetMapDataWithCredentialsOptions,
     ) {
+        loadStartTime = System.currentTimeMillis()
+
         // Create the backup object in the format expected by hydrateMapData
         val mainArray = JSONArray()
         for (byte in cachedData) {
@@ -169,7 +171,6 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
                 put("main", mainArray)
             }
 
-        loadStartTime = System.currentTimeMillis()
         val hydrateStartTime = System.currentTimeMillis()
 
         mapView.hydrateMapData(backupObject, options) { result ->
