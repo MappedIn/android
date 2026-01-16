@@ -2,6 +2,7 @@ package com.mappedin.demo
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
@@ -22,7 +23,7 @@ class StackedMapsDemoActivity : AppCompatActivity() {
 	private lateinit var loadingIndicator: ProgressBar
 
 	private var animate = true
-	private var distanceBetweenFloors = 10.0
+	private var distanceBetweenFloors = 25.0
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -58,7 +59,13 @@ class StackedMapsDemoActivity : AppCompatActivity() {
 				ViewGroup.LayoutParams.WRAP_CONTENT,
 			)
 		controlParams.gravity = Gravity.TOP or Gravity.START
-		controlParams.setMargins(32, 32, 32, 32)
+		// Account for action bar height to prevent overlap
+		val typedValue = TypedValue()
+		var actionBarHeight = 0
+		if (theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+			actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics)
+		}
+		controlParams.setMargins(32, actionBarHeight + 32, 32, 32)
 		container.addView(controlPanel, controlParams)
 
 		setContentView(container)
@@ -222,6 +229,14 @@ class StackedMapsDemoActivity : AppCompatActivity() {
 				pitch = 75.0,
 			),
 		)
+
+		// Expand floors.
+		StackedMapsUtils.expandFloors(
+			mapView,
+			ExpandOptions(
+				distanceBetweenFloors = distanceBetweenFloors,
+				animate = animate,
+			),
+		)
 	}
 }
-
