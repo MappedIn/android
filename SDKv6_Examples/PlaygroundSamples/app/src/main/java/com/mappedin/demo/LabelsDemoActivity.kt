@@ -132,13 +132,6 @@ class LabelsDemoActivity : AppCompatActivity() {
 							}
 							Log.d("MappedinDemo", "show3dMap success")
 
-							mapView.on(Events.Click) { clickPayload ->
-								val text = clickPayload?.labels?.firstOrNull()?.text
-								text?.let { Log.d("MappedinDemo", "removing label: $it") }
-								clickPayload?.labels?.firstOrNull()?.let {
-									mapView.labels.remove(it)
-								}
-							}
 							onMapReady(mapView)
 						}
 						r2.onFailure {
@@ -155,11 +148,11 @@ class LabelsDemoActivity : AppCompatActivity() {
 	}
 
 	private fun onMapReady(mapView: MapView) {
-		mapView.currentFloor { result ->
-			result.onSuccess { floor ->
-				floor?.let {
-					mapView.camera.focusOn(it)
-				}
+		mapView.on(Events.Click) { clickPayload ->
+			val text = clickPayload?.labels?.firstOrNull()?.text
+			text?.let { Log.d("MappedinDemo", "removing label: $it") }
+			clickPayload?.labels?.firstOrNull()?.let {
+				mapView.labels.remove(it)
 			}
 		}
 
