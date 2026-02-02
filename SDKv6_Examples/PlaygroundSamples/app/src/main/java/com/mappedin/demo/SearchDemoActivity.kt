@@ -148,6 +148,12 @@ class SearchDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					progressBar.visibility = View.GONE
+				}
+				android.util.Log.e("SearchDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

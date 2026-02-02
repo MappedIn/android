@@ -10,12 +10,9 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import com.mappedin.MapView
 import com.mappedin.models.AddLabelOptions
-import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
 import com.mappedin.models.Show3DMapOptions
 import com.mappedin.models.Space
-import org.json.JSONArray
-import org.json.JSONObject
 
 class OfflineModeDemoActivity : AppCompatActivity() {
 	private lateinit var mapView: MapView
@@ -49,33 +46,15 @@ class OfflineModeDemoActivity : AppCompatActivity() {
 
 		setContentView(container)
 
-		// Load the MVFv3 zip file from assets
-		val zipBuffer = loadMvfFromAssets("school-demo-multifloor-mvfv3.zip")
-		if (zipBuffer == null) {
-			Log.e("OfflineModeDemo", "Failed to load MVF file from assets")
-			runOnUiThread {
-				loadingIndicator.visibility = View.GONE
-			}
-			return
-		}
+		// Use MapView.getAssetUrl to generate a URL the WebView can fetch
+		// This is more efficient than reading bytes and passing them through hydrateMapData
+		val mvfUrl = MapView.getAssetUrl("school-demo-multifloor-mvfv3.zip")
 
-		// Create the backup object in the format expected by hydrateMapData
-		// { type: "binary", main: <array of bytes> }
-		val mainArray = JSONArray()
-		for (byte in zipBuffer) {
-			mainArray.put(byte.toInt() and 0xFF)
-		}
-		val backupObject =
-			JSONObject().apply {
-				put("type", "binary")
-				put("main", mainArray)
-			}
-
-		// Hydrate the map data from the local MVF file
-		mapView.hydrateMapData(backupObject) { result ->
+		// Hydrate the map data from the local MVF file URL
+		mapView.hydrateMapDataFromURL(mvfUrl) { result ->
 			result
 				.onSuccess {
-					Log.d("OfflineModeDemo", "hydrateMapData success")
+					Log.d("OfflineModeDemo", "hydrateMapDataFromURL success")
 					// Display the map
 					mapView.show3dMap(Show3DMapOptions()) { r ->
 						r.onSuccess {
@@ -95,7 +74,7 @@ class OfflineModeDemoActivity : AppCompatActivity() {
 					runOnUiThread {
 						loadingIndicator.visibility = View.GONE
 					}
-					Log.e("OfflineModeDemo", "hydrateMapData error: $error")
+					Log.e("OfflineModeDemo", "hydrateMapDataFromURL error: $error")
 				}
 		}
 	}
@@ -112,14 +91,4 @@ class OfflineModeDemoActivity : AppCompatActivity() {
 			}
 		}
 	}
-
-	private fun loadMvfFromAssets(fileName: String): ByteArray? =
-		try {
-			assets.open(fileName).use { inputStream ->
-				inputStream.readBytes()
-			}
-		} catch (e: Exception) {
-			Log.e("OfflineModeDemo", "Error loading MVF file: ${e.message}")
-			null
-		}
 }

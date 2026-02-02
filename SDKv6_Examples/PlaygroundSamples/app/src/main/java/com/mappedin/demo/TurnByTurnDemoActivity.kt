@@ -165,6 +165,12 @@ class TurnByTurnDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				android.util.Log.e("TurnByTurnDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

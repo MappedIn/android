@@ -143,6 +143,9 @@ class BuildingFloorSelectionDemoActivity : AppCompatActivity() {
 							}
 					}
 				}.onFailure {
+					runOnUiThread {
+						loadingIndicator.visibility = View.GONE
+					}
 					Log.e("MappedinDemo", "getMapData error: $it")
 				}
 		}

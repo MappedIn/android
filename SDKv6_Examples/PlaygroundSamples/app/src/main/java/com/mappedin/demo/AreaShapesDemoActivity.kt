@@ -162,6 +162,12 @@ class AreaShapesDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				android.util.Log.e("AreaShapesDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

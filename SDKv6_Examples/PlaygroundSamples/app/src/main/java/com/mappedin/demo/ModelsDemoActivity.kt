@@ -115,6 +115,12 @@ class ModelsDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				Log.e("ModelsDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 
@@ -232,7 +238,7 @@ class ModelsDemoActivity : AppCompatActivity() {
 
 	private fun getModelUrl(modelId: String): String? {
 		// Map model IDs to their GLB filenames in assets/3d_assets
-		return "https://appassets.androidplatform.net/assets/3d_assets/$modelId.glb"
+		return MapView.getAssetUrl("3d_assets/$modelId.glb")
 	}
 
 	private fun loadJsonFromAssets(fileName: String): JSONObject? =
