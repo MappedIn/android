@@ -90,6 +90,9 @@ class ColorsAndTexturesDemoActivity : AppCompatActivity() {
 						}
 					}
 				}.onFailure {
+					runOnUiThread {
+						loadingIndicator.visibility = android.view.View.GONE
+					}
 					Log.e("MappedinDemo", "getMapData error: $it")
 				}
 		}
@@ -99,10 +102,10 @@ class ColorsAndTexturesDemoActivity : AppCompatActivity() {
 	private fun onMapReady(mapView: MapView) {
 		Log.d("MappedinDemo", "show3dMap success - Applying textures")
 
-		// Get local asset URLs using the Android WebView asset URL scheme
-		val exteriorWallURL = "https://appassets.androidplatform.net/assets/exterior-wall.jpg"
-		val floorURL = "https://appassets.androidplatform.net/assets/floor.png"
-		val objectSideURL = "https://appassets.androidplatform.net/assets/object-side.jpg"
+		// Get local asset URLs using the MapView helper
+		val exteriorWallURL = MapView.getAssetUrl("exterior-wall.jpg")
+		val floorURL = MapView.getAssetUrl("floor.png")
+		val objectSideURL = MapView.getAssetUrl("object-side.jpg")
 
 		// Make interior doors visible, sides brown and top yellow
 		mapView.updateState(

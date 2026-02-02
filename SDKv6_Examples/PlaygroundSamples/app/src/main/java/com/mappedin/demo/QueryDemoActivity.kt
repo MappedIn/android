@@ -127,6 +127,12 @@ class QueryDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				android.util.Log.e("QueryDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

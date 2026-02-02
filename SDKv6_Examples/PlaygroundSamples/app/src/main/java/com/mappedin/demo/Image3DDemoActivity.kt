@@ -2,6 +2,7 @@ package com.mappedin.demo
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -149,6 +150,12 @@ class Image3DDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				Log.e("Image3DDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 
@@ -199,10 +206,10 @@ class Image3DDemoActivity : AppCompatActivity() {
 
 	private fun getImageResource(position: Int): String =
 		when (position) {
-			0 -> "https://appassets.androidplatform.net/assets/arena_hockey.png"
-			1 -> "https://appassets.androidplatform.net/assets/arena_basketball.png"
-			2 -> "https://appassets.androidplatform.net/assets/arena_concert.png"
-			else -> "https://appassets.androidplatform.net/assets/arena_hockey.png"
+			0 -> MapView.getAssetUrl("arena_hockey.png")
+			1 -> MapView.getAssetUrl("arena_basketball.png")
+			2 -> MapView.getAssetUrl("arena_concert.png")
+			else -> MapView.getAssetUrl("arena_hockey.png")
 		}
 
 	private fun dp(value: Int): Int {

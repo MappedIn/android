@@ -59,6 +59,10 @@
 			android:name="com.mappedin.demo.AreaShapesDemoActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.BlueDotDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 		<activity
 			android:name="com.mappedin.demo.NavigationDemoActivity"
 			android:exported="false"
@@ -101,6 +105,18 @@
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
         <activity
             android:name="com.mappedin.demo.Text3DDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.DynamicFocusDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.DynamicFocusManualDemoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+        <activity
+            android:name="com.mappedin.demo.CacheMVFDemoActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 	</application>

@@ -127,6 +127,12 @@ class CameraDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			r.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				Log.e("CameraDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

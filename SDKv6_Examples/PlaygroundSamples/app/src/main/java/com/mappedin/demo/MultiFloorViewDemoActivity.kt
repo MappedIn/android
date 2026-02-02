@@ -87,6 +87,9 @@ class MultiFloorViewDemoActivity : AppCompatActivity() {
 						}
 					}
 				}.onFailure {
+					runOnUiThread {
+						loadingIndicator.visibility = android.view.View.GONE
+					}
 					Log.e("MappedinDemo", "getMapData error: $it")
 				}
 		}

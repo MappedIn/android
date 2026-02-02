@@ -112,6 +112,12 @@ class MarkersDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				android.util.Log.e("MarkersDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

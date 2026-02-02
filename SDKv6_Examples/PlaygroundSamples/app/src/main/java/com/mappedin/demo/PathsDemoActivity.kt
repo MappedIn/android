@@ -126,6 +126,12 @@ class PathsDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			result.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				android.util.Log.e("PathsDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 

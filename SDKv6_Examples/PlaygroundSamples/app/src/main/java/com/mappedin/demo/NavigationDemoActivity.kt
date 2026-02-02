@@ -172,6 +172,12 @@ class NavigationDemoActivity : AppCompatActivity() {
 					}
 				}
 			}
+			r.onFailure {
+				runOnUiThread {
+					loadingIndicator.visibility = View.GONE
+				}
+				android.util.Log.e("NavigationDemoActivity", "getMapData error: $it")
+			}
 		}
 	}
 
