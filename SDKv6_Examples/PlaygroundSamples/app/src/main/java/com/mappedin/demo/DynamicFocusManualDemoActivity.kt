@@ -241,7 +241,6 @@ class DynamicFocusManualDemoActivity : AppCompatActivity() {
 
                                 runOnUiThread {
                                     populateFloorStacks()
-                                    initializeFloorPreferences()
                                     setupEventListeners()
                                 }
                             }
@@ -469,10 +468,14 @@ class DynamicFocusManualDemoActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             floorSpinner.adapter = adapter
 
-            // Set initial floor selection based on default floor or previously selected floor
-            val floorToSelect =
-                floorToShowByBuilding[floorStackId]
-                    ?: allFloors.find { it.id == floorStack.defaultFloor }
+            // Set initial floor selection using same priority as showFloors:
+            // 1. Stored preference
+            // 2. Elevation match
+            // 3. Default floor
+            val storedPref = floorToShowByBuilding[floorStackId]
+            val elevationMatch = currentFloorStackFloors.find { it.elevation == currentElevation }
+            val defaultFloor = allFloors.find { it.id == floorStack.defaultFloor }
+            val floorToSelect = storedPref ?: elevationMatch ?: defaultFloor
 
             val index =
                 floorToSelect?.let { floor ->
@@ -487,32 +490,6 @@ class DynamicFocusManualDemoActivity : AppCompatActivity() {
             // Use post to ensure selection change is fully processed first
             floorSpinner.post {
                 floorSpinner.onItemSelectedListener = floorSpinnerListener
-            }
-        }
-    }
-
-    /**
-     * Initialize floor preferences for buildings that don't have one yet.
-     * This does NOT clear existing preferences - it only sets defaults for buildings
-     * that haven't been visited yet.
-     */
-    private fun initializeFloorPreferences() {
-        // Only initialize preferences for buildings that don't have one yet
-        allFloorStacks.forEach { floorStack ->
-            if (!floorToShowByBuilding.containsKey(floorStack.id)) {
-                // Get the Floor objects for this floor stack
-                val floorsInStack =
-                    floorStack.floors.mapNotNull { floorId ->
-                        allFloors.find { it.id == floorId }
-                    }
-                // Try to find a floor at current elevation, or use default
-                val floor =
-                    floorsInStack.find { it.elevation == currentElevation }
-                        ?: allFloors.find { it.id == floorStack.defaultFloor }
-
-                if (floor != null) {
-                    floorToShowByBuilding[floorStack.id] = floor
-                }
             }
         }
     }
