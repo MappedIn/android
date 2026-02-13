@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Sample backup rules file; customize as needed.
+   See https://developer.android.com/guide/topics/data/autobackup
+-->
+<full-backup-content>
+</full-backup-content>
