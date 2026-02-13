@@ -27,4 +27,5 @@ The app uses [Mappedin demo keys](https://developer.mappedin.com/docs/demo-keys-
 
 - [Mappedin SDK for Android v6 API Reference](https://docs.mappedin.com/android-sdk-api/v6/latest/)
 - [Getting Started Guide](https://developer.mappedin.com/android-sdk/getting-started)
+- [Mappedin and Jetpack Compose Guide](https://developer.mappedin.com/android-sdk/jetpack-compose)
 - [Mappedin Developer Portal](https://developer.mappedin.com)
