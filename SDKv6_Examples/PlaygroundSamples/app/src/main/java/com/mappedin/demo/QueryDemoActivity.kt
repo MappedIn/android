@@ -15,12 +15,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import com.mappedin.MapView
 import com.mappedin.models.Events
 import com.mappedin.models.FindNearestResult
 import com.mappedin.models.GeometryUpdateState
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
+import com.mappedin.models.QueryAtResult
 import com.mappedin.models.Show3DMapOptions
 import com.mappedin.models.Space
 import java.util.Locale
@@ -31,6 +34,7 @@ class QueryDemoActivity : AppCompatActivity() {
 	private var highlightedSpace: Space? = null
 	private var originalColor: String? = null
 	private lateinit var instructionText: TextView
+	private var useAtQuery = false
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -62,10 +66,33 @@ class QueryDemoActivity : AppCompatActivity() {
 			}
 		val descriptionView =
 			TextView(this).apply {
-				text = "Click on the map to find and highlight the nearest space."
+				text = "Click on the map to query. Use the toggle to switch between nearest and at."
 				setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
 				setTextColor("#6B7280".toColorInt())
 			}
+		val queryModeGroup =
+			RadioGroup(this).apply {
+				orientation = RadioGroup.HORIZONTAL
+				setPadding(0, dp(8), 0, 0)
+			}
+		val nearestRadio =
+			RadioButton(this).apply {
+				text = "Nearest"
+				id = View.generateViewId()
+				setPadding(dp(16), dp(8), dp(16), dp(8))
+			}
+		val atRadio =
+			RadioButton(this).apply {
+				text = "At"
+				id = View.generateViewId()
+				setPadding(dp(16), dp(8), dp(16), dp(8))
+			}
+		queryModeGroup.addView(nearestRadio)
+		queryModeGroup.addView(atRadio)
+		queryModeGroup.check(nearestRadio.id)
+		queryModeGroup.setOnCheckedChangeListener { _, checkedId ->
+			useAtQuery = checkedId == atRadio.id
+		}
 		instructionText =
 			TextView(this).apply {
 				text = "Click anywhere on the map to start."
@@ -75,6 +102,7 @@ class QueryDemoActivity : AppCompatActivity() {
 			}
 		header.addView(titleView)
 		header.addView(descriptionView)
+		header.addView(queryModeGroup)
 		header.addView(instructionText)
 		root.addView(header, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
@@ -151,43 +179,81 @@ class QueryDemoActivity : AppCompatActivity() {
 				}
 			}
 
-			// Find the nearest space to the clicked coordinate
-			Log.d("Query", "Calling nearest with coordinate")
-			mapView.mapData.query.nearest(coordinate, listOf(MapDataType.SPACE)) { result ->
-				Log.d("Query", "nearest callback received: success=${result.isSuccess}, failure=${result.isFailure}")
-				result.onSuccess { queryResults ->
-					Log.d("Query", "queryResults size: ${queryResults?.size}")
-					val nearestResult = queryResults?.firstOrNull()
-					when (val feature = nearestResult?.feature) {
-						is FindNearestResult.Feature.SpaceFeature -> {
-							val space = feature.space
-							Log.d("Query", "Nearest space: ${space.name} at ${nearestResult.distance}m")
+			if (useAtQuery) {
+				// Query.at: find all geometry at the clicked coordinate
+				Log.d("Query", "Calling at with coordinate")
+				mapView.mapData.query.at(coordinate) { result ->
+					Log.d("Query", "at callback received: success=${result.isSuccess}, failure=${result.isFailure}")
+					result.onSuccess { atResults ->
+						Log.d("Query", "atResults size: ${atResults?.size}")
+						val firstSpace =
+							atResults?.firstOrNull { it is QueryAtResult.SpaceResult } as? QueryAtResult.SpaceResult
+						if (firstSpace != null) {
+							val space = firstSpace.space
+							Log.d("Query", "Space at point: ${space.name} (${atResults.size} geometry at point)")
 
-							// Get the current color of the space before highlighting
 							mapView.getState(space) { stateResult ->
 								stateResult.onSuccess { state ->
 									originalColor = state?.color
-
-									// Highlight the space with a new color
 									mapView.updateState(space, GeometryUpdateState(color = "#FF6B35")) { }
-
-									// Update the highlighted space reference
 									highlightedSpace = space
-
-									// Update instruction text
-									instructionText.text = "Highlighted: ${space.name} (${String.format(Locale.getDefault(), "%.1f", nearestResult.distance)}m away)"
+									runOnUiThread {
+										instructionText.text = "Highlighted: ${space.name} (${atResults?.size ?: 0} geometry at point)"
+									}
 								}
 							}
+						} else {
+							Log.d("Query", "No space at click location")
+							runOnUiThread {
+								instructionText.text = "No space at click. ${atResults?.size ?: 0} geometry found."
+							}
 						}
-						else -> {
-							Log.d("Query", "No space feature found")
-							instructionText.text = "No space found near click location."
+					}
+					result.onFailure { error ->
+						Log.e("Query", "at failed: ${error.message}", error)
+						runOnUiThread {
+							instructionText.text = "Error: ${error.message}"
 						}
 					}
 				}
-				result.onFailure { error ->
-					Log.e("Query", "nearest failed: ${error.message}", error)
-					instructionText.text = "Error: ${error.message}"
+			} else {
+				// Query.nearest: find the nearest space to the clicked coordinate
+				Log.d("Query", "Calling nearest with coordinate")
+				mapView.mapData.query.nearest(coordinate, listOf(MapDataType.SPACE)) { result ->
+					Log.d("Query", "nearest callback received: success=${result.isSuccess}, failure=${result.isFailure}")
+					result.onSuccess { queryResults ->
+						Log.d("Query", "queryResults size: ${queryResults?.size}")
+						val nearestResult = queryResults?.firstOrNull()
+						when (val feature = nearestResult?.feature) {
+							is FindNearestResult.Feature.SpaceFeature -> {
+								val space = feature.space
+								Log.d("Query", "Nearest space: ${space.name} at ${nearestResult.distance}m")
+
+								mapView.getState(space) { stateResult ->
+									stateResult.onSuccess { state ->
+										originalColor = state?.color
+										mapView.updateState(space, GeometryUpdateState(color = "#FF6B35")) { }
+										highlightedSpace = space
+										runOnUiThread {
+											instructionText.text = "Highlighted: ${space.name} (${String.format(Locale.getDefault(), "%.1f", nearestResult.distance)}m away)"
+										}
+									}
+								}
+							}
+							else -> {
+								Log.d("Query", "No space feature found")
+								runOnUiThread {
+									instructionText.text = "No space found near click location."
+								}
+							}
+						}
+					}
+					result.onFailure { error ->
+						Log.e("Query", "nearest failed: ${error.message}", error)
+						runOnUiThread {
+							instructionText.text = "Error: ${error.message}"
+						}
+					}
 				}
 			}
 		}
