@@ -1,4 +1,14 @@
 # macOS
 .DS_Store
-/SDKv6_Examples/JetpackComposeWithMappedin/.idea
-/SDKv6_Examples/JetpackComposeWithMappedin/.idea
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+build/
+local.properties
+
+# Kotlin
+.kotlin/
