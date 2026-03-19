@@ -1,8 +1,8 @@
 # Mappedin Android Samples
 
-[![Platform](https://img.shields.io/badge/platform-Android-green)](https://developer.mappedin.com/android-sdk/getting-started) [![API](https://img.shields.io/badge/API-24%2B-brightgreen)](https://developer.mappedin.com/android-sdk/getting-started)
-
 [![Maven Central](https://img.shields.io/maven-central/v/com.mappedin.sdk/mappedin)](https://central.sonatype.com/artifact/com.mappedin.sdk/mappedin)
+
+[![Platform](https://img.shields.io/badge/platform-Android-green)](https://developer.mappedin.com/android-sdk/getting-started) [![API](https://img.shields.io/badge/API-24%2B-brightgreen)](https://developer.mappedin.com/android-sdk/getting-started)
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0%2B-purple)](https://kotlinlang.org/)
 
