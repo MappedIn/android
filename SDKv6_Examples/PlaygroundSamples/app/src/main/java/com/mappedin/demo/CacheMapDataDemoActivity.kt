@@ -30,9 +30,14 @@ import java.io.File
  * OfflineModeDemoActivity for examples of this. Use the load time stats printed out from these
  * demos to help make the best choice for your map.
  *
+ * **Enterprise maps:** `hydrateMapData` must receive the same shape as `BinaryBundle.toJson()` —
+ * especially `options.enterprise` and any `languagePacks`. This demo saves a small manifest plus
+ * binary files instead of only `bundle.main`, so Enterprise offline load works. If you previously
+ * cached only `.bin`, a fallback sets `enterprise` from your API key (non-`mik_` keys are CMS).
+ *
  * This demo shows how to:
  * 1. Check if map data is cached locally
- * 2. Load from cache using hydrateMapData if available
+ * 2. Load from cache using hydrateMapData if available (full bundle shape)
  * 3. Fetch from server using getMapData if not cached
  * 4. Save the fetched data to cache using toBinaryBundle
  *
@@ -48,6 +53,7 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 	companion object {
 		private const val TAG = "CacheMapDataDemo"
 		private const val CACHE_FILE_PREFIX = "cached-map-"
+		private const val MANIFEST_SUFFIX = ".manifest.json"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,13 +149,12 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 		val mapId = options.mapId
 		currentMapId = mapId
 
-		// Check if there is cached data for this map
-		val cachedData = loadFromCache(mapId)
+		val backup = loadHydrateBackupFromCache(mapId, options)
 
-		if (cachedData != null) {
+		if (backup != null) {
 			Log.d(TAG, "Using cached map data for $mapId")
 			updateStatus("Loading from cache...")
-			loadFromCachedData(cachedData, options)
+			loadFromCachedBackup(backup, options)
 		} else {
 			Log.d(TAG, "Fetching map data from server for $mapId")
 			updateStatus("Fetching from server...")
@@ -159,26 +164,14 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 
 	private var loadStartTime: Long = 0
 
-	private fun loadFromCachedData(
-		cachedData: ByteArray,
+	private fun loadFromCachedBackup(
+		backup: JSONObject,
 		options: GetMapDataWithCredentialsOptions,
 	) {
 		loadStartTime = System.currentTimeMillis()
-
-		// Create the backup object in the format expected by hydrateMapData
-		val mainArray = JSONArray()
-		for (byte in cachedData) {
-			mainArray.put(byte.toInt() and 0xFF)
-		}
-		val backupObject =
-			JSONObject().apply {
-				put("type", "binary")
-				put("main", mainArray)
-			}
-
 		val hydrateStartTime = System.currentTimeMillis()
 
-		mapView.hydrateMapData(backupObject, options) { result ->
+		mapView.hydrateMapData(backup, options) { result ->
 			val hydrateEndTime = System.currentTimeMillis()
 			val hydrateDuration = hydrateEndTime - hydrateStartTime
 
@@ -189,10 +182,8 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 					showMap(isCached = true, dataLoadDuration = hydrateDuration)
 				}.onFailure { error ->
 					Log.e(TAG, "hydrateMapData error: $error (after ${hydrateDuration}ms)")
-					// If cache is corrupted, delete it and fetch fresh data
 					deleteFromCache(options.mapId)
 					updateStatus("Cache invalid, fetching from server...")
-
 					// Create a new MapView since hydrateMapData can only be called once
 					recreateMapView()
 					fetchFromServer(options)
@@ -212,7 +203,6 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 				.onSuccess {
 					Log.d(TAG, "getMapData success - fetched from server in ${getMapDataDuration}ms")
 					updateStatus("Fetched from server...")
-
 					// Cache saving is deferred until after show3dMap to avoid blocking the render
 					showMap(
 						isCached = false,
@@ -250,7 +240,6 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 					)
 					onMapReady()
 
-					// Save to cache after map is displayed to avoid blocking the render
 					if (mapIdToCache != null) {
 						Log.d(TAG, "Starting background cache save...")
 						saveToCache(mapIdToCache)
@@ -266,7 +255,6 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 	private fun onMapReady() {
 		Log.d(TAG, "Map displayed successfully")
 
-		// Add labels to all named spaces
 		mapView.mapData.getByType<Space>(MapDataType.SPACE) { result ->
 			result.onSuccess { spaces ->
 				spaces.filter { it.name.isNotEmpty() }.forEach { space ->
@@ -282,10 +270,8 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 				.onSuccess { bundle ->
 					if (bundle != null) {
 						try {
-							val cacheFile = getCacheFile(mapId)
-							cacheFile.writeBytes(bundle.main)
-							Log.d(TAG, "Map data cached successfully to ${cacheFile.absolutePath}")
-							Log.d(TAG, "Cache size: ${bundle.main.size} bytes")
+							writeBinaryCache(bundle, mapId)
+							Log.d(TAG, "Map data cached (enterprise=${bundle.enterprise}, langPacks=${bundle.languagePacks.size})")
 							updateStatus("Cached for offline use!")
 						} catch (e: Exception) {
 							Log.e(TAG, "Failed to save cache: ${e.message}")
@@ -299,43 +285,164 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 		}
 	}
 
-	private fun loadFromCache(mapId: String): ByteArray? =
-		try {
-			val cacheFile = getCacheFile(mapId)
-			if (cacheFile.exists()) {
-				Log.d(TAG, "Found cached data at ${cacheFile.absolutePath}")
-				Log.d(TAG, "Cache size: ${cacheFile.length()} bytes")
-				cacheFile.readBytes()
-			} else {
-				Log.d(TAG, "No cached data found for $mapId")
-				null
+	private fun writeBinaryCache(
+		bundle: com.mappedin.data.BinaryBundle,
+		mapId: String,
+	) {
+		val oldManifestFile = File(filesDir, "$CACHE_FILE_PREFIX$mapId$MANIFEST_SUFFIX")
+		if (oldManifestFile.exists()) {
+			try {
+				val oldManifest = BinaryCacheManifest.fromJson(JSONObject(oldManifestFile.readText()))
+				oldManifest?.languagePacks?.forEach { File(filesDir, it.fileName).delete() }
+			} catch (_: Exception) { }
+		}
+
+		val mainName = "$CACHE_FILE_PREFIX$mapId.bin"
+		val mainFile = File(filesDir, mainName)
+		mainFile.writeBytes(bundle.main)
+
+		val langRefs = mutableListOf<BinaryCacheManifest.LanguageFileRef>()
+		for (pack in bundle.languagePacks) {
+			val safeCode = sanitizedFileComponent(pack.code)
+			val fileName = "$CACHE_FILE_PREFIX$mapId-lang-$safeCode.bin"
+			val file = File(filesDir, fileName)
+			file.writeBytes(pack.data)
+			langRefs.add(BinaryCacheManifest.LanguageFileRef(pack.code, pack.name, fileName))
+		}
+
+		val manifest =
+			BinaryCacheManifest(
+				version = BinaryCacheManifest.CURRENT_VERSION,
+				enterprise = bundle.enterprise,
+				mainFileName = mainName,
+				languagePacks = langRefs,
+			)
+		val manifestFile = File(filesDir, "$CACHE_FILE_PREFIX$mapId$MANIFEST_SUFFIX")
+		manifestFile.writeText(manifest.toJson().toString())
+		Log.d(TAG, "Wrote cache main=$mainName (${bundle.main.size} bytes), manifest=${manifestFile.name}")
+	}
+
+	private fun loadHydrateBackupFromCache(
+		mapId: String,
+		options: GetMapDataWithCredentialsOptions,
+	): JSONObject? {
+		val manifestFile = File(filesDir, "$CACHE_FILE_PREFIX$mapId$MANIFEST_SUFFIX")
+		val mainFile = getMainCacheFile(mapId)
+
+		if (manifestFile.exists()) {
+			try {
+				val manifest =
+					BinaryCacheManifest.fromJson(JSONObject(manifestFile.readText()))
+						?: return null
+				if (manifest.version != BinaryCacheManifest.CURRENT_VERSION) {
+					Log.d(TAG, "Unknown cache manifest version ${manifest.version}")
+					return null
+				}
+				val mainData = File(filesDir, manifest.mainFileName).readBytes()
+				val languagePacks = JSONArray()
+				for (ref in manifest.languagePacks) {
+					val packData = File(filesDir, ref.fileName).readBytes()
+					val packArray = JSONArray()
+					for (byte in packData) {
+						packArray.put(byte.toInt() and 0xFF)
+					}
+					languagePacks.put(
+						JSONObject().apply {
+							put(
+								"language",
+								JSONObject().apply {
+									put("code", ref.code)
+									put("name", ref.name)
+								},
+							)
+							put("localePack", packArray)
+						},
+					)
+				}
+				Log.d(TAG, "Loaded cache from manifest (enterprise=${manifest.enterprise}, langPacks=${languagePacks.length()})")
+				return hydrateBackupBinary(mainData, manifest.enterprise, languagePacks)
+			} catch (e: Exception) {
+				Log.e(TAG, "Failed to load manifest cache: ${e.message}")
+				return null
 			}
+		}
+
+		if (!mainFile.exists()) {
+			Log.d(TAG, "No cached data found for $mapId")
+			return null
+		}
+		return try {
+			val mainData = mainFile.readBytes()
+			val enterpriseInferred = !options.key.startsWith("mik_")
+			Log.d(TAG, "Legacy .bin only — using enterprise=$enterpriseInferred from key prefix")
+			hydrateBackupBinary(mainData, enterpriseInferred, JSONArray())
 		} catch (e: Exception) {
 			Log.e(TAG, "Failed to load cache: ${e.message}")
 			null
 		}
-
-	private fun deleteFromCache(mapId: String) {
-		try {
-			val cacheFile = getCacheFile(mapId)
-			if (cacheFile.exists()) {
-				cacheFile.delete()
-				Log.d(TAG, "Deleted cached data for $mapId")
-			}
-		} catch (e: Exception) {
-			Log.e(TAG, "Failed to delete cache: ${e.message}")
-		}
 	}
 
-	private fun getCacheFile(mapId: String): File = File(filesDir, "$CACHE_FILE_PREFIX$mapId.bin")
+	private fun hydrateBackupBinary(
+		main: ByteArray,
+		enterprise: Boolean,
+		languagePacks: JSONArray,
+	): JSONObject {
+		val mainArray = JSONArray()
+		for (byte in main) {
+			mainArray.put(byte.toInt() and 0xFF)
+		}
+		val backup =
+			JSONObject().apply {
+				put("type", "binary")
+				put("main", mainArray)
+				put(
+					"options",
+					JSONObject().apply {
+						put("enterprise", enterprise)
+					},
+				)
+			}
+		if (languagePacks.length() > 0) {
+			backup.put("languagePacks", languagePacks)
+		}
+		return backup
+	}
+
+	private fun deleteFromCache(mapId: String) {
+		val manifestFile = File(filesDir, "$CACHE_FILE_PREFIX$mapId$MANIFEST_SUFFIX")
+
+		if (manifestFile.exists()) {
+			try {
+				val manifest = BinaryCacheManifest.fromJson(JSONObject(manifestFile.readText()))
+				if (manifest != null) {
+					val filesToDelete = mutableListOf(manifestFile, File(filesDir, manifest.mainFileName))
+					filesToDelete.addAll(manifest.languagePacks.map { File(filesDir, it.fileName) })
+					for (file in filesToDelete) {
+						file.delete()
+					}
+					Log.d(TAG, "Deleted manifest cache for $mapId")
+					return
+				}
+			} catch (e: Exception) {
+				Log.e(TAG, "Failed to parse manifest for deletion: ${e.message}")
+			}
+		}
+
+		val legacyMain = getMainCacheFile(mapId)
+		legacyMain.delete()
+		manifestFile.delete()
+		Log.d(TAG, "Deleted cached data for $mapId")
+	}
+
+	private fun getMainCacheFile(mapId: String): File = File(filesDir, "$CACHE_FILE_PREFIX$mapId.bin")
+
+	private fun sanitizedFileComponent(code: String): String = code.map { ch -> if (ch.isLetterOrDigit()) ch else '_' }.joinToString("")
 
 	private fun recreateMapView() {
 		val parent = mapView.view.parent as? FrameLayout ?: return
 		parent.removeView(mapView.view)
-
 		// Destroy the old MapView to release WebView resources and prevent memory leaks
 		mapView.destroy()
-
 		mapView = MapView(this)
 		parent.addView(
 			mapView.view,
@@ -357,6 +464,68 @@ class CacheMapDataDemoActivity : AppCompatActivity() {
 	private fun hideLoading() {
 		runOnUiThread {
 			loadingIndicator.visibility = View.GONE
+		}
+	}
+}
+
+private data class BinaryCacheManifest(
+	val version: Int,
+	val enterprise: Boolean,
+	val mainFileName: String,
+	val languagePacks: List<LanguageFileRef>,
+) {
+	data class LanguageFileRef(
+		val code: String,
+		val name: String,
+		val fileName: String,
+	)
+
+	fun toJson(): JSONObject =
+		JSONObject().apply {
+			put("version", version)
+			put("enterprise", enterprise)
+			put("mainFileName", mainFileName)
+			put(
+				"languagePacks",
+				JSONArray().apply {
+					for (ref in languagePacks) {
+						put(
+							JSONObject().apply {
+								put("code", ref.code)
+								put("name", ref.name)
+								put("fileName", ref.fileName)
+							},
+						)
+					}
+				},
+			)
+		}
+
+	companion object {
+		const val CURRENT_VERSION = 1
+
+		fun fromJson(json: JSONObject): BinaryCacheManifest? {
+			val version = json.optInt("version", -1)
+			val enterprise = json.optBoolean("enterprise", false)
+			val mainFileName = json.optString("mainFileName", "")
+			if (mainFileName.isEmpty()) return null
+
+			val langPacksArray = json.optJSONArray("languagePacks")
+			val languagePacks = mutableListOf<LanguageFileRef>()
+			if (langPacksArray != null) {
+				for (i in 0 until langPacksArray.length()) {
+					val obj = langPacksArray.optJSONObject(i) ?: continue
+					languagePacks.add(
+						LanguageFileRef(
+							code = obj.optString("code", ""),
+							name = obj.optString("name", ""),
+							fileName = obj.optString("fileName", ""),
+						),
+					)
+				}
+			}
+
+			return BinaryCacheManifest(version, enterprise, mainFileName, languagePacks)
 		}
 	}
 }
