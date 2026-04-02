@@ -53,7 +53,7 @@ class CacheMVFDemoActivity : AppCompatActivity() {
 		private const val CACHE_FILE_PREFIX = "cached-mvf-"
 
 		// API credentials (Demo API key)
-		// See Trial API key Terms and Conditions: https://developer.mappedin.com/docs/demo-keys-and-maps
+		// See Demo API Key Terms and Conditions: https://developer.mappedin.com/docs/demo-keys-and-maps
 		private const val MAPPEDIN_KEY = "mik_yeBk0Vf0nNJtpesfu560e07e5"
 		private const val MAPPEDIN_SECRET = "mis_2g9ST8ZcSFb5R9fPnsvYhrX3RyRwPtDGbMGweCYKEq385431022"
 

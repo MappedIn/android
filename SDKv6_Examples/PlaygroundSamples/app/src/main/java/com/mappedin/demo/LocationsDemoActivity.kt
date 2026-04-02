@@ -99,7 +99,7 @@ class LocationsDemoActivity : AppCompatActivity() {
 
 		setContentView(root)
 
-		// See Trial API key Terms and Conditions
+		// See Demo API Key Terms and Conditions
 		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options = GetMapDataWithCredentialsOptions(
 			key = "mik_yeBk0Vf0nNJtpesfu560e07e5",
