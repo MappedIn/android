@@ -130,7 +130,7 @@ class QueryDemoActivity : AppCompatActivity() {
 		mapContainer.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f)
 		root.addView(mapContainer)
 
-		// See Trial API key Terms and Conditions
+		// See Demo API Key Terms and Conditions
 		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options =
 			GetMapDataWithCredentialsOptions(

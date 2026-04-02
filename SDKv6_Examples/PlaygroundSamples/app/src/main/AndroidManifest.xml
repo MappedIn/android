@@ -119,5 +119,9 @@
             android:name="com.mappedin.demo.CacheMVFDemoActivity"
             android:exported="false"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
+			android:name="com.mappedin.demo.EventsDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 	</application>
 </manifest>

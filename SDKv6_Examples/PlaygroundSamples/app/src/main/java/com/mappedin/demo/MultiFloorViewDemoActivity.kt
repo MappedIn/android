@@ -12,6 +12,8 @@ import com.mappedin.models.Floor
 import com.mappedin.models.FloorUpdateState
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
+import com.mappedin.models.FloorGap
+import com.mappedin.models.MultiFloorViewOptions
 import com.mappedin.models.Show3DMapOptions
 
 class MultiFloorViewDemoActivity : AppCompatActivity() {
@@ -46,7 +48,7 @@ class MultiFloorViewDemoActivity : AppCompatActivity() {
 
 		setContentView(container)
 
-		// See Trial API key Terms and Conditions
+		// See Demo API Key Terms and Conditions
 		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options =
 			GetMapDataWithCredentialsOptions(
@@ -65,9 +67,9 @@ class MultiFloorViewDemoActivity : AppCompatActivity() {
 					val show3dMapOptions =
 						Show3DMapOptions(
 							multiFloorView =
-								Show3DMapOptions.MultiFloorViewOptions(
+								MultiFloorViewOptions(
 									enabled = true,
-									floorGap = 10.0,
+									floorGap = FloorGap.Numeric(10.0),
 									updateCameraElevationOnFloorChange = true,
 								),
 						)

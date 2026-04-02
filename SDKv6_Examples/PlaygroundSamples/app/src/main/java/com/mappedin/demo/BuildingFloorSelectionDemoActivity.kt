@@ -116,7 +116,7 @@ class BuildingFloorSelectionDemoActivity : AppCompatActivity() {
 			),
 		)
 
-		// See Trial API key Terms and Conditions
+		// See Demo API Key Terms and Conditions
 		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options =
 			GetMapDataWithCredentialsOptions(

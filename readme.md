@@ -32,6 +32,7 @@ The following table lists the sample activities that pertain to the latest versi
 | [ColorsAndTexturesDemo]      | Demonstrates how to apply custom colors and textures to the map.                               | [Images, Textures & Colors]       |
 | [DynamicFocusDemo]           | Demonstrates how to use Dynamic Focus.                                                         | [Dynamic Focus]                   |
 | [DynamicFocusManualDemo]     | Demonstrates how to create a custom Dynamic Focus effect.                                      | [Custom Dynamic Focus]            |
+| [EventsDemo]                 | Demonstrates how to use events created in Mappedin CMS.                                        |                                   |
 | [Image3DDemo]                | Demonstrates how to add images on a map.                                                       | [Images, Textures & Colors]       |
 | [InteractivityDemo]          | Demonstrates how to capture and act on touch events.                                           | [Interactivity]                   |
 | [LabelsDemo]                 | Demonstrates adding rich labels to the map.                                                    | [Labels]                          |
@@ -58,6 +59,7 @@ The following table lists the sample activities that pertain to the latest versi
 [ColorsAndTexturesDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/ColorsAndTexturesDemoActivity.kt
 [DynamicFocusDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/DynamicFocusDemoActivity.kt
 [DynamicFocusManualDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/DynamicFocusManualDemoActivity.kt
+[EventsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/EventsDemoActivity.kt
 [Image3DDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/Image3DDemoActivity.kt
 [InteractivityDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/InteractivityDemoActivity.kt
 [LabelsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/LabelsDemoActivity.kt

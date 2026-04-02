@@ -43,13 +43,13 @@ class DisplayMapDemoActivity : AppCompatActivity() {
 
 		setContentView(container)
 
-		// See Trial API key Terms and Conditions
+		// See Demo API Key Terms and Conditions
 		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options =
 			GetMapDataWithCredentialsOptions(
-				key = "5eab30aa91b055001a68e996",
-				secret = "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-				mapId = "mappedin-demo-mall",
+				key = "mik_yeBk0Vf0nNJtpesfu560e07e5",
+				secret = "mis_2g9ST8ZcSFb5R9fPnsvYhrX3RyRwPtDGbMGweCYKEq385431022",
+				mapId = "660c0c6e7c0c4fe5b4cc484c",
 			)
 
 		// Load the map data.

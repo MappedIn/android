@@ -161,7 +161,7 @@ class DynamicFocusDemoActivity : AppCompatActivity() {
 		}
 
 	private fun loadMap() {
-		// Trial API key - see https://developer.mappedin.com/docs/demo-keys-and-maps
+		// Demo API Key - see https://developer.mappedin.com/docs/demo-keys-and-maps
 		// Using the outdoor/indoor map for Dynamic Focus demo
 		val options =
 			GetMapDataWithCredentialsOptions(
