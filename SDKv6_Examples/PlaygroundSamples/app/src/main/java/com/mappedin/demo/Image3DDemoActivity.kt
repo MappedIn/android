@@ -18,9 +18,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.widget.Toast
 import com.mappedin.MapView
 import com.mappedin.models.AddImageOptions
 import com.mappedin.models.AddLabelOptions
+import com.mappedin.models.Events
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.Show3DMapOptions
 import com.mappedin.models.Space
@@ -180,8 +182,27 @@ class Image3DDemoActivity : AppCompatActivity() {
 							rotation = 239.0,
 							verticalOffset = 1.0,
 							flipImageToFaceCamera = false,
+							interactive = true,
 						)
 					mapView.image3D.add(floor, imageResource, opts) { }
+				}
+
+				mapView.on(Events.Click) { payload ->
+					val images = payload?.images.orEmpty()
+					if (images.isNotEmpty()) {
+						val image = images.first()
+						Log.d(
+							"Image3DDemoActivity",
+							"Clicked Image3DView id=${image.id} url=${image.url}",
+						)
+						runOnUiThread {
+							Toast.makeText(
+								this@Image3DDemoActivity,
+								"Clicked Image3DView: ${image.id}",
+								Toast.LENGTH_SHORT,
+							).show()
+						}
+					}
 				}
 			}
 		}
@@ -199,6 +220,7 @@ class Image3DDemoActivity : AppCompatActivity() {
 					rotation = 239.0,
 					verticalOffset = 1.0,
 					flipImageToFaceCamera = false,
+					interactive = true,
 				)
 			mapView.image3D.add(floor, imageResource, opts) { }
 		}

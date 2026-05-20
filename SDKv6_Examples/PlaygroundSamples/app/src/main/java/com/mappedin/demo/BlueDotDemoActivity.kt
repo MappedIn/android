@@ -16,12 +16,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
 import com.mappedin.models.BlueDotEvents
 import com.mappedin.models.BlueDotOptions
-import com.mappedin.models.BlueDotPositionUpdate
-import com.mappedin.models.BlueDotUpdateOptions
 import com.mappedin.models.Coordinate
 import com.mappedin.models.Events
 import com.mappedin.models.Floor
 import com.mappedin.models.GetMapDataWithCredentialsOptions
+import com.mappedin.models.ManualPositionOptions
 import com.mappedin.models.Show3DMapOptions
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -41,6 +40,9 @@ class BlueDotDemoActivity : AppCompatActivity() {
 
 	private var currentHeading: Double = 0.0
 	private var currentAccuracy: Double = 5.0
+	private var lastLatitude: Double? = null
+	private var lastLongitude: Double? = null
+	private var lastFloorLevel: Int? = null
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -367,9 +369,7 @@ class BlueDotDemoActivity : AppCompatActivity() {
 		mapView.blueDot.enable(options) { result ->
 			result.fold(
 				onSuccess = {
-					runOnUiThread {
-						statusLabel.text = "BlueDot enabled - tap map to place"
-					}
+					placeBlueDotAtCenter()
 				},
 				onFailure = { error ->
 					runOnUiThread {
@@ -381,29 +381,40 @@ class BlueDotDemoActivity : AppCompatActivity() {
 		}
 	}
 
+	private fun placeBlueDotAtCenter() {
+		mapView.camera.center { result ->
+			result.onSuccess { coordinate ->
+				if (coordinate != null) {
+					mapView.currentFloor { floorResult ->
+						val floors = floorResult.getOrNull()?.let { listOf(it) }
+						moveBlueDot(coordinate, floors)
+					}
+				}
+			}
+		}
+	}
+
 	private fun moveBlueDot(
 		coordinate: Coordinate,
 		floors: List<Floor>?,
 	) {
-		val floorId: BlueDotPositionUpdate.FloorId? =
-			if (!floors.isNullOrEmpty()) {
-				BlueDotPositionUpdate.FloorId.Id(floors.first().id)
-			} else if (coordinate.floorId != null) {
-				BlueDotPositionUpdate.FloorId.Id(coordinate.floorId!!)
-			} else {
-				null
-			}
+		val floorLevel: Int? =
+			floors?.firstOrNull()?.elevation?.toInt()
 
-		val position =
-			BlueDotPositionUpdate(
-				accuracy = BlueDotPositionUpdate.Accuracy.Value(currentAccuracy),
-				floorId = floorId,
-				heading = BlueDotPositionUpdate.Heading.Value(currentHeading),
-				latitude = BlueDotPositionUpdate.Latitude.Value(coordinate.latitude),
-				longitude = BlueDotPositionUpdate.Longitude.Value(coordinate.longitude),
-			)
+		lastLatitude = coordinate.latitude
+		lastLongitude = coordinate.longitude
+		lastFloorLevel = floorLevel
 
-		mapView.blueDot.update(position, BlueDotUpdateOptions(animate = true)) { _ ->
+		mapView.blueDot.reportPosition(
+			ManualPositionOptions(
+				latitude = coordinate.latitude,
+				longitude = coordinate.longitude,
+				accuracy = currentAccuracy,
+				heading = currentHeading,
+				floorLevel = floorLevel,
+				confidence = 1.0,
+			),
+		) { _ ->
 			runOnUiThread {
 				statusLabel.text = "BlueDot placed"
 			}
@@ -423,9 +434,22 @@ class BlueDotDemoActivity : AppCompatActivity() {
 	private fun setHeading(heading: Double) {
 		currentHeading = heading
 
-		mapView.blueDot.update(
-			BlueDotPositionUpdate(heading = BlueDotPositionUpdate.Heading.Value(heading)),
-			BlueDotUpdateOptions(animate = true),
+		val lat = lastLatitude
+		val lng = lastLongitude
+		if (lat == null || lng == null) {
+			runOnUiThread { statusLabel.text = "Place a position first" }
+			return
+		}
+
+		mapView.blueDot.reportPosition(
+			ManualPositionOptions(
+				latitude = lat,
+				longitude = lng,
+				accuracy = currentAccuracy,
+				heading = heading,
+				floorLevel = lastFloorLevel,
+				confidence = 1.0,
+			),
 		) { _ ->
 			runOnUiThread {
 				statusLabel.text = "Heading set to ${heading.toInt()}°"
@@ -437,9 +461,22 @@ class BlueDotDemoActivity : AppCompatActivity() {
 	private fun setAccuracy(accuracy: Double) {
 		currentAccuracy = accuracy
 
-		mapView.blueDot.update(
-			BlueDotPositionUpdate(accuracy = BlueDotPositionUpdate.Accuracy.Value(accuracy)),
-			BlueDotUpdateOptions(animate = true),
+		val lat = lastLatitude
+		val lng = lastLongitude
+		if (lat == null || lng == null) {
+			runOnUiThread { statusLabel.text = "Place a position first" }
+			return
+		}
+
+		mapView.blueDot.reportPosition(
+			ManualPositionOptions(
+				latitude = lat,
+				longitude = lng,
+				accuracy = accuracy,
+				heading = currentHeading,
+				floorLevel = lastFloorLevel,
+				confidence = 1.0,
+			),
 		) { _ ->
 			runOnUiThread {
 				statusLabel.text = "Accuracy set to ${accuracy.toInt()}m"
