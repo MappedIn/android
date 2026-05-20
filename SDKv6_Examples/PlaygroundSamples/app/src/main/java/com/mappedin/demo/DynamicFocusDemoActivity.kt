@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mappedin.MapView
+import com.mappedin.models.AutoZoomThresholds
 import com.mappedin.models.DynamicFocusOptions
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.Show3DMapOptions
@@ -161,8 +162,8 @@ class DynamicFocusDemoActivity : AppCompatActivity() {
 		}
 
 	private fun loadMap() {
-		// Demo API Key - see https://developer.mappedin.com/docs/demo-keys-and-maps
-		// Using the outdoor/indoor map for Dynamic Focus demo
+		// See Demo API Key Terms and Conditions
+		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options =
 			GetMapDataWithCredentialsOptions(
 				key = "mik_yeBk0Vf0nNJtpesfu560e07e5",
@@ -222,8 +223,7 @@ class DynamicFocusDemoActivity : AppCompatActivity() {
 			DynamicFocusOptions(
 				autoFocus = true,
 				setFloorOnFocus = true,
-				indoorZoomThreshold = 17.0,
-				outdoorZoomThreshold = 17.0,
+				autoZoomThresholds = AutoZoomThresholds.Enabled(),
 			)
 
 		mapView.dynamicFocus.enable(options) { result ->

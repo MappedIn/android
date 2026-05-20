@@ -68,6 +68,10 @@
 			android:exported="false"
 			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 		<activity
+			android:name="com.mappedin.demo.BlueDotPathTetheringDemoActivity"
+			android:exported="false"
+			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+		<activity
 			android:name="com.mappedin.demo.CameraDemoActivity"
 			android:exported="false"
 			android:theme="@style/Theme.Material3.DayNight.NoActionBar" />

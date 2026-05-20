@@ -180,7 +180,8 @@ class DynamicFocusManualDemoActivity : AppCompatActivity() {
 	}
 
 	private fun loadMap() {
-		// Demo API Key - see https://developer.mappedin.com/docs/demo-keys-and-maps
+		// See Demo API Key Terms and Conditions
+		// https://developer.mappedin.com/docs/demo-keys-and-maps
 		val options =
 			GetMapDataWithCredentialsOptions(
 				key = "mik_yeBk0Vf0nNJtpesfu560e07e5",
