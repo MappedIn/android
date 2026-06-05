@@ -35,6 +35,7 @@ The following table lists the sample activities that pertain to the latest versi
 | [DynamicFocusDemo]             | Demonstrates how to use Dynamic Focus.                                                                | [Dynamic Focus]                   |
 | [DynamicFocusManualDemo]       | Demonstrates how to create a custom Dynamic Focus effect.                                             | [Custom Dynamic Focus]            |
 | [EventsDemo]                   | Demonstrates how to use events created in Mappedin CMS.                                               |                                   |
+| [IconsDemo]                    | Demonstrates how use Mappedin icons.                                                                  | Coming Soon                       |
 | [Image3DDemo]                  | Demonstrates how to add images on a map.                                                              | [Images, Textures & Colors]       |
 | [InteractivityDemo]            | Demonstrates how to capture and act on touch events.                                                  | [Interactivity]                   |
 | [LabelsDemo]                   | Demonstrates adding rich labels to the map.                                                           | [Labels]                          |
@@ -46,6 +47,7 @@ The following table lists the sample activities that pertain to the latest versi
 | [OfflineModeDemo]              | Demonstrates loading a map from a local Mappedin Venue Format ([MVFv3]) file.                         | [Offline Mode]                    |
 | [PathsDemo]                    | Demonstrates how to draw a path between two rooms.                                                    | [Wayfinding]                      |
 | [QueryDemo]                    | Demonstrates how to find the nearest room based on a coordinate and click event.                      |                                   |
+| [ReusableMapDemo]              | Demonstrates how to reuse the same MapView instance on multiple screens for faster loading.           | Coming Soon                       |
 | [SearchDemo]                   | Demonstrates how to use the suggest and search feature.                                               | [Search]                          |
 | [StackedMapsDemo]              | Demonstrates how to use the stacked maps.                                                             | [Multi Floor View & Stacked Maps] |
 | [Text3DDemo]                   | Demonstrates how to use Text3D labels.                                                                | [Flat Text]                       |
@@ -64,6 +66,7 @@ The following table lists the sample activities that pertain to the latest versi
 [DynamicFocusDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/DynamicFocusDemoActivity.kt
 [DynamicFocusManualDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/DynamicFocusManualDemoActivity.kt
 [EventsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/EventsDemoActivity.kt
+[IconDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/IconsDemoActivity.kt
 [Image3DDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/Image3DDemoActivity.kt
 [InteractivityDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/InteractivityDemoActivity.kt
 [LabelsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/LabelsDemoActivity.kt
@@ -75,6 +78,7 @@ The following table lists the sample activities that pertain to the latest versi
 [OfflineModeDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/OfflineModeDemoActivity.kt
 [PathsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/PathsDemoActivity.kt
 [QueryDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/QueryDemoActivity.kt
+[ReusableMapDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/ReusableMapScreenFragment.kt
 [SearchDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/SearchDemoActivity.kt
 [StackedMapsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/StackedMapsDemoActivity.kt
 [Text3DDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/Text3DDemoActivity.kt

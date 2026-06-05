@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 				"Dynamic Focus",
 				"Dynamic Focus (Manual)",
 				"Events",
+				"Icons",
 				"Image3D",
 				"Interactivity",
 				"Labels",
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 				"Offline Mode",
 				"Paths",
 				"Query",
+				"Reusable MapView",
 				"Search",
 				"Stacked Maps",
 				"Text3D",
@@ -65,21 +67,23 @@ class MainActivity : AppCompatActivity() {
 				10 -> startActivity(Intent(this, DynamicFocusDemoActivity::class.java))
 				11 -> startActivity(Intent(this, DynamicFocusManualDemoActivity::class.java))
 				12 -> startActivity(Intent(this, EventsDemoActivity::class.java))
-				13 -> startActivity(Intent(this, Image3DDemoActivity::class.java))
-				14 -> startActivity(Intent(this, InteractivityDemoActivity::class.java))
-				15 -> startActivity(Intent(this, LabelsDemoActivity::class.java))
-				16 -> startActivity(Intent(this, LocationsDemoActivity::class.java))
-				17 -> startActivity(Intent(this, MarkersDemoActivity::class.java))
-				18 -> startActivity(Intent(this, ModelsDemoActivity::class.java))
-				19 -> startActivity(Intent(this, MultiFloorViewDemoActivity::class.java))
-				20 -> startActivity(Intent(this, NavigationDemoActivity::class.java))
-				21 -> startActivity(Intent(this, OfflineModeDemoActivity::class.java))
-				22 -> startActivity(Intent(this, PathsDemoActivity::class.java))
-				23 -> startActivity(Intent(this, QueryDemoActivity::class.java))
-				24 -> startActivity(Intent(this, SearchDemoActivity::class.java))
-				25 -> startActivity(Intent(this, StackedMapsDemoActivity::class.java))
-				26 -> startActivity(Intent(this, Text3DDemoActivity::class.java))
-				27 -> startActivity(Intent(this, TurnByTurnDemoActivity::class.java))
+				13 -> startActivity(Intent(this, IconsDemoActivity::class.java))
+				14 -> startActivity(Intent(this, Image3DDemoActivity::class.java))
+				15 -> startActivity(Intent(this, InteractivityDemoActivity::class.java))
+				16 -> startActivity(Intent(this, LabelsDemoActivity::class.java))
+				17 -> startActivity(Intent(this, LocationsDemoActivity::class.java))
+				18 -> startActivity(Intent(this, MarkersDemoActivity::class.java))
+				19 -> startActivity(Intent(this, ModelsDemoActivity::class.java))
+				20 -> startActivity(Intent(this, MultiFloorViewDemoActivity::class.java))
+				21 -> startActivity(Intent(this, NavigationDemoActivity::class.java))
+				22 -> startActivity(Intent(this, OfflineModeDemoActivity::class.java))
+				23 -> startActivity(Intent(this, PathsDemoActivity::class.java))
+				24 -> startActivity(Intent(this, QueryDemoActivity::class.java))
+				25 -> startActivity(Intent(this, ReusableMapViewDemoActivity::class.java))
+				26 -> startActivity(Intent(this, SearchDemoActivity::class.java))
+				27 -> startActivity(Intent(this, StackedMapsDemoActivity::class.java))
+				28 -> startActivity(Intent(this, Text3DDemoActivity::class.java))
+				29 -> startActivity(Intent(this, TurnByTurnDemoActivity::class.java))
 			}
 		}
 	}
