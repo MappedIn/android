@@ -66,7 +66,7 @@ The following table lists the sample activities that pertain to the latest versi
 [DynamicFocusDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/DynamicFocusDemoActivity.kt
 [DynamicFocusManualDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/DynamicFocusManualDemoActivity.kt
 [EventsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/EventsDemoActivity.kt
-[IconDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/IconsDemoActivity.kt
+[IconsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/IconsDemoActivity.kt
 [Image3DDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/Image3DDemoActivity.kt
 [InteractivityDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/InteractivityDemoActivity.kt
 [LabelsDemo]: ./SDKv6_Examples/PlaygroundSamples/app/src/main/java/com/mappedin/demo/LabelsDemoActivity.kt
