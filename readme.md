@@ -34,8 +34,8 @@ The following table lists the sample activities that pertain to the latest versi
 | [ColorsAndTexturesDemo]        | Demonstrates how to apply custom colors and textures to the map.                                      | [Images, Textures & Colors]        |
 | [DynamicFocusDemo]             | Demonstrates how to use Dynamic Focus.                                                                | [Dynamic Focus]                    |
 | [DynamicFocusManualDemo]       | Demonstrates how to create a custom Dynamic Focus effect.                                             | [Custom Dynamic Focus]             |
-| [EventsDemo]                   | Demonstrates how to use events created in Mappedin CMS.                                               | [Icons]                            |
-| [IconsDemo]                    | Demonstrates how use Mappedin icons.                                                                  | Coming Soon                        |
+| [EventsDemo]                   | Demonstrates how to use events created in Mappedin CMS.                                               |                                    |
+| [IconsDemo]                    | Demonstrates how use Mappedin icons.                                                                  | [Icons]                            |
 | [Image3DDemo]                  | Demonstrates how to add images on a map.                                                              | [Images, Textures & Colors]        |
 | [InteractivityDemo]            | Demonstrates how to capture and act on touch events.                                                  | [Interactivity]                    |
 | [LabelsDemo]                   | Demonstrates adding rich labels to the map.                                                           | [Labels]                           |
