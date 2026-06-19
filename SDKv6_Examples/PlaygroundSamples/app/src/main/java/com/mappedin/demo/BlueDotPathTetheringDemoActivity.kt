@@ -928,7 +928,7 @@ class BlueDotPathTetheringDemoActivity : AppCompatActivity() {
 			val result = ArrayList<ManualPositionOptions>(array.length())
 			for (i in 0 until array.length()) {
 				val obj = array.optJSONObject(i) ?: continue
-				val floorId = if (obj.has("floorOrFloorId")) obj.optString("floorOrFloorId", null) else null
+				val floorId = if (obj.has("floorOrFloorId") && !obj.isNull("floorOrFloorId")) obj.optString("floorOrFloorId") else null
 				result.add(
 					ManualPositionOptions(
 						latitude = obj.getDouble("latitude"),

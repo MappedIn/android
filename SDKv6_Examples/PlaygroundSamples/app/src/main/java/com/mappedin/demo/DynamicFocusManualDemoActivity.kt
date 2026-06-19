@@ -587,7 +587,7 @@ class DynamicFocusManualDemoActivity : AppCompatActivity() {
 					val floorStackId = facade.floorStack
 
 					// Only switch if it's a different building
-					if (floorStackId != null && floorStackId != currentSelectedFloorStackId) {
+					if (floorStackId != currentSelectedFloorStackId) {
 						val floorStack = allFloorStacks.find { it.id == floorStackId }
 						floorStack?.let {
 							Log.d("DynamicFocusManual", "Facade in view - switching to building: ${it.name}")
