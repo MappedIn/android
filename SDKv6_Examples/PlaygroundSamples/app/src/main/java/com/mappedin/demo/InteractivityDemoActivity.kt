@@ -22,6 +22,7 @@ import com.mappedin.models.AddPathOptions
 import com.mappedin.models.ClickPayload
 import com.mappedin.models.EnterpriseLocation
 import com.mappedin.models.Events
+import com.mappedin.models.GeometryState
 import com.mappedin.models.GeometryUpdateState
 import com.mappedin.models.GetMapDataWithCredentialsOptions
 import com.mappedin.models.MapDataType
@@ -138,7 +139,7 @@ class InteractivityDemoActivity : AppCompatActivity() {
 		mapView.mapData.getByType<Space>(MapDataType.SPACE) { result ->
 			result.onSuccess { spaces ->
 				spaces.forEach { space ->
-					mapView.updateState(space, GeometryUpdateState(interactive = true)) { }
+					mapView.updateState(space, GeometryUpdateState(interactivity = GeometryState.Interactive.True)) { }
 				}
 			}
 		}
