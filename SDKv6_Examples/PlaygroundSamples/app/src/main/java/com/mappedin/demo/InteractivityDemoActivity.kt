@@ -65,7 +65,7 @@ class InteractivityDemoActivity : AppCompatActivity() {
 			}
 		val descriptionView =
 			TextView(this).apply {
-				text = "Click on labels, spaces, and paths to see interactive features in action."
+				text = "Click or long-press on labels, spaces, and paths to see interactive features in action."
 				setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
 				setTextColor("#6B7280".toColorInt())
 			}
@@ -147,7 +147,13 @@ class InteractivityDemoActivity : AppCompatActivity() {
 		// Set up click listener
 		mapView.on(Events.Click) { clickPayload ->
 			clickPayload ?: return@on
-			handleClick(clickPayload)
+			handleClick(clickPayload, longPress = false)
+		}
+
+		// Set up long-press listener (same payload shape as click)
+		mapView.on(Events.LongPress) { clickPayload ->
+			clickPayload ?: return@on
+			handleClick(clickPayload, longPress = true)
 		}
 
 		// Add interactive labels to all spaces with names.
@@ -211,12 +217,16 @@ class InteractivityDemoActivity : AppCompatActivity() {
 		}
 	}
 
-	private fun handleClick(clickPayload: ClickPayload) {
+	private fun handleClick(clickPayload: ClickPayload, longPress: Boolean = false) {
 		val title: String
 		val message = StringBuilder()
 
 		// Use the map name as the title (from floors)
-		title = clickPayload.floors?.firstOrNull()?.name ?: "Map Click"
+		title = clickPayload.floors?.firstOrNull()?.name ?: if (longPress) "Map Long Press" else "Map Click"
+
+		if (longPress) {
+			message.append("Long press\n")
+		}
 
 		// If a label was clicked, add its text to the message
 		val labels = clickPayload.labels
