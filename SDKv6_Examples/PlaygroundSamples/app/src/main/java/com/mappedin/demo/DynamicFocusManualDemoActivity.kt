@@ -224,7 +224,7 @@ class DynamicFocusManualDemoActivity : AppCompatActivity() {
 		}
 
 		// Label all spaces with names
-		mapView.__EXPERIMENTAL__auto()
+		mapView.auto()
 
 		// Fetch all floor stacks, floors, and facades, then set up the UI
 		mapView.mapData.getByType<FloorStack>(MapDataType.FLOOR_STACK) { stacksResult ->
