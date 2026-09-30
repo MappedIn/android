@@ -137,9 +137,9 @@ class ReusableMapViewDemoActivity : AppCompatActivity() {
 					sharedMapView.show3dMap(Show3DMapOptions()) { showResult ->
 						showResult
 							.onSuccess {
-								// Automatically add default labels and markers so
-								// the map looks complete on its first and only load.
-								sharedMapView.__EXPERIMENTAL__auto()
+								// Automatically add default labels so the map looks
+								// complete on its first and only load.
+								sharedMapView.auto()
 								// The map is rendered now, so mark it ready and hide
 								// the loading indicator. Focusing depends on the
 								// spaces query below, which is loaded separately so

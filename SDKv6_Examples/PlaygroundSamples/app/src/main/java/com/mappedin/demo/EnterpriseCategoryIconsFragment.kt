@@ -82,7 +82,7 @@ class EnterpriseCategoryIconsFragment : Fragment() {
 			GetMapDataWithCredentialsOptions(
 				key = "5eab30aa91b055001a68e996",
 				secret = "RJyRXKcryCMy4erZqqCbuB1NbR66QTGNXVE0x3Pg6oCIlUR1",
-				mapId = "mappedin-demo-enterprise",
+				mapId = "mappedin-demo-mall",
 			)
 
 		mapView.getMapData(options) { result ->
